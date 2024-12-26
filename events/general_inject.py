@@ -42,9 +42,9 @@ def general_injection(file_label, cheatCodeEntry):
         folder_path = os.path.join("tmp/tmpROM", folder_name + "/sys/main.dol")
         folder_path_raw = os.path.join("tmp/tmpROM", folder_name)
         if sys.platform == "win32":
-            subprocess.run([fetchResource("dependencies/win32/GeckoLoader.exe"), "--hooktype=GX", folder_path, "tmp/codes.txt", "--dest=tmp/tmpDOL"], check=True)
+            subprocess.run([fetchResource("dependencies/win32/GeckoLoader.exe"), "--hooktype=GX", "--optimize", folder_path, "tmp/codes.txt", "--dest=tmp/tmpDOL"], check=True)
         else:
-            subprocess.run([fetchResource("dependencies/darwin/GeckoLoader"), "--hooktype=GX", folder_path, "tmp/codes.txt", "--dest=tmp/tmpDOL"], check=True)
+            subprocess.run([fetchResource("dependencies/darwin/GeckoLoader"), "--hooktype=GX", "--optimize", folder_path, "tmp/codes.txt", "--dest=tmp/tmpDOL"], check=True)
         os.remove(folder_path)
         shutil.move("tmp/tmpDOL/main.dol", folder_path)
         if sys.platform == "win32":
