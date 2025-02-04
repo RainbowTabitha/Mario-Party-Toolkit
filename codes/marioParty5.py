@@ -8,14 +8,14 @@
 def getBlueSpaceCodeFive(amount, amountDec):
     return f'''
 MP5 - Blue Spaces Give {amountDec} Coins
-C20A9F5C 00000000
+C20A9F5C 00000001
 3880{amount} 00000000
 '''
 
 def getRedSpaceCodeFive(amount, amountDec):
     return f'''
 MP5 - Red Spaces Take Away {amountDec} Coins
-C20AA160 00000000
+C20AA160 00000001
 3880{amount} 00000000
 '''
 
@@ -191,7 +191,7 @@ def getStarReplaceFive3(amount, amountDec):
     return f'''
 MP5 - Replace Happening Star with {amountDec}
 2046872C 881D0017
-C246872C 00000000
+C246872C 00000001
 {amount} 7C000378
 60000000 00000000
 E2000001 80008000
