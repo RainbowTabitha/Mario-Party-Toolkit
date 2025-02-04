@@ -75,43 +75,55 @@ E0000000 80008000
 def getBooSpaceStarFour(amount, amountDec):
     return f'''
 MP4 - Star Stealing Costs {amountDec} at the Boo House.
-040A5F30 2C1E{amount}
+C20A5F30 00000001
+2C1E{amount} 00000000
 '''
 
 def getBooSpaceCoinsFour(amount, amountDec):
     return f'''
 MP4 - Coin Stealing Costs {amountDec} at the Boo House.
-040A61DC 2C1E{amount}
-040A517C 2C03{amount}
+C20A61DC 00000001
+2C1E{amount} 00000000
+C20A517C 00000001
+2C03{amount} 00000000
 '''
 
 def getStarSpaceCodeFour(amount, amountDec):
     return f'''
 MP4 - Stars Cost {amountDec} Coins
-040843CC 2C03{amount}
-04084590 2C03{amount}
-040845CC 2C03{amount}
-0408473C 2C1C{amount}
+C20843CC 00000001
+2C03{amount} 00000000
+C2084590 00000001
+2C03{amount} 00000000
+C20845CC 00000001
+2C03{amount} 00000000
+C208473C 00000001
+2C1C{amount} 00000000
 '''
 
 def getSquishCodeFour(amount, amountDec):
     return f'''
 MP4 - Mega Mushroom Steals {amountDec} Coins
-0406BE88 2C00{amount}
-0406BE90 3800{amount}
+C206BE88 00000001
+2C00{amount} 00000000
+C206BE90 00000001
+3800{amount} 00000000
 '''
 
 def getBowserSuitCodeFour(amount, amountDec):
     return f'''
 MP4 - Bowser Suit Steals {amountDec} Coins
-0406C788 2C00{amount}
-0406C790 3800{amount}
+C206C788 00000001
+2C00{amount} 00000000
+C206C790 00000001
+3800{amount} 00000000
 '''
 
 def getLotterySpaceCodeFour(amount, amountDec):
     return f'''
 MP4 - Lottery Costs {amountDec} Coins
-0407BD20 2C1E{amount}
+C207BD20 00000001
+2C1E{amount} 00000000
 '''
 
 def getMinigameReplacement4(hexUno, hexDos, gameUno, gameDos):
@@ -178,8 +190,10 @@ C2076A0C 00000003
 def getLotteryRewards4(lotteryPrizeA, lotteryPrizeB, lotteryPrizeC, lotteryPrizeD, lotteryPrizeALabel, lotteryPrizeBLabel, lotteryPrizeCLabel, lotteryPrizeDLabel):
     return f'''
 MP4 - Lottery 1st is {lotteryPrizeALabel} - 2nd is {lotteryPrizeBLabel} - 3rd is {lotteryPrizeCLabel} or {lotteryPrizeDLabel}
-0407EA58 3B80{lotteryPrizeA}
-0407EA60 3B80{lotteryPrizeB}
+C207EA58 00000001
+3B80{lotteryPrizeA} 00000000
+C207EA60 00000001
+3B80{lotteryPrizeB} 00000000
 021D5678 0000{lotteryPrizeC}{lotteryPrizeD}
 '''
 
@@ -203,7 +217,8 @@ C2063AE4 0000000B
 def initialCoinsMod4(hex, hexDec):
     return f'''
 MP4 - Gain {hexDec} Coins at the Start of the Game
-020A8F0E 0000{hex}
+C20A8F0C 00000001
+3AC0{hex} 00000000
 '''
 
 def getBattleGame4(p1, p2, p3, p4, p5, s1, s2, s3, s4, s5):

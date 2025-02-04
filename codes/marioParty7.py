@@ -8,15 +8,17 @@
 def getBlueSpaceCodeSeven(amount, amountDec):
     return f'''
 MP7 - Blue Spaces Give {amountDec} Coins
-04168578 60000000
-0416857C 3880{amount}
+C2168578 00000000
+60000000 3880{amount}
+60000000 00000000
 '''
 
 def getRedSpaceCodeSeven(amount, amountDec):
     return f'''
 MP7 - Red Spaces Take Away {amountDec} Coins
-04168600 60000000
-04168604 3880{amount}
+C2168600 00000000
+60000000 3880{amount}
+60000000 00000000
 '''
 
 def getCharacterSpaceCodeSeven(amount, amountDec):
@@ -53,14 +55,21 @@ C20098A4 00000012
 def getStarSpaceCodeSeven(amount, amountDec, x2, x3, x4):
     return f'''
 MP7 - Stars Cost {amountDec} Coins
-04188774 3B80{amount}
+C2188774 00000001
+3B80{amount} 00000000
 204E0640 38030001
-044E0644 1C00000A
-044E0574 3800{amount} 
-044E08D8 3800{amount}
-044E09B8 1C00000A
-044E0BAC 38A0{amount}
-044E0C8C 1C60000A
+C24E0644 00000001
+1C00000A 00000000
+C24E0574 00000001
+3800{amount} 00000000
+C24E08D8 00000001
+3800{amount} 00000000
+C24E09B8 00000001
+1C00000A 00000000
+C24E0BAC 00000001
+38A0{amount} 00000000
+C24E0C8C 00000001
+1C60000A 00000000
 E2000001 80008000
 204F92AC 804F929D
 044F9268 0000{amount}
@@ -73,18 +82,23 @@ E2000001 80008000
 def getStarSpaceCodeSevenLastFive(amount, amountDec):
     return f'''
 MP7 - Stars Cost {amountDec} Coins During the Last 5 Turns Event
-0418876C 3B80{amount}
+C218876C 00000001
+3B80{amount} 00000000
 '''
 
 def getHammerBroSpaceCodeSeven(amount, negAmount, halfAmount, amountDec):
     return f'''
 MP7 - Hammer Bro Takes {amountDec} Coins
-041A902C 3AC0{amount}
-041A9A28 38A0{negAmount}
-041A973C 38000000
-041A9744 3800{halfAmount}
-041A974C 38000000
-041A9754 3800{halfAmount}
+C21A902C 00000002
+3AC0{amount} 38A0{negAmount}
+60000000 00000000
+C21A973C 00000001
+38000000 00000000
+C21A9744 00000002
+3800{halfAmount} 38000000
+60000000 00000000
+C21A9754 00000001
+3800{halfAmount} 00000000
 '''
 
 def getZapSpaceCodeSeven(amount, amountDec):
@@ -97,20 +111,24 @@ C21B652C 00000001
 def getFlowerSpaceCodeSeven(amount, amountDec):
     return f'''
 MP7 - Flower Gives {amountDec} Coins Per Space
-041C4F24 3B40{amount}
+C21C4F24 00000001
+3B40{amount} 00000000
 '''
 
 def getVacuumSpaceCodeSeven(amount, amountDec):
     return f'''
 MP7 - Vaccum Always Steals {amountDec} Coins
-041C8A34 3860{amount}
+C21C8A34 00000001
+3860{amount} 00000000
 '''
 
 def getFireballSpaceCodeSeven(amount, negAmount, amountDec):
     return f'''
 MP7 - Fireball Takes {amountDec} Coins
-041C1464 3b80{amount}
-041C148C 38A0{negAmount}
+C21C1464 00000001
+3B80{amount} 00000000
+C21C148C 00000001
+38A0{negAmount} 00000000
 '''
 
 def getMinigameReplacement7(hexUno, hexDos, gameUno, gameDos):
@@ -305,10 +323,12 @@ def getWindmillMaxSeven(amount, amountDec):
     return f'''
 MP7 - Windmillville: Invest Up To {amountDec}
 204E4C7C 2C040064
-044E4C7C 2C04{amount}
+C24E4C7C 00000001
+2C04{amount} 00000000
 E2000001 80008000
 204E4CCC 2C040064
-044E4CCC 2C04{amount}
+C24E4CCC 00000001
+2C04{amount} 00000000
 E2000001 80008000
 '''
 
@@ -420,7 +440,8 @@ def getStarReplaceSeven1(amount, amountDec):
     return f'''
 MP7 - Replace Minigame Star with {amountDec}
 204E185C A8A70028
-044E185C {amount}
+C24E185C 00000001
+{amount} 00000000
 E2000001 80008000
 '''
 
@@ -428,7 +449,8 @@ def getStarReplaceSeven2(amount, amountDec):
     return f'''
 MP7 - Replace Orb Star with {amountDec}
 204E18D4 A8C3003C
-044E18D4 {amount}
+C24E18D4 00000001
+{amount} 00000000
 E2000001 80008000
 '''
 
@@ -436,10 +458,9 @@ def getStarReplaceSeven3(amount, amountDec):
     return f'''
 MP7 - Replace Happening Star with {amountDec}
 204E1A0C 8903001F
-044E1A0C {amount}
-E2000001 80008000
-204E1A10 7D060774
-044E1A10 7D064378
+C24E1A0C 00000002
+{amount} 7D064378
+60000000 00000000
 E2000001 80008000
 '''
 
@@ -447,7 +468,8 @@ def getStarReplaceSeven4(amount, amountDec):
     return f'''
 MP7 - Replace Shopping Star with {amountDec}
 204E1898 A885003E
-044E1898 {amount}
+C24E1898 00000001
+{amount} 00000000
 E2000001 80008000
 '''
 
@@ -455,7 +477,8 @@ def getStarReplaceSeven5(amount, amountDec):
     return f'''
 MP7 - Replace Running Star with {amountDec}
 204E1910 A8C40018
-044E1910 {amount}
+C24E1910 00000001
+{amount} 00000000
 E2000001 80008000
 '''
 
@@ -463,9 +486,8 @@ def getStarReplaceSeven6(amount, amountDec):
     return f'''
 MP7 - Replace Red Star with {amountDec}
 204E198C 8904001D
-044E198C {amount}
-E2000001 80008000
-204E1990 7D060774
-044E1990 7D064378
+C24E198C 00000002
+{amount} 7D064378
+60000000 00000000
 E2000001 80008000
 '''

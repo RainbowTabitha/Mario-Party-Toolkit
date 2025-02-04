@@ -8,13 +8,15 @@
 def getBlueSpaceCodeFive(amount, amountDec):
     return f'''
 MP5 - Blue Spaces Give {amountDec} Coins
-040A9F5C 3880{amount}
+C20A9F5C 00000000
+3880{amount} 00000000
 '''
 
 def getRedSpaceCodeFive(amount, amountDec):
     return f'''
 MP5 - Red Spaces Take Away {amountDec} Coins
-040AA160 3880{amount}
+C20AA160 00000000
+3880{amount} 00000000
 '''
 
 def getMinigameCodeFive(amount, amountDec):
@@ -58,7 +60,8 @@ C20AFF9C 00000001
 def getKoopaBankFive(amount, amountDec):
     return f'''
 MP5 - Koopa Bank Deposits are {amountDec} Coins
-040E7090 3B20{amount}
+C20E7090 00000001
+3B20{amount} 00000000
 '''
 
 def getWigglerSpaceCodeFive(amount, negAmount, amountDec):
@@ -170,7 +173,8 @@ def getStarReplaceFive1(amount, amountDec):
     return f'''
 MP5 - Replace Minigame Star with {amountDec}
 2046871C A81D0022
-0446871C {amount}
+C246871C 00000001
+{amount} 00000000
 E2000001 80008000
 '''
 
@@ -178,7 +182,8 @@ def getStarReplaceFive2(amount, amountDec):
     return f'''
 MP5 - Replace Orb Star with {amountDec}
 20468724 A81D0026
-04468724 {amount}
+C2468724 00000001
+{amount} 00000000
 E2000001 80008000
 '''
 
@@ -186,8 +191,9 @@ def getStarReplaceFive3(amount, amountDec):
     return f'''
 MP5 - Replace Happening Star with {amountDec}
 2046872C 881D0017
-0446872C {amount}
-04468730 7C000378
+C246872C 00000000
+{amount} 7C000378
+60000000 00000000
 E2000001 80008000
 '''
 
@@ -211,7 +217,8 @@ MP5 - Undersea Dream: Seashells Only Give {text}
 def initialCoinsMod5(hex, hexDec):
     return f'''
 MP5 - Gain {hexDec} Coins at the Start of the Game
-0208C8E6 0000{hex}
+C208C8E6 00000001
+3880{hex} 00000000
 '''
 
 def getBattleGame5(p1, p2, p3, p4, p5, s1, s2, s3, s4, s5):

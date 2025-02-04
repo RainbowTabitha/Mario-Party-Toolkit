@@ -8,13 +8,15 @@
 def getBlueSpaceCodeSix(amount, amountDec):
     return f'''
 MP6 - Blue Spaces Give {amountDec} Coins
-0415F1E8 3880{amount}
+C215F1E8 00000001
+3880{amount} 00000000
 '''
 
 def getRedSpaceCodeSix(amount, amountDec):
     return f'''
 MP6 - Red Spaces Take Away {amountDec} Coins
-0415F278 3880{amount}
+C215F278 00000001
+3880{amount} 00000000
 '''
 
 def getMinigameCodeSix(amount, amountDec):
@@ -73,19 +75,27 @@ E2000001 80008000
 def getCharacterSpaceCodeSix(amount, amountDec):
     return f'''
 MP6 - Character Spaces Give {amountDec} Coins
-0415F230 3880{amount}
+C215F230 00000001
+3880{amount} 00000000
 '''
 
 def getStarSpaceCodeSix(amount, negAmount, amountDec, y4, y2, x2, x4):
     return f'''
 MP6 - Stars Cost {amountDec} Coins
-0418333C 2C03{amount}
-0418342C 2C03{amount}
-041834C4 2C03{amount}
-0415F668 2C03{amount}
-0415FA18 3880{negAmount}
-0416068C 2C00{amount}
-04160D0C 3880{negAmount}    
+C218333C 00000001
+2C03{amount} 00000000
+C218342C 00000001
+2C03{amount} 00000000
+C21834C4 00000001
+2C03{amount} 00000000
+C215F668 00000001
+2C03{amount} 00000000
+C215FA18 00000001
+3880{negAmount} 00000000
+C216068C 00000001
+2C00{amount} 00000000
+C2160D0C 00000001
+3880{negAmount} 00000000  
 C2183590 00000002
 3880{amount} 7C8400D0
 60000000 00000000
@@ -279,7 +289,8 @@ MP6 - Start with {oneItem}, {twoItem}, and {threeItem}
 7CAC00AE 98A30005
 48150114 {one}{two}{three}{one}
 {two}{three}{one}{two} {three}{one}{two}{three}
-04153748 4BEAFED8
+C2153748 00000001
+4BEAFED8 00000000
 '''
 
 def getCoinStealBaseSix(value, amountDec):
@@ -327,7 +338,8 @@ def getStarReplaceSix1(amount, amountDec):
     return f'''
 MP6 - Replace Minigame Star with {amountDec}
 204ECF10 A883001E
-044ECF10 {amount}
+C24ECF10 00000001
+{amount} 00000000
 E2000001 80008000
 '''
 
@@ -335,7 +347,8 @@ def getStarReplaceSix2(amount, amountDec):
     return f'''
 MP6 - Replace Orb Star with {amountDec}
 204ECF4C A8C70034
-044ECF4C {amount}
+C24ECF4C 00000001
+{amount} 00000000
 E2000001 80008000
 '''
 
@@ -343,17 +356,17 @@ def getStarReplaceSix3(amount, amountDec):
     return f'''
 MP6 - Replace Happening Star with {amountDec}
 204ECF88 88040017
-044ECF88 {amount}
-E2000001 80008000
-204ECF8C 7C060774
-044ECF8C 7C060378
+C24ECF88 00000002
+{amount} 7C060378
+60000000 00000000
 E2000001 80008000
 '''
 
 def initialCoinsMod6(hex, hexDec):
     return f'''
 MP6 - Gain {hexDec} Coins at the Start of the Game
-0214B3AE 0000{hex}
+C214B3AC 00000001
+3880{hex} 00000000
 '''
 
 def getBattleGame6(p1, p2, p3, p4, p5, s1, s2, s3, s4, s5):
@@ -369,16 +382,20 @@ MP6 - Battle Minigames Bounties are {s1}, {s2}, {s3}, {s4}, and {s5}
 def getZapOrb6(hex, amountDec):
     return f'''
 MP6 - Zap Takes {amountDec} Coins
-041AE1B8 3B60{hex}
+C21AE1B8 00000001
+3B60{hex} 00000000
 '''
 
 def getFaireFlowerEventStars(value):
     return f'''
 MP6 - Always Wager Stars at Faire Square Flower Event
 282C0256 0000007D
-044d3c68 38E00001
-044d4e34 38000001
-044d3c68 38E00001
+C24D3C68 00000001
+38E00001 00000000
+C24D4E34 00000001
+38000001 00000000
+C24D3C68 00000001
+38E00001 00000000
 E2000001 80008000
 '''
 
@@ -386,8 +403,11 @@ def getFaireFlowerEventCoins(value):
     return f'''
 MP6 - Always Wager Coins at Faire Square Flower Event
 282C0256 0000007D
-044d3c70 60000000
-044d4e3C 60000000
-044d3c70 60000000
+C24D3C70 00000001
+60000000 00000000
+C24D4E3C 00000001
+60000000 00000000
+C24D3C70 00000001
+60000000 00000000
 E2000001 80008000
 '''
