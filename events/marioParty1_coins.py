@@ -11,22 +11,22 @@ from codes.marioParty1 import *
 import pyperclip
 
 def coinsEvent_mp1(blueAmount, blueTick, redAmount, redTick, starAmount):
-    if not blueAmount.get() and not redAmount.get() and not starAmount.get():
+    if not blueAmount.text() and not redAmount.text() and not starAmount.text():
         createDialog("Error", "error", "Please fill out atleast one box.", None)
         return
+    
     # Extract blue space information
-    blueSpaceAmountBaseOne = blueAmount.get()
+    blueSpaceAmountBaseOne = blueAmount.text()
     blueSpaceAmountOne = hex(int(blueSpaceAmountBaseOne))[2:].zfill(4).upper() if blueSpaceAmountBaseOne else "DUMMY"
-    blueSpaceSwitchOne = "1" if blueTick.get() else "0"
+    blueSpaceSwitchOne = "1" if blueTick.isChecked() else "0"
 
     # Extract red space information
-    redSpaceAmountBaseOne = redAmount.get()
+    redSpaceAmountBaseOne = redAmount.text()
     redSpaceAmountOne = hex(int(redSpaceAmountBaseOne))[2:].zfill(4).upper() if redSpaceAmountBaseOne else "DUMMY"
-    redSpaceSwitchOne = "1" if redTick.get() else "0"
-
+    redSpaceSwitchOne = "1" if redTick.isChecked() else "0"
 
     # Extract star space information
-    starSpaceAmountBaseOne = starAmount.get()
+    starSpaceAmountBaseOne = starAmount.text()
     starSpaceAmountOne = hex(int(starSpaceAmountBaseOne))[2:].zfill(4).upper() if starSpaceAmountBaseOne else "DUMMY"
     negativeStarSpaceAmountBaseOne = -int(starSpaceAmountBaseOne) if starSpaceAmountBaseOne else "DUMMY" 
     starSpaceAmountNegativeOne = format(negativeStarSpaceAmountBaseOne & 0xFFFFFFFFFFFFFFFF, 'X')[12:] if starSpaceAmountBaseOne else "DUMMY"
@@ -44,12 +44,14 @@ def coinsEvent_mp1(blueAmount, blueTick, redAmount, redTick, starAmount):
 
     marioPartyOneStarSpace = getStarSpaceCodeOne(starSpaceAmountOne, starSpaceAmountNegativeOne, starSpaceAmountBaseOne) if starSpaceAmountOne != "DUMMY" else ""
 
-
     # Replace placeholder in generated codes
     generatedCode = (marioPartyOneBlueSpace + marioPartyOneRedSpace + marioPartyOneStarSpace).strip()
 
     # Copy generated codes to clipboard
-    pyperclip.copy(generatedCode)
+    try:
+        pyperclip.copy(generatedCode)
+    except Exception as e:
+        print(f"Error copying to clipboard: {e}")
 
     # Notify user about successful operation
     print("Generated codes copied to the clipboard.")

@@ -1,7 +1,6 @@
-customtkinter
-tk
+PyQt5
+PyQt-Fluent-Widgets[full]
 Pillow
-pyperclip
-pyinstaller == 5.13.2
-CTkToolTip
 requests
+darkdetect
+pyperclip
