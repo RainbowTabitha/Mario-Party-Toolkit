@@ -31,6 +31,9 @@ class MarioPartyPages:
             'marioParty9': self.create_mp9_tabs,
             'marioPartyDS': self.create_mpds_tabs,
         }
+        
+        # Store references to all tabs for theme updates
+        self.all_tabs = []
 
     def create_game_page(self, game_id, game_name):
         """Create a page for a specific Mario Party game"""
@@ -142,18 +145,28 @@ class MarioPartyPages:
         # Coins Mods tab - MP1 only has 3 basic coin fields
         coins_tab = CoinsTab("marioParty1", "basic")
         tab_widget.addTab(coins_tab, "Coins Mods")
+        self.all_tabs.append(coins_tab)
         
         # Block Weights tab
         block_tab = BlockWeightsTab("marioParty1")
         tab_widget.addTab(block_tab, "Block Weights")
+        self.all_tabs.append(block_tab)
         
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty1")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
+        self.all_tabs.append(mg_tab)
         
         # Star Handicaps tab
         handicap_tab = HandicapTab("marioParty1")
         tab_widget.addTab(handicap_tab, "Star Handicaps")
+        self.all_tabs.append(handicap_tab)
+    
+    def update_all_tabs_theme(self):
+        """Update theme for all tabs when theme changes"""
+        for tab in self.all_tabs:
+            if hasattr(tab, 'themeChanged'):
+                tab.themeChanged()
 
     def create_mp2_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
@@ -161,26 +174,32 @@ class MarioPartyPages:
         # Coins Mods tab - MP2 has basic coins + Koopa Bank
         coins_tab = CoinsTab("marioParty2", "basic")
         tab_widget.addTab(coins_tab, "Coins Mods")
+        self.all_tabs.append(coins_tab)
         
         # Items tab - MP2 item price modifications
         items_tab = ItemsTab("marioParty2")
         tab_widget.addTab(items_tab, "Item Prices")
+        self.all_tabs.append(items_tab)
         
         # Item Replacement tab - MP2 item space replacement
         item_replace_tab = ItemReplaceTab("marioParty2")
         tab_widget.addTab(item_replace_tab, "Item Replacement")
+        self.all_tabs.append(item_replace_tab)
         
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty2")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
+        self.all_tabs.append(mg_tab)
         
         # Star Handicaps tab
         handicap_tab = HandicapTab("marioParty2")
         tab_widget.addTab(handicap_tab, "Star Handicaps")
+        self.all_tabs.append(handicap_tab)
         
         # Bonus Star Replacement tab
         bonus_star_tab = BonusStarTab("marioParty2")
         tab_widget.addTab(bonus_star_tab, "Bonus Star Replacement")
+        self.all_tabs.append(bonus_star_tab)
 
     def create_mp3_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
@@ -188,22 +207,27 @@ class MarioPartyPages:
         # Coins Mods tab - MP3 has basic coins + Koopa Bank + Boo Coins/Stars
         coins_tab = CoinsTab("marioParty3", "basic")
         tab_widget.addTab(coins_tab, "Coins Mods")
+        self.all_tabs.append(coins_tab)
         
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty3")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
+        self.all_tabs.append(mg_tab)
         
         # Items tab - MP3 item price modifications
         items_tab = ItemsTab("marioParty3")
         tab_widget.addTab(items_tab, "Item Prices")
+        self.all_tabs.append(items_tab)
         
         # Item Replacement tab - MP3 item space replacement
         item_replace_tab = ItemReplaceTab("marioParty3")
         tab_widget.addTab(item_replace_tab, "Item Replacement")
+        self.all_tabs.append(item_replace_tab)
         
         # Star Handicaps tab
         handicap_tab = HandicapTab("marioParty3")
         tab_widget.addTab(handicap_tab, "Star Handicaps")
+        self.all_tabs.append(handicap_tab)
 
     def create_mp4_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)

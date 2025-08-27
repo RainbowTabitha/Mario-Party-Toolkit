@@ -5,7 +5,7 @@
 # ============================================
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSizePolicy
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from qfluentwidgets import SubtitleLabel, PushButton
 
 # Import dark mode detection
@@ -19,6 +19,9 @@ from qfluentwidgets import setTheme, Theme
 
 
 class SettingsPage(QWidget):
+    # Signal emitted when theme changes
+    themeChanged = pyqtSignal()
+    
     def __init__(self):
         super().__init__()
         self.setup_ui()
@@ -74,6 +77,9 @@ class SettingsPage(QWidget):
                     self.theme_toggle_btn.setText("Toggle Theme (Light)")
                     print("✓ Theme changed to Dark")
                 
+                # Emit signal to notify other components
+                self.themeChanged.emit()
+                
             except Exception as e:
                 print(f"⚠️  Error toggling theme: {e}")
         else:
@@ -81,3 +87,5 @@ class SettingsPage(QWidget):
             setTheme(Theme.LIGHT)
             self.theme_toggle_btn.setText("Toggle Theme (Light)")
             print("✓ Theme changed to Light (fallback)")
+            # Emit signal to notify other components
+            self.themeChanged.emit()

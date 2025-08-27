@@ -3,7 +3,7 @@
 # Bonus Star Replacement Tab Component for Mario Party 2
 # ============================================
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QMessageBox, QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox, QGroupBox
 from PyQt5.QtCore import Qt
 from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton, InfoBar, InfoBarPosition
 
@@ -24,47 +24,22 @@ class BonusStarTab(QWidget):
         layout.setSpacing(8)
         layout.setContentsMargins(16, 12, 16, 12)
 
-        title = QLabel("Bonus Star Replacement")
-        title.setStyleSheet("""
-            font-size: 24px;
-            font-weight: 700;
-            color: #E0E0E0;
-            margin: 8px 0;
-            text-align: center;
-        """)
+        title = SubtitleLabel("Bonus Star Replacement")
+        title.setAlignment(Qt.AlignCenter)
         layout.addWidget(title)
 
         desc = BodyLabel("Replace the three bonus stars with any other bonus star type:")
-        desc.setStyleSheet("""
-            font-size: 15px;
-            color: #E0E0E0;
-            margin-bottom: 8px;
-            text-align: center;
-        """)
+        desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
         group = QGroupBox("Bonus Star Replacement")
-        group.setStyleSheet("""
-            QGroupBox {
-                font-size: 16px;
-                font-weight: 600;
-                color: palette(text);
-                border: 2px solid #3C3C3C;
-                border-radius: 8px;
-                margin-top: 12px;
-                padding-top: 12px;
-                background: #2A2A2A;
-            }
-            QGroupBox::title {
-                subcontrol-origin: margin;
-                left: 16px;
-                padding: 0 8px 0 8px;
-                background: #4A90E2;
-                color: white;
-                border-radius: 6px;
-                font-weight: 700;
-            }
-        """)
+        
+        # Store reference to group for theme updates
+        self.bonus_star_group = group
+        
+        # Apply initial styling
+        self.update_bonus_star_group_theme()
+        
         group_layout = QVBoxLayout()
         group_layout.setSpacing(16)
         group_layout.setContentsMargins(20, 16, 20, 16)
@@ -76,8 +51,8 @@ class BonusStarTab(QWidget):
 
         # Minigame Star
         mg_row = QHBoxLayout()
-        mg_label = QLabel("Replace Minigame Star with:")
-        mg_label.setStyleSheet("font-size: 16px; color: #E0E0E0; min-width: 200px;")
+        mg_label = BodyLabel("Replace Minigame Star with:")
+        mg_label.setStyleSheet("font-size: 16px; min-width: 200px;")
         mg_row.addWidget(mg_label)
         self.star1_combo = ComboBox()
         self.star1_combo.addItems(self.stars2)
@@ -89,8 +64,8 @@ class BonusStarTab(QWidget):
 
         # Coin Star
         coin_row = QHBoxLayout()
-        coin_label = QLabel("Replace Coin Star with:")
-        coin_label.setStyleSheet("font-size: 16px; color: #E0E0E0; min-width: 200px;")
+        coin_label = BodyLabel("Replace Coin Star with:")
+        coin_label.setStyleSheet("font-size: 16px; min-width: 200px;")
         coin_row.addWidget(coin_label)
         self.star2_combo = ComboBox()
         self.star2_combo.addItems(self.stars2)
@@ -102,8 +77,8 @@ class BonusStarTab(QWidget):
 
         # Happening Star
         hap_row = QHBoxLayout()
-        hap_label = QLabel("Replace Happening Star with:")
-        hap_label.setStyleSheet("font-size: 16px; color: #E0E0E0; min-width: 200px;")
+        hap_label = BodyLabel("Replace Happening Star with:")
+        hap_label.setStyleSheet("font-size: 16px; min-width: 200px;")
         hap_row.addWidget(hap_label)
         self.star3_combo = ComboBox()
         self.star3_combo.addItems(self.stars2)
@@ -115,71 +90,100 @@ class BonusStarTab(QWidget):
 
         layout.addWidget(group)
 
-        generate_btn = QPushButton("Generate Codes")
-        generate_btn.setStyleSheet("""
-            QPushButton {
-                background: #4A90E2;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                padding: 12px 24px;  /* Reduced from 16px 32px */
-                font-size: 15px;  /* Reduced from 16px */
-                font-weight: 700;
-                margin: 8px 0;  /* Reduced from 16px */
-                min-height: 44px;  /* Reduced from 52px */
-            }
-            QPushButton:hover {
-                background: #5BA0F2;
-            }
-            QPushButton:pressed {
-                background: #357ABD;
-            }
-        """)
+        # Generate button
+        generate_btn = PushButton("Generate Codes")
         generate_btn.clicked.connect(self.generate_codes)
         layout.addWidget(generate_btn)
-        
+
+        # Add stretch to push everything up
         layout.addStretch()
+
         self.setLayout(layout)
 
     def generate_codes(self):
-        if self.game_id == "marioParty2":
-            try:
-                if 'customBonusStarEvent_mp2' in globals():
-                    # Create mock objects to match the expected interface
-                    class MockComboBox:
-                        def __init__(self, text):
-                            self._text = text
-                        def get(self):
-                            return self._text
-                        def currentText(self):
-                            return self._text
-                    star1 = MockComboBox(self.star1_combo.currentText())
-                    star2 = MockComboBox(self.star2_combo.currentText())
-                    star3 = MockComboBox(self.star3_combo.currentText())
-                    customBonusStarEvent_mp2(star1, star2, star3, self.stars2)
-                    InfoBar.success(
-                        title="Operation Successful",
-                        content="Generated codes copied to clipboard!",
-                        orient=Qt.Horizontal,
-                        isClosable=True,
-                        position=InfoBarPosition.TOP_RIGHT,
-                        duration=2500,
-                        parent=self.window()
-                    )
-                else:
-                    self.show_error("Mario Party 2 bonus star replacement not available")
-            except Exception as e:
-                self.show_error(f"Error generating codes: {str(e)}")
-        else:
-            self.show_error(f"Bonus star replacement not supported for {self.game_id}")
+        """Generate codes for bonus star replacement"""
+        try:
+            if 'customBonusStarEvent_mp2' in globals():
+                # Create mock objects to match the expected interface
+                class MockComboBox:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+                    def currentText(self):
+                        return self._text
+
+                # Create mock objects with current values
+                star1 = MockComboBox(self.star1_combo.currentText())
+                star2 = MockComboBox(self.star2_combo.currentText())
+                star3 = MockComboBox(self.star3_combo.currentText())
+
+                customBonusStarEvent_mp2(star1, star2, star3)
+            else:
+                self.show_error("Bonus star replacement not available")
+        except Exception as e:
+            self.show_error(f"Error generating codes: {str(e)}")
 
     def show_error(self, message):
+        """Show error message to user"""
         InfoBar.error(
             title="Error",
             content=message,
             orient=Qt.Horizontal,
             isClosable=True,
-            position=InfoBarPosition.TOP_RIGHT,
-            duration=2500,
-            parent=self.window()
+            position=InfoBarPosition.TOP,
+            duration=3000,
+            parent=self
         )
+    
+    def update_bonus_star_group_theme(self):
+        """Update the bonus star group styling based on current theme"""
+        from qfluentwidgets import isDarkTheme
+        if isDarkTheme():
+            self.bonus_star_group.setStyleSheet("""
+                QGroupBox {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: palette(text);
+                    border: 2px solid palette(mid);
+                    border-radius: 8px;
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    background: #3c3c3c;
+                }
+                QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left: 16px;
+                    padding: 0 8px 0 8px;
+                    background: palette(highlight);
+                    color: palette(highlighted-text);
+                    border-radius: 6px;
+                    font-weight: 700;
+                }
+            """)
+        else:
+            self.bonus_star_group.setStyleSheet("""
+                QGroupBox {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: palette(text);
+                    border: 2px solid palette(mid);
+                    border-radius: 8px;
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    background: #ffffff;
+                }
+                QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left: 16px;
+                    padding: 0 8px 0 8px;
+                    background: palette(highlight);
+                    color: palette(highlighted-text);
+                    border-radius: 6px;
+                    font-weight: 700;
+                }
+            """)
+    
+    def themeChanged(self):
+        """Called when theme changes - update all styling"""
+        self.update_bonus_star_group_theme()

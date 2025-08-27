@@ -58,24 +58,24 @@ class NavigationManager:
 
     def add_mario_party_pages(self):
         """Add all Mario Party game pages to navigation"""
-        mario_party_pages = MarioPartyPages()
+        self.mario_party_pages = MarioPartyPages()
         
         # Add each Mario Party game
         games = [
             ("marioParty1", "Mario Party 1", "assets/logos/marioParty1.png"),
             ("marioParty2", "Mario Party 2", "assets/logos/marioParty2.png"),
             ("marioParty3", "Mario Party 3", "assets/logos/marioParty3.png"),
-            ("marioParty4", "Mario Party 4", "assets/logos/marioParty4.png"),
-            ("marioParty5", "Mario Party 5", "assets/logos/marioParty5.png"),
-            ("marioParty6", "Mario Party 6", "assets/logos/marioParty6.png"),
-            ("marioParty7", "Mario Party 7", "assets/logos/marioParty7.png"),
-            ("marioParty8", "Mario Party 8", "assets/logos/marioParty8.png"),
-            ("marioParty9", "Mario Party 9", "assets/logos/marioParty9.png"),
-            ("marioPartyDS", "Mario Party DS", "assets/logos/marioPartyDS.png"),
+            # ("marioParty4", "Mario Party 4", "assets/logos/marioParty4.png"),
+            # ("marioParty5", "Mario Party 5", "assets/logos/marioParty5.png"),
+            # ("marioParty6", "Mario Party 6", "assets/logos/marioParty6.png"),
+            # ("marioParty7", "Mario Party 7", "assets/logos/marioParty7.png"),
+            # ("marioParty8", "Mario Party 8", "assets/logos/marioParty8.png"),
+            # ("marioParty9", "Mario Party 9", "assets/logos/marioParty9.png"),
+            # ("marioPartyDS", "Mario Party DS", "assets/logos/marioPartyDS.png"),
         ]
         
         for game_id, game_name, logo_path in games:
-            page = mario_party_pages.create_game_page(game_id, game_name)
+            page = self.mario_party_pages.create_game_page(game_id, game_name)
             icon = ResourceManager.get_game_icon(logo_path)
             
             self.main_window.addSubInterface(
@@ -100,12 +100,23 @@ class NavigationManager:
 
     def add_settings_page(self):
         """Add the settings page to navigation"""
+        self.settings_page = SettingsPage()
         self.main_window.addSubInterface(
-            interface=SettingsPage(),
+            interface=self.settings_page,
             icon=FluentIcon.SETTING,
             text='Settings',
             position=NavigationItemPosition.BOTTOM
         )
+        
+        # Connect theme change signal to all game pages
+        self.settings_page.themeChanged.connect(self.update_all_game_themes)
+    
+    def update_all_game_themes(self):
+        """Update themes for all game pages when theme changes"""
+        # Update all Mario Party game tabs
+        if hasattr(self, 'mario_party_pages'):
+            self.mario_party_pages.update_all_tabs_theme()
+        print("✓ Theme change signal received - updating all game pages")
 
     def add_about_page(self):
         """Add the about page to navigation"""
