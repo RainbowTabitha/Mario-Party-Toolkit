@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # ============================================
-# Items Tab Component for Mario Party 2
+# Items Tab Component for Mario Party Toolkit
 # ============================================
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QLineEdit, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QLineEdit, QPushButton, QMessageBox, QApplication
 from PyQt5.QtCore import Qt
-from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton
+from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, InfoBar, InfoBarPosition
 
-# Import items event function for MP2
+# Import items event functions for supported games
 try:
     from events.marioParty2_items import itemsEvent_mp2
+    from events.marioParty3_items import itemsEvent_mp3
 except ImportError:
     pass
 
@@ -50,6 +51,25 @@ class ItemsTab(QWidget):
         """)
         layout.addWidget(desc)
         
+        # Check if this game supports item modifications
+        if self.game_id not in ["marioParty2", "marioParty3"]:
+            # Show unsupported message
+            unsupported_label = QLabel("Item price modifications are not supported for this game.")
+            unsupported_label.setStyleSheet("""
+                font-size: 16px;
+                color: #E0E0E0;
+                margin: 20px 0;
+                text-align: center;
+                padding: 20px;
+                background: #2A2A2A;
+                border-radius: 8px;
+                border: 2px solid #555555;
+            """)
+            layout.addWidget(unsupported_label)
+            layout.addStretch()
+            self.setLayout(layout)
+            return
+        
         # Item Prices Group
         group = QGroupBox("Item Prices")
         group.setStyleSheet("""
@@ -79,236 +99,8 @@ class ItemsTab(QWidget):
         group_layout.setContentsMargins(16, 12, 16, 12)
         group.setLayout(group_layout)
         
-        # Mushroom Row
-        mushroom_row = QHBoxLayout()
-        mushroom_row.setSpacing(12)
-        
-        mushroom_label = QLabel("Mushroom:")
-        mushroom_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: #E0E0E0;")
-        mushroom_row.addWidget(mushroom_label)
-        
-        self.mushroom_entry = LineEdit()
-        self.mushroom_entry.setPlaceholderText("10")
-        self.mushroom_entry.setText("10")
-        self.mushroom_entry.setFixedWidth(60)
-        self.mushroom_entry.setStyleSheet("""
-            QLineEdit {
-                font-size: 15px;
-                font-weight: 600;
-                padding: 6px 8px;
-                border: 2px solid #4A90E2;
-                border-radius: 6px;
-                background: #1A1A1A;
-                color: white;
-                text-align: center;
-            }
-            QLineEdit:focus {
-                border: 2px solid #5BA0F2;
-                background: #2A2A2A;
-            }
-        """)
-        mushroom_row.addWidget(self.mushroom_entry)
-
-        mushroom_row.addStretch()
-        group_layout.addLayout(mushroom_row)
-        
-        # Skeleton Key Row
-        skeleton_row = QHBoxLayout()
-        skeleton_row.setSpacing(12)
-        
-        skeleton_label = QLabel("Skeleton Key:")
-        skeleton_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: #E0E0E0;")
-        skeleton_row.addWidget(skeleton_label)
-        
-        self.skeleton_entry = LineEdit()
-        self.skeleton_entry.setPlaceholderText("10")
-        self.skeleton_entry.setText("10")
-        self.skeleton_entry.setFixedWidth(60)
-        self.skeleton_entry.setStyleSheet("""
-            QLineEdit {
-                font-size: 15px;
-                font-weight: 600;
-                padding: 6px 8px;
-                border: 2px solid #4A90E2;
-                border-radius: 6px;
-                background: #1A1A1A;
-                color: white;
-                text-align: center;
-            }
-            QLineEdit:focus {
-                border: 2px solid #5BA0F2;
-                background: #2A2A2A;
-            }
-        """)
-        skeleton_row.addWidget(self.skeleton_entry)
-        
-        skeleton_row.addStretch()
-        group_layout.addLayout(skeleton_row)
-        
-        # Plunder Chest Row
-        plunder_row = QHBoxLayout()
-        plunder_row.setSpacing(12)
-        
-        plunder_label = QLabel("Plunder Chest:")
-        plunder_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: #E0E0E0;")
-        plunder_row.addWidget(plunder_label)
-        
-        self.plunder_entry = LineEdit()
-        self.plunder_entry.setPlaceholderText("15")
-        self.plunder_entry.setText("15")
-        self.plunder_entry.setFixedWidth(60)
-        self.plunder_entry.setStyleSheet("""
-            QLineEdit {
-                font-size: 15px;
-                font-weight: 600;
-                padding: 6px 8px;
-                border: 2px solid #4A90E2;
-                border-radius: 6px;
-                background: #1A1A1A;
-                color: white;
-                text-align: center;
-            }
-            QLineEdit:focus {
-                border: 2px solid #5BA0F2;
-                background: #2A2A2A;
-            }
-        """)
-        plunder_row.addWidget(self.plunder_entry)
-        
-        plunder_row.addStretch()
-        group_layout.addLayout(plunder_row)
-        
-        # Dueling Glove Row
-        dueling_row = QHBoxLayout()
-        dueling_row.setSpacing(12)
-        
-        dueling_label = QLabel("Dueling Glove:")
-        dueling_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: #E0E0E0;")
-        dueling_row.addWidget(dueling_label)
-        
-        self.dueling_entry = LineEdit()
-        self.dueling_entry.setPlaceholderText("15")
-        self.dueling_entry.setText("15")
-        self.dueling_entry.setFixedWidth(60)
-        self.dueling_entry.setStyleSheet("""
-            QLineEdit {
-                font-size: 15px;
-                font-weight: 600;
-                padding: 6px 8px;
-                border: 2px solid #4A90E2;
-                border-radius: 6px;
-                background: #1A1A1A;
-                color: white;
-                text-align: center;
-            }
-            QLineEdit:focus {
-                border: 2px solid #5BA0F2;
-                background: #2A2A2A;
-            }
-        """)
-        dueling_row.addWidget(self.dueling_entry)
-        
-        dueling_row.addStretch()
-        group_layout.addLayout(dueling_row)
-        
-        # Warp Block Row
-        warp_row = QHBoxLayout()
-        warp_row.setSpacing(12)
-        
-        warp_label = QLabel("Warp Block:")
-        warp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: #E0E0E0;")
-        warp_row.addWidget(warp_label)
-        
-        self.warp_entry = LineEdit()
-        self.warp_entry.setPlaceholderText("20")
-        self.warp_entry.setText("20")
-        self.warp_entry.setFixedWidth(60)
-        self.warp_entry.setStyleSheet("""
-            QLineEdit {
-                font-size: 15px;
-                font-weight: 600;
-                padding: 6px 8px;
-                border: 2px solid #4A90E2;
-                border-radius: 6px;
-                background: #1A1A1A;
-                color: white;
-                text-align: center;
-            }
-            QLineEdit:focus {
-                border: 2px solid #5BA0F2;
-                background: #2A2A2A;
-            }
-        """)
-        warp_row.addWidget(self.warp_entry)
-        
-        warp_row.addStretch()
-        group_layout.addLayout(warp_row)
-        
-        # Golden Mushroom Row
-        golden_row = QHBoxLayout()
-        golden_row.setSpacing(12)
-        
-        golden_label = QLabel("Golden Mushroom:")
-        golden_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: #E0E0E0;")
-        golden_row.addWidget(golden_label)
-        
-        self.golden_entry = LineEdit()
-        self.golden_entry.setPlaceholderText("30")
-        self.golden_entry.setText("30")
-        self.golden_entry.setFixedWidth(60)
-        self.golden_entry.setStyleSheet("""
-            QLineEdit {
-                font-size: 15px;
-                font-weight: 600;
-                padding: 6px 8px;
-                border: 2px solid #4A90E2;
-                border-radius: 6px;
-                background: #1A1A1A;
-                color: white;
-                text-align: center;
-            }
-            QLineEdit:focus {
-                border: 2px solid #5BA0F2;
-                background: #2A2A2A;
-            }
-        """)
-        golden_row.addWidget(self.golden_entry)
-        
-        golden_row.addStretch()
-        group_layout.addLayout(golden_row)
-        
-        # Magic Lamp Row
-        lamp_row = QHBoxLayout()
-        lamp_row.setSpacing(12)
-        
-        lamp_label = QLabel("Magic Lamp:")
-        lamp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: #E0E0E0;")
-        lamp_row.addWidget(lamp_label)
-        
-        self.lamp_entry = LineEdit()
-        self.lamp_entry.setPlaceholderText("30")
-        self.lamp_entry.setText("30")
-        self.lamp_entry.setFixedWidth(60)
-        self.lamp_entry.setStyleSheet("""
-            QLineEdit {
-                font-size: 15px;
-                font-weight: 600;
-                padding: 6px 8px;
-                border: 2px solid #4A90E2;
-                border-radius: 6px;
-                background: #1A1A1A;
-                color: white;
-                text-align: center;
-            }
-            QLineEdit:focus {
-                border: 2px solid #5BA0F2;
-                background: #2A2A2A;
-            }
-        """)
-        lamp_row.addWidget(self.lamp_entry)
-        
-        lamp_row.addStretch()
-        group_layout.addLayout(lamp_row)
+        # Create item entries based on game
+        self.create_item_entries(group_layout)
         
         layout.addWidget(group)
         
@@ -320,11 +112,11 @@ class ItemsTab(QWidget):
                 color: white;
                 border: none;
                 border-radius: 8px;
-                padding: 12px 24px;  /* Reduced from 16px 32px */
-                font-size: 15px;  /* Reduced from 16px */
+                padding: 12px 24px;
+                font-size: 15px;
                 font-weight: 700;
-                margin: 8px 0;  /* Reduced from 16px */
-                min-height: 44px;  /* Reduced from 52px */
+                margin: 8px 0;
+                min-height: 44px;
             }
             QPushButton:hover {
                 background: #5BA0F2;
@@ -341,10 +133,175 @@ class ItemsTab(QWidget):
         
         self.setLayout(layout)
     
+    def is_dark_mode(self):
+        """Detect if the current theme is dark mode"""
+        try:
+            # Get the application instance and check if it has a dark theme
+            app = QApplication.instance()
+            if app:
+                # Check the application's palette to determine if it's dark mode
+                palette = app.palette()
+                background_color = palette.color(palette.Window)
+                # If background is dark, assume dark mode
+                return background_color.lightness() < 128
+        except:
+            pass
+        # Default to dark mode if we can't detect
+        return True
+    
+    def create_item_entries(self, group_layout):
+        """Create item entry fields based on the current game"""
+        if self.game_id == "marioParty2":
+            # MP2 items (7 items)
+            items_config = [
+                "Mushroom",
+                "Skeleton Key",
+                "Plunder Chest",
+                "Dueling Glove",
+                "Warp Block",
+                "Golden Mushroom",
+                "Magic Lamp"
+            ]
+        elif self.game_id == "marioParty3":
+            # MP3 items (16 items)
+            items_config = [
+                "Mushroom",
+                "Skeleton Key", 
+                "Poison Mushroom",
+                "Reverse Mushroom",
+                "Warp Block",
+                "Cellular Shopper",
+                "Golden Mushroom",
+                "Magic Lamp",
+                "Bowser Phone",
+                "Dueling Glove",
+                "Lucky Lamp",
+                "Bowser Suit",
+                "Plunder Chest",
+                "Boo Bell",
+                "Boo Repellent",
+                "Item Bag"
+            ]
+        else:
+            return
+        
+        # Create two-column layout
+        columns_layout = QHBoxLayout()
+        columns_layout.setSpacing(20)
+        
+        # Left column
+        left_column = QVBoxLayout()
+        left_column.setSpacing(12)
+        
+        # Right column
+        right_column = QVBoxLayout()
+        right_column.setSpacing(12)
+        
+        # Split items between columns
+        mid_point = len(items_config) // 2
+        left_items = items_config[:mid_point]
+        right_items = items_config[mid_point:]
+        
+        # Create entry fields for left column
+        self.item_entries = {}
+        for item_name in left_items:
+            item_row = QHBoxLayout()
+            item_row.setSpacing(12)
+            
+            # Set label color based on light/dark mode
+            label_color = "#FFFFFF" if self.is_dark_mode() else "#000000"
+            if self.game_id == "marioParty3":
+                if item_name in ["Mushroom", "Skeleton Key", "Poison Mushroom", "Reverse Mushroom", "Cellular Shopper", "Warp Block"]:
+                    label_color = '#ff0000'
+            item_label = QLabel(f"{item_name}:")
+            item_label.setStyleSheet(f"font-size: 15px; font-weight: 600; min-width: 120px; color: {label_color};")
+            item_row.addWidget(item_label)
+            
+            item_entry = LineEdit()
+            item_entry.setPlaceholderText("")
+            item_entry.setText("")
+            item_entry.setFixedWidth(60)
+            
+            # Set text box color based on light/dark mode
+            text_color = "#FFFFFF" if self.is_dark_mode() else "#000000"
+            
+            item_entry.setStyleSheet(f"""
+                QLineEdit {{
+                    font-size: 15px;
+                    font-weight: 600;
+                    padding: 6px 8px;
+                    border: 2px solid #4A90E2;
+                    border-radius: 6px;
+                    background: #1A1A1A;
+                    color: {text_color};
+                    text-align: center;
+                }}
+                QLineEdit:focus {{
+                    border: 2px solid #5BA0F2;
+                    background: #2A2A2A;
+                }}
+            """)
+            item_row.addWidget(item_entry)
+            
+            # Store reference to entry
+            self.item_entries[item_name.lower().replace(" ", "")] = item_entry
+            
+            item_row.addStretch()
+            left_column.addLayout(item_row)
+        
+        # Create entry fields for right column
+        for item_name in right_items:
+            item_row = QHBoxLayout()
+            item_row.setSpacing(12)
+            
+            # Set label color based on light/dark mode
+            label_color = "#FFFFFF" if self.is_dark_mode() else "#000000"
+            item_label = QLabel(f"{item_name}:")
+            item_label.setStyleSheet(f"font-size: 15px; font-weight: 600; min-width: 120px; color: {label_color};")
+            item_row.addWidget(item_label)
+            
+            item_entry = LineEdit()
+            item_entry.setPlaceholderText("")
+            item_entry.setText("")
+            item_entry.setFixedWidth(60)
+            
+            # Set text box color based on light/dark mode
+            text_color = "#FFFFFF" if self.is_dark_mode() else "#000000"
+            
+            item_entry.setStyleSheet(f"""
+                QLineEdit {{
+                    font-size: 15px;
+                    font-weight: 600;
+                    padding: 6px 8px;
+                    border: 2px solid #4A90E2;
+                    border-radius: 6px;
+                    background: #1A1A1A;
+                    color: {text_color};
+                    text-align: center;
+                }}
+                QLineEdit:focus {{
+                    border: 2px solid #5BA0F2;
+                    background: #2A2A2A;
+                }}
+            """)
+            item_row.addWidget(item_entry)
+            
+            # Store reference to entry
+            self.item_entries[item_name.lower().replace(" ", "")] = item_entry
+            
+            item_row.addStretch()
+            right_column.addLayout(item_row)
+        
+        # Add columns to the main layout
+        columns_layout.addLayout(left_column)
+        columns_layout.addLayout(right_column)
+        
+        group_layout.addLayout(columns_layout)
+    
     def generate_codes(self):
         """Generate codes for the current game"""
-        if self.game_id == "marioParty2":
-            try:
+        try:
+            if self.game_id == "marioParty2":
                 if 'itemsEvent_mp2' in globals():
                     # Create mock objects to match the expected interface
                     class MockEntry:
@@ -356,21 +313,55 @@ class ItemsTab(QWidget):
                             return self._text
                     
                     # Create mock objects with current values
-                    mushroom = MockEntry(self.mushroom_entry.text())
-                    skeleton_key = MockEntry(self.skeleton_entry.text())
-                    plunder_chest = MockEntry(self.plunder_entry.text())
-                    dueling_glove = MockEntry(self.dueling_entry.text())
-                    warp_block = MockEntry(self.warp_entry.text())
-                    golden_mushroom = MockEntry(self.golden_entry.text())
-                    magic_lamp = MockEntry(self.lamp_entry.text())
+                    mushroom = MockEntry(self.item_entries["mushroom"].text())
+                    skeleton_key = MockEntry(self.item_entries["skeletonkey"].text())
+                    plunder_chest = MockEntry(self.item_entries["plunderchest"].text())
+                    dueling_glove = MockEntry(self.item_entries["duelingglove"].text())
+                    warp_block = MockEntry(self.item_entries["warpblock"].text())
+                    golden_mushroom = MockEntry(self.item_entries["goldenmushroom"].text())
+                    magic_lamp = MockEntry(self.item_entries["magiclamp"].text())
                     
                     itemsEvent_mp2(mushroom, skeleton_key, plunder_chest, dueling_glove, warp_block, golden_mushroom, magic_lamp)
                 else:
                     self.show_error("Mario Party 2 items modification not available")
-            except Exception as e:
-                self.show_error(f"Error generating codes: {str(e)}")
-        else:
-            self.show_error(f"Items modification not supported for {self.game_id}")
+            elif self.game_id == "marioParty3":
+                if 'itemsEvent_mp3' in globals():
+                    # Create mock objects to match the expected interface
+                    class MockEntry:
+                        def __init__(self, text):
+                            self._text = text
+                        def get(self):
+                            return self._text
+                        def text(self):
+                            return self._text
+                    
+                    # Create mock objects with current values for MP3
+                    mushroom = MockEntry(self.item_entries["mushroom"].text())
+                    skeleton_key = MockEntry(self.item_entries["skeletonkey"].text())
+                    poison_mushroom = MockEntry(self.item_entries["poisonmushroom"].text())
+                    reverse_mushroom = MockEntry(self.item_entries["reversemushroom"].text())
+                    golden_mushroom = MockEntry(self.item_entries["goldenmushroom"].text())
+                    magic_lamp = MockEntry(self.item_entries["magiclamp"].text())
+                    warp_block = MockEntry(self.item_entries["warpblock"].text())
+                    cellular_shopper = MockEntry(self.item_entries["cellularshopper"].text())
+                    bowser_phone = MockEntry(self.item_entries["bowserphone"].text())
+                    dueling_glove = MockEntry(self.item_entries["duelingglove"].text())
+                    lucky_lamp = MockEntry(self.item_entries["luckylamp"].text())
+                    bowser_suit = MockEntry(self.item_entries["bowsersuit"].text())
+                    plunder_chest = MockEntry(self.item_entries["plunderchest"].text())
+                    boo_bell = MockEntry(self.item_entries["boobell"].text())
+                    boo_repellent = MockEntry(self.item_entries["boorepellent"].text())
+                    item_bag = MockEntry(self.item_entries["itembag"].text())
+                    
+                    itemsEvent_mp3(mushroom, skeleton_key, poison_mushroom, reverse_mushroom, golden_mushroom, 
+                                 magic_lamp, warp_block, cellular_shopper, bowser_phone, dueling_glove, 
+                                 lucky_lamp, bowser_suit, plunder_chest, boo_bell, boo_repellent, item_bag)
+                else:
+                    self.show_error("Mario Party 3 items modification not available")
+            else:
+                self.show_error(f"Items modification not supported for {self.game_id}")
+        except Exception as e:
+            self.show_error(f"Error generating codes: {str(e)}")
     
     def show_error(self, message):
         """Show error message to user"""

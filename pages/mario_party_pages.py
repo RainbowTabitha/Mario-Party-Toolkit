@@ -184,18 +184,22 @@ class MarioPartyPages:
 
     def create_mp3_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
-        """Create tabs for Mario Party 3 - Similar to MP2 but with Boo options"""
+        """Create tabs for Mario Party 3 - Advanced coin structure with Boo options"""
         # Coins Mods tab - MP3 has basic coins + Koopa Bank + Boo Coins/Stars
         coins_tab = CoinsTab("marioParty3", "basic")
         tab_widget.addTab(coins_tab, "Coins Mods")
         
-        # Block Weights tab
-        block_tab = BlockWeightsTab("marioParty3")
-        tab_widget.addTab(block_tab, "Block Weights")
-        
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty3")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
+        
+        # Items tab - MP3 item price modifications
+        items_tab = ItemsTab("marioParty3")
+        tab_widget.addTab(items_tab, "Item Prices")
+        
+        # Item Replacement tab - MP3 item space replacement
+        item_replace_tab = ItemReplaceTab("marioParty3")
+        tab_widget.addTab(item_replace_tab, "Item Replacement")
         
         # Star Handicaps tab
         handicap_tab = HandicapTab("marioParty3")

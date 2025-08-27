@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 # ============================================
-# Item Replacement Tab Component for Mario Party 2
+# Item Replacement Tab Component for Mario Party Toolkit
 # ============================================
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QComboBox, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QComboBox, QPushButton, QMessageBox, QApplication
 from PyQt5.QtCore import Qt
-from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton
+from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton, InfoBar, InfoBarPosition
 
-# Import item replacement event function for MP2
+# Import item replacement event functions for supported games
 try:
     from events.marioParty2_itemReplace import itemReplace_mp2
+    from events.marioParty3_itemReplace import itemReplace_mp3
 except ImportError:
+    # Handle missing imports gracefully
     pass
 
 
@@ -39,6 +41,25 @@ class ItemReplaceTab(QWidget):
             text-align: center;
         """)
         layout.addWidget(title)
+        
+        # Check if this game supports item replacement
+        if self.game_id not in ["marioParty2", "marioParty3"]:
+            # Show unsupported message
+            unsupported_label = QLabel("Item replacement is not supported for this game.")
+            unsupported_label.setStyleSheet("""
+                font-size: 16px;
+                color: #E0E0E0;
+                margin: 20px 0;
+                text-align: center;
+                padding: 20px;
+                background: #2A2A2A;
+                border-radius: 8px;
+                border: 2px solid #555555;
+            """)
+            layout.addWidget(unsupported_label)
+            layout.addStretch()
+            self.setLayout(layout)
+            return
         
         # Description
         desc = BodyLabel("Replace specific item spaces with different items:")
@@ -197,11 +218,11 @@ class ItemReplaceTab(QWidget):
                 color: white;
                 border: none;
                 border-radius: 8px;
-                padding: 12px 24px;  /* Reduced from 16px 32px */
-                font-size: 15px;  /* Reduced from 16px */
+                padding: 12px 24px;
+                font-size: 15px;
                 font-weight: 700;
-                margin: 8px 0;  /* Reduced from 16px */
-                min-height: 44px;  /* Reduced from 52px */
+                margin: 8px 0;
+                min-height: 44px;
             }
             QPushButton:hover {
                 background: #5BA0F2;
@@ -221,14 +242,22 @@ class ItemReplaceTab(QWidget):
     def populate_item_lists(self):
         """Populate item lists based on the current game"""
         if self.game_id == "marioParty2":
+            # Based on the hex array in marioParty2_itemReplace.py
             items_list = [
-                "None", "Mushroom", "Skeleton Key", "Plunder Chest", "Bowser BOMB", 
-                "Dueling Glove", "Warp Block", "Golden Mushroom", "Boo Bell", 
-                "Bowser Suit", "Magic Lamp"
+                "NONE", "Mushroom", "Skeleton Key", "Plunder Chest", "Bowser BOMB", 
+                "Dueling Glove", "Warp Block", "Golden Mushroom", "Boo Bell", "Magic Lamp"
+            ]
+        elif self.game_id == "marioParty3":
+            # Based on the hex array in marioParty3_itemReplace.py
+            items_list = [
+                "NONE", "Mushroom", "Skeleton Key", "Plunder Chest", "Bowser BOMB", 
+                "Dueling Glove", "Warp Block", "Golden Mushroom", "Boo Bell", "Magic Lamp",
+                "Bowser Phone", "Bowser Suit", "Cellular Shopper", "Lucky Lamp", "Poison Mushroom",
+                "Reverse Mushroom", "Mini Mushroom", "Mega Mushroom", "Warp Pipe", "Boo Repellent"
             ]
         else:
-            # Default item list for unsupported games
-            items_list = ["Item 1", "Item 2", "Item 3", "Item 4"]
+            # This shouldn't happen since we check earlier, but just in case
+            items_list = ["NONE"]
         
         # Populate both combo boxes
         self.item1_combo.addItems(items_list)
@@ -248,31 +277,55 @@ class ItemReplaceTab(QWidget):
         
         # Validate selection
         if item1 == item2:
-            QMessageBox.warning(self, "Invalid Selection", 
-                              "Please select different items for replacement.")
+            main_window = QApplication.instance().activeWindow()
+            InfoBar.error(
+                title="Invalid Selection",
+                content="Please select different items for replacement.",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP_RIGHT,
+                duration=2500,
+                parent=main_window
+            )
             return
         
         try:
+            # Create mock objects that match the expected interface
+            # The functions expect .get() method calls, so we need to create compatible objects
+            class MockItemWidget:
+                def __init__(self, text):
+                    self._text = text
+                def get(self):
+                    return self._text
+            
+            # Create mock objects with current values
+            item1_widget = MockItemWidget(item1)
+            item2_widget = MockItemWidget(item2)
+            
+            # Get the items list for the current game
+            if self.game_id == "marioParty2":
+                items_list = ["NONE", "Mushroom", "Skeleton Key", "Plunder Chest", "Bowser BOMB", 
+                             "Dueling Glove", "Warp Block", "Golden Mushroom", "Boo Bell", "Magic Lamp"]
+            elif self.game_id == "marioParty3":
+                items_list = ["NONE", "Mushroom", "Skeleton Key", "Plunder Chest", "Bowser BOMB", 
+                             "Dueling Glove", "Warp Block", "Golden Mushroom", "Boo Bell", "Magic Lamp",
+                             "Bowser Phone", "Bowser Suit", "Cellular Shopper", "Lucky Lamp", "Poison Mushroom",
+                             "Reverse Mushroom", "Mini Mushroom", "Mega Mushroom", "Warp Pipe", "Boo Repellent"]
+            else:
+                self.show_error(f"Item replacement not supported for {self.game_id}")
+                return
+            
             # Call appropriate item replacement function based on game
             if self.game_id == "marioParty2":
                 if 'itemReplace_mp2' in globals():
-                    # Create mock objects to match the expected interface
-                    class MockComboBox:
-                        def __init__(self, text):
-                            self._text = text
-                        def get(self):
-                            return self._text
-                        def currentText(self):
-                            return self._text
-                    
-                    # Create mock objects with current values
-                    item1_combo = MockComboBox(item1)
-                    item2_combo = MockComboBox(item2)
-                    items_list = [self.item1_combo.itemText(i) for i in range(self.item1_combo.count())]
-                    
-                    itemReplace_mp2(item1_combo, item2_combo, items_list)
+                    itemReplace_mp2(item1_widget, item2_widget, items_list)
                 else:
                     self.show_error("Mario Party 2 item replacement not available")
+            elif self.game_id == "marioParty3":
+                if 'itemReplace_mp3' in globals():
+                    itemReplace_mp3(item1_widget, item2_widget, items_list)
+                else:
+                    self.show_error("Mario Party 3 item replacement not available")
             else:
                 self.show_error(f"Item replacement not supported for {self.game_id}")
                 
