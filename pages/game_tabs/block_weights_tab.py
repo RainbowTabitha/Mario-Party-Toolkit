@@ -64,7 +64,7 @@ class BlockWeightsTab(QWidget):
         
         # Plus icon
         plus_icon = QLabel()
-        plus_icon.setPixmap(QIcon(fetchResource("assets/items/plusBlock.png")).pixmap(20, 20))  # Reduced from 24x24
+        plus_icon.setPixmap(QIcon(str(fetchResource("assets/items/plusBlock.png"))).pixmap(20, 20))  # Reduced from 24x24
         plus_icon.setStyleSheet("padding: 2px;")  # Reduced from 4px
         plus_row.addWidget(plus_icon)
         
@@ -89,7 +89,7 @@ class BlockWeightsTab(QWidget):
         
         # Minus icon
         minus_icon = QLabel()
-        minus_icon.setPixmap(QIcon(fetchResource("assets/items/minusBlock.png")).pixmap(20, 20))  # Reduced from 24x24
+        minus_icon.setPixmap(QIcon(str(fetchResource("assets/items/minusBlock.png"))).pixmap(20, 20))  # Reduced from 24x24
         minus_icon.setStyleSheet("padding: 2px;")  # Reduced from 4px
         minus_row.addWidget(minus_icon)
         
@@ -114,7 +114,7 @@ class BlockWeightsTab(QWidget):
         
         # Speed icon
         speed_icon = QLabel()
-        speed_icon.setPixmap(QIcon(fetchResource("assets/items/speedBlock.png")).pixmap(20, 20))  # Reduced from 24x24
+        speed_icon.setPixmap(QIcon(str(fetchResource("assets/items/speedBlock.png"))).pixmap(20, 20))  # Reduced from 24x24
         speed_icon.setStyleSheet("padding: 2px;")  # Reduced from 4px
         speed_row.addWidget(speed_icon)
         
@@ -139,7 +139,7 @@ class BlockWeightsTab(QWidget):
         
         # Slow icon
         slow_icon = QLabel()
-        slow_icon.setPixmap(QIcon(fetchResource("assets/items/slowBlock.png")).pixmap(20, 20))  # Reduced from 24x24
+        slow_icon.setPixmap(QIcon(str(fetchResource("assets/items/slowBlock.png"))).pixmap(20, 20))  # Reduced from 24x24
         slow_icon.setStyleSheet("padding: 2px;")  # Reduced from 4px
         slow_row.addWidget(slow_icon)
         
@@ -164,7 +164,7 @@ class BlockWeightsTab(QWidget):
         
         # Warp icon
         warp_icon = QLabel()
-        warp_icon.setPixmap(QIcon(fetchResource("assets/items/warpBlock.png")).pixmap(20, 20))  # Reduced from 24x24
+        warp_icon.setPixmap(QIcon(str(fetchResource("assets/items/warpBlock.png"))).pixmap(20, 20))  # Reduced from 24x24
         warp_icon.setStyleSheet("padding: 2px;")  # Reduced from 4px
         warp_row.addWidget(warp_icon)
         
