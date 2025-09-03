@@ -5,7 +5,11 @@
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QGroupBox
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
 from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, CheckBox, PushButton
+
+# Import resource manager for images
+from utils.resource_manager import ResourceManager
 
 # Import coins event functions for MP1, MP2, and MP3
 try:
@@ -58,6 +62,10 @@ class CoinsTab(QWidget):
         blue_row = QHBoxLayout()
         blue_row.setSpacing(12)
         
+        # Add blue space image
+        blue_image = self.create_image_label("assets/eventTags/blueSpace.png", 32, 32)
+        blue_row.addWidget(blue_image)
+        
         blue_label = BodyLabel("Blue Space:")
         blue_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
         blue_row.addWidget(blue_label)
@@ -77,6 +85,10 @@ class CoinsTab(QWidget):
         # Red Space Row
         red_row = QHBoxLayout()
         red_row.setSpacing(12)
+        
+        # Add red space image
+        red_image = self.create_image_label("assets/eventTags/redSpace.png", 32, 32)
+        red_row.addWidget(red_image)
         
         red_label = BodyLabel("Red Space:")
         red_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
@@ -98,6 +110,10 @@ class CoinsTab(QWidget):
         star_row = QHBoxLayout()
         star_row.setSpacing(12)
         
+        # Add star space image
+        star_image = self.create_image_label("assets/eventTags/starSpace.png", 32, 32)
+        star_row.addWidget(star_image)
+        
         star_label = BodyLabel("Star Space:")
         star_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
         star_row.addWidget(star_label)
@@ -116,6 +132,10 @@ class CoinsTab(QWidget):
             koopa_row = QHBoxLayout()
             koopa_row.setSpacing(12)
             
+            # Add koopa bank image
+            koopa_image = self.create_image_label("assets/eventTags/koopaBank3.png", 32, 32)
+            koopa_row.addWidget(koopa_image)
+            
             koopa_label = BodyLabel("Koopa Bank:")
             koopa_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
             koopa_row.addWidget(koopa_label)
@@ -131,9 +151,13 @@ class CoinsTab(QWidget):
         
         # Mario Party 3 specific fields
         if self.game_id == "marioParty3":
- 
+            # Boo Coins Row
             boo_coins_row = QHBoxLayout()
             boo_coins_row.setSpacing(12)
+            
+            # Add boo coins image
+            boo_coins_image = self.create_image_label("assets/eventTags/booHouseCoins.png", 32, 32)
+            boo_coins_row.addWidget(boo_coins_image)
             
             boo_coins_label = BodyLabel("Boo Coins:")
             boo_coins_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
@@ -152,6 +176,10 @@ class CoinsTab(QWidget):
             boo_stars_row = QHBoxLayout()
             boo_stars_row.setSpacing(12)
             
+            # Add boo stars image
+            boo_stars_image = self.create_image_label("assets/eventTags/booHouseStars.png", 32, 32)
+            boo_stars_row.addWidget(boo_stars_image)
+            
             boo_stars_label = BodyLabel("Boo Stars:")
             boo_stars_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
             boo_stars_row.addWidget(boo_stars_label)
@@ -165,6 +193,278 @@ class CoinsTab(QWidget):
             boo_stars_row.addStretch()
             group_layout.addLayout(boo_stars_row)
         
+        # Additional coin mods for MP2+
+        if self.game_type != "basic" or self.game_id in ["marioParty2", "marioParty3", "marioParty4", "marioParty5", "marioParty6", "marioParty7", "marioParty8", "marioParty9", "marioPartyDS"]:
+            # Minigame Win Row
+            mg_row = QHBoxLayout()
+            mg_row.setSpacing(12)
+            
+            # Add minigame image
+            mg_image = self.create_image_label("assets/eventTags/miniGame.png", 32, 32)
+            mg_row.addWidget(mg_image)
+            
+            mg_label = BodyLabel("Minigame Win:")
+            mg_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            mg_row.addWidget(mg_label)
+            
+            self.mg_entry = LineEdit()
+            self.mg_entry.setPlaceholderText("10")
+            self.mg_entry.setText("10")
+            self.mg_entry.setFixedWidth(60)
+            mg_row.addWidget(self.mg_entry)
+            
+            mg_row.addStretch()
+            group_layout.addLayout(mg_row)
+            
+            # Initial Coins Row
+            initial_row = QHBoxLayout()
+            initial_row.setSpacing(12)
+            
+            # Add initial coins image
+            initial_image = self.create_image_label("assets/eventTags/initialCoins.png", 32, 32)
+            initial_row.addWidget(initial_image)
+            
+            initial_label = BodyLabel("Initial Coins:")
+            initial_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            initial_row.addWidget(initial_label)
+            
+            self.initial_entry = LineEdit()
+            self.initial_entry.setPlaceholderText("10")
+            self.initial_entry.setText("10")
+            self.initial_entry.setFixedWidth(60)
+            initial_row.addWidget(self.initial_entry)
+            
+            initial_row.addStretch()
+            group_layout.addLayout(initial_row)
+        
+        # Mario Party 4 specific fields
+        if self.game_id == "marioParty4":
+            # Mega Mushroom Row
+            mega_row = QHBoxLayout()
+            mega_row.setSpacing(12)
+            
+            mega_image = self.create_image_label("assets/items/megaMushroom.png", 32, 32)
+            mega_row.addWidget(mega_image)
+            
+            mega_label = BodyLabel("Mega Mushroom:")
+            mega_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            mega_row.addWidget(mega_label)
+            
+            self.mega_entry = LineEdit()
+            self.mega_entry.setPlaceholderText("10")
+            self.mega_entry.setText("10")
+            self.mega_entry.setFixedWidth(60)
+            mega_row.addWidget(self.mega_entry)
+            
+            mega_row.addStretch()
+            group_layout.addLayout(mega_row)
+            
+            # Bowser Suit Row
+            bowser_row = QHBoxLayout()
+            bowser_row.setSpacing(12)
+            
+            bowser_image = self.create_image_label("assets/items/bowserSuit4.png", 32, 32)
+            bowser_row.addWidget(bowser_image)
+            
+            bowser_label = BodyLabel("Bowser Suit:")
+            bowser_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            bowser_row.addWidget(bowser_label)
+            
+            self.bowser_entry = LineEdit()
+            self.bowser_entry.setPlaceholderText("30")
+            self.bowser_entry.setText("30")
+            self.bowser_entry.setFixedWidth(60)
+            bowser_row.addWidget(self.bowser_entry)
+            
+            bowser_row.addStretch()
+            group_layout.addLayout(bowser_row)
+            
+            # Lottery Row
+            lottery_row = QHBoxLayout()
+            lottery_row.setSpacing(12)
+            
+            lottery_image = self.create_image_label("assets/eventTags/lottery4.png", 32, 32)
+            lottery_row.addWidget(lottery_image)
+            
+            lottery_label = BodyLabel("Lottery:")
+            lottery_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            lottery_row.addWidget(lottery_label)
+            
+            self.lottery_entry = LineEdit()
+            self.lottery_entry.setPlaceholderText("5")
+            self.lottery_entry.setText("5")
+            self.lottery_entry.setFixedWidth(60)
+            lottery_row.addWidget(self.lottery_entry)
+            
+            lottery_row.addStretch()
+            group_layout.addLayout(lottery_row)
+        
+        # Mario Party 5 specific fields
+        if self.game_id == "marioParty5":
+            # Wiggler Row
+            wiggler_row = QHBoxLayout()
+            wiggler_row.setSpacing(12)
+            
+            wiggler_image = self.create_image_label("assets/eventTags/wigglerCapsule.png", 32, 32)
+            wiggler_row.addWidget(wiggler_image)
+            
+            wiggler_label = BodyLabel("Wiggler:")
+            wiggler_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            wiggler_row.addWidget(wiggler_label)
+            
+            self.wiggler_entry = LineEdit()
+            self.wiggler_entry.setPlaceholderText("20")
+            self.wiggler_entry.setText("20")
+            self.wiggler_entry.setFixedWidth(60)
+            wiggler_row.addWidget(self.wiggler_entry)
+            
+            wiggler_row.addStretch()
+            group_layout.addLayout(wiggler_row)
+            
+            # Chain Chomp Row
+            chomp_row = QHBoxLayout()
+            chomp_row.setSpacing(12)
+            
+            chomp_image = self.create_image_label("assets/eventTags/chainChomp.png", 32, 32)
+            chomp_row.addWidget(chomp_image)
+            
+            chomp_label = BodyLabel("Chain Chomp:")
+            chomp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            chomp_row.addWidget(chomp_label)
+            
+            self.chomp_entry = LineEdit()
+            self.chomp_entry.setPlaceholderText("15")
+            self.chomp_entry.setText("15")
+            self.chomp_entry.setFixedWidth(60)
+            chomp_row.addWidget(self.chomp_entry)
+            
+            chomp_row.addStretch()
+            group_layout.addLayout(chomp_row)
+        
+        # Mario Party 6 specific fields
+        if self.game_id == "marioParty6":
+            # Pink Boo Coins Row
+            pink_boo_coins_row = QHBoxLayout()
+            pink_boo_coins_row.setSpacing(12)
+            
+            pink_boo_coins_image = self.create_image_label("assets/eventTags/pinkBooCoins.png", 32, 32)
+            pink_boo_coins_row.addWidget(pink_boo_coins_image)
+            
+            pink_boo_coins_label = BodyLabel("Pink Boo Coins:")
+            pink_boo_coins_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            pink_boo_coins_row.addWidget(pink_boo_coins_label)
+            
+            self.pink_boo_coins_entry = LineEdit()
+            self.pink_boo_coins_entry.setPlaceholderText("5")
+            self.pink_boo_coins_entry.setText("5")
+            self.pink_boo_coins_entry.setFixedWidth(60)
+            pink_boo_coins_row.addWidget(self.pink_boo_coins_entry)
+            
+            pink_boo_coins_row.addStretch()
+            group_layout.addLayout(pink_boo_coins_row)
+            
+            # Pink Boo Stars Row
+            pink_boo_stars_row = QHBoxLayout()
+            pink_boo_stars_row.setSpacing(12)
+            
+            pink_boo_stars_image = self.create_image_label("assets/eventTags/pinkBooStars.png", 32, 32)
+            pink_boo_stars_row.addWidget(pink_boo_stars_image)
+            
+            pink_boo_stars_label = BodyLabel("Pink Boo Stars:")
+            pink_boo_stars_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            pink_boo_stars_row.addWidget(pink_boo_stars_label)
+            
+            self.pink_boo_stars_entry = LineEdit()
+            self.pink_boo_stars_entry.setPlaceholderText("50")
+            self.pink_boo_stars_entry.setText("50")
+            self.pink_boo_stars_entry.setFixedWidth(60)
+            pink_boo_stars_row.addWidget(self.pink_boo_stars_entry)
+            
+            pink_boo_stars_row.addStretch()
+            group_layout.addLayout(pink_boo_stars_row)
+        
+        # Mario Party 8 specific fields
+        if self.game_id == "marioParty8":
+            # Bitsize Row
+            bitsize_row = QHBoxLayout()
+            bitsize_row.setSpacing(12)
+            
+            bitsize_image = self.create_image_label("assets/eventTags/bitsizeCandy.png", 32, 32)
+            bitsize_row.addWidget(bitsize_image)
+            
+            bitsize_label = BodyLabel("Bitsize:")
+            bitsize_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            bitsize_row.addWidget(bitsize_label)
+            
+            self.bitsize_entry = LineEdit()
+            self.bitsize_entry.setPlaceholderText("5")
+            self.bitsize_entry.setText("5")
+            self.bitsize_entry.setFixedWidth(60)
+            bitsize_row.addWidget(self.bitsize_entry)
+            
+            bitsize_row.addStretch()
+            group_layout.addLayout(bitsize_row)
+            
+            # Bowlo Row
+            bowlo_row = QHBoxLayout()
+            bowlo_row.setSpacing(12)
+            
+            bowlo_image = self.create_image_label("assets/eventTags/bowloCandy.png", 32, 32)
+            bowlo_row.addWidget(bowlo_image)
+            
+            bowlo_label = BodyLabel("Bowlo:")
+            bowlo_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            bowlo_row.addWidget(bowlo_label)
+            
+            self.bowlo_entry = LineEdit()
+            self.bowlo_entry.setPlaceholderText("3")
+            self.bowlo_entry.setText("3")
+            self.bowlo_entry.setFixedWidth(60)
+            bowlo_row.addWidget(self.bowlo_entry)
+            
+            bowlo_row.addStretch()
+            group_layout.addLayout(bowlo_row)
+            
+            # Vampire Row
+            vampire_row = QHBoxLayout()
+            vampire_row.setSpacing(12)
+            
+            vampire_image = self.create_image_label("assets/eventTags/vampireCandy.png", 32, 32)
+            vampire_row.addWidget(vampire_image)
+            
+            vampire_label = BodyLabel("Vampire:")
+            vampire_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            vampire_row.addWidget(vampire_label)
+            
+            self.vampire_entry = LineEdit()
+            self.vampire_entry.setPlaceholderText("5")
+            self.vampire_entry.setText("5")
+            self.vampire_entry.setFixedWidth(60)
+            vampire_row.addWidget(self.vampire_entry)
+            
+            vampire_row.addStretch()
+            group_layout.addLayout(vampire_row)
+            
+            # Hotel Row
+            hotel_row = QHBoxLayout()
+            hotel_row.setSpacing(12)
+            
+            hotel_image = self.create_image_label("assets/eventTags/hotel.png", 32, 32)
+            hotel_row.addWidget(hotel_image)
+            
+            hotel_label = BodyLabel("Hotel Max:")
+            hotel_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            hotel_row.addWidget(hotel_label)
+            
+            self.hotel_entry = LineEdit()
+            self.hotel_entry.setPlaceholderText("255")
+            self.hotel_entry.setText("255")
+            self.hotel_entry.setFixedWidth(60)
+            hotel_row.addWidget(self.hotel_entry)
+            
+            hotel_row.addStretch()
+            group_layout.addLayout(hotel_row)
+        
         layout.addWidget(group)
         
         # Generate button with reduced margins
@@ -176,6 +476,39 @@ class CoinsTab(QWidget):
         layout.addStretch()
         
         self.setLayout(layout)
+
+    def create_image_label(self, image_path, width=32, height=32):
+        """Create a QLabel with an image from the assets folder"""
+        try:
+            # Get the image path from resource manager
+            image_path = ResourceManager.get_resource_path(image_path)
+            
+            # Create QLabel and set image
+            image_label = QLabel()
+            pixmap = QPixmap(str(image_path))
+            
+            if not pixmap.isNull():
+                # Scale the image to the specified dimensions
+                scaled_pixmap = pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                image_label.setPixmap(scaled_pixmap)
+                image_label.setFixedSize(width, height)
+                image_label.setAlignment(Qt.AlignCenter)
+            else:
+                # Fallback text if image fails to load
+                image_label.setText("?")
+                image_label.setFixedSize(width, height)
+                image_label.setAlignment(Qt.AlignCenter)
+                image_label.setStyleSheet("border: 1px solid gray; background: lightgray;")
+            
+            return image_label
+            
+        except Exception as e:
+            # Fallback if image creation fails
+            fallback_label = QLabel("?")
+            fallback_label.setFixedSize(width, height)
+            fallback_label.setAlignment(Qt.AlignCenter)
+            fallback_label.setStyleSheet("border: 1px solid gray; background: lightgray;")
+            return fallback_label
     
     def generate_codes(self):
         """Generate codes for the current game"""
@@ -241,6 +574,10 @@ class CoinsTab(QWidget):
                     # Only include koopa_amount if koopa_entry exists
                     koopa_amount = MockEntry(self.koopa_entry.text()) if hasattr(self, 'koopa_entry') else MockEntry("5")
                     
+                    # Include new fields if they exist
+                    mg_amount = MockEntry(self.mg_entry.text()) if hasattr(self, 'mg_entry') else MockEntry("10")
+                    initial_amount = MockEntry(self.initial_entry.text()) if hasattr(self, 'initial_entry') else MockEntry("10")
+                    
                     coinsEvent_mp2(blue_amount, blue_tick, red_amount, red_tick, star_amount, koopa_amount)
                 else:
                     self.show_error("Mario Party 2 coins modification not available")
@@ -275,6 +612,10 @@ class CoinsTab(QWidget):
                     koopa_amount = MockEntry(self.koopa_entry.text()) if hasattr(self, 'koopa_entry') else MockEntry("5")
                     boo_coins = MockEntry(self.boo_coins_entry.text()) if hasattr(self, 'boo_coins_entry') else MockEntry("10")
                     boo_stars = MockEntry(self.boo_stars_entry.text()) if hasattr(self, 'boo_stars_entry') else MockEntry("15")
+                    
+                    # Include new fields if they exist
+                    mg_amount = MockEntry(self.mg_entry.text()) if hasattr(self, 'mg_entry') else MockEntry("10")
+                    initial_amount = MockEntry(self.initial_entry.text()) if hasattr(self, 'initial_entry') else MockEntry("10")
                     
                     coinsEvent_mp3(blue_amount, blue_tick, red_amount, red_tick, star_amount, boo_coins, boo_stars, koopa_amount)
                 else:
