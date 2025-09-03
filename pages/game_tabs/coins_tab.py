@@ -71,8 +71,7 @@ class CoinsTab(QWidget):
         blue_row.addWidget(blue_label)
         
         self.blue_entry = LineEdit()
-        self.blue_entry.setPlaceholderText("3")
-        self.blue_entry.setText("3")
+        # Leave fields blank - users can fill in custom values
         self.blue_entry.setFixedWidth(60)
         blue_row.addWidget(self.blue_entry)
                 
@@ -95,8 +94,7 @@ class CoinsTab(QWidget):
         red_row.addWidget(red_label)
         
         self.red_entry = LineEdit()
-        self.red_entry.setPlaceholderText("3")
-        self.red_entry.setText("3")
+        # Leave fields blank - users can fill in custom values
         self.red_entry.setFixedWidth(60)
         red_row.addWidget(self.red_entry)
         
@@ -119,8 +117,8 @@ class CoinsTab(QWidget):
         star_row.addWidget(star_label)
         
         self.star_entry = LineEdit()
-        self.star_entry.setPlaceholderText("20")
-        self.star_entry.setText("20")
+        # Leave fields blank - users can fill in custom values
+
         self.star_entry.setFixedWidth(60)
         star_row.addWidget(self.star_entry)
                 
@@ -141,8 +139,7 @@ class CoinsTab(QWidget):
             koopa_row.addWidget(koopa_label)
             
             self.koopa_entry = LineEdit()
-            self.koopa_entry.setPlaceholderText("5")
-            self.koopa_entry.setText("5")
+            # Leave fields blank - users can fill in custom values
             self.koopa_entry.setFixedWidth(60)
             koopa_row.addWidget(self.koopa_entry)
             
@@ -164,8 +161,8 @@ class CoinsTab(QWidget):
             boo_coins_row.addWidget(boo_coins_label)
             
             self.boo_coins_entry = LineEdit()
-            self.boo_coins_entry.setPlaceholderText("10")
-            self.boo_coins_entry.setText("10")
+            # Leave fields blank - users can fill in custom values
+
             self.boo_coins_entry.setFixedWidth(60)
             boo_coins_row.addWidget(self.boo_coins_entry)
             
@@ -185,8 +182,8 @@ class CoinsTab(QWidget):
             boo_stars_row.addWidget(boo_stars_label)
             
             self.boo_stars_entry = LineEdit()
-            self.boo_stars_entry.setPlaceholderText("15")
-            self.boo_stars_entry.setText("15")
+            # Leave fields blank - users can fill in custom values
+
             self.boo_stars_entry.setFixedWidth(60)
             boo_stars_row.addWidget(self.boo_stars_entry)
             
@@ -208,8 +205,8 @@ class CoinsTab(QWidget):
             mg_row.addWidget(mg_label)
             
             self.mg_entry = LineEdit()
-            self.mg_entry.setPlaceholderText("10")
-            self.mg_entry.setText("10")
+            # Leave fields blank - users can fill in custom values
+
             self.mg_entry.setFixedWidth(60)
             mg_row.addWidget(self.mg_entry)
             
@@ -229,8 +226,8 @@ class CoinsTab(QWidget):
             initial_row.addWidget(initial_label)
             
             self.initial_entry = LineEdit()
-            self.initial_entry.setPlaceholderText("10")
-            self.initial_entry.setText("10")
+            # Leave fields blank - users can fill in custom values
+
             self.initial_entry.setFixedWidth(60)
             initial_row.addWidget(self.initial_entry)
             
@@ -252,7 +249,7 @@ class CoinsTab(QWidget):
             
             self.mega_entry = LineEdit()
             self.mega_entry.setPlaceholderText("10")
-            self.mega_entry.setText("10")
+
             self.mega_entry.setFixedWidth(60)
             mega_row.addWidget(self.mega_entry)
             

@@ -81,8 +81,6 @@ class HandicapTab(QWidget):
         p1_row.addWidget(p1_label)
         
         self.p1_entry = LineEdit()
-        self.p1_entry.setPlaceholderText("0")
-        self.p1_entry.setText("0")
         self.p1_entry.setFixedWidth(50)  # Reduced from 60
         p1_row.addWidget(self.p1_entry)
         
@@ -98,8 +96,6 @@ class HandicapTab(QWidget):
         p2_row.addWidget(p2_label)
         
         self.p2_entry = LineEdit()
-        self.p2_entry.setPlaceholderText("0")
-        self.p2_entry.setText("0")
         self.p2_entry.setFixedWidth(50)  # Reduced from 60
         p2_row.addWidget(self.p2_entry)
         
@@ -115,8 +111,6 @@ class HandicapTab(QWidget):
         p3_row.addWidget(p3_label)
         
         self.p3_entry = LineEdit()
-        self.p3_entry.setPlaceholderText("0")
-        self.p3_entry.setText("0")
         self.p3_entry.setFixedWidth(50)  # Reduced from 60
         p3_row.addWidget(self.p3_entry)
         
@@ -132,8 +126,6 @@ class HandicapTab(QWidget):
         p4_row.addWidget(p4_label)
         
         self.p4_entry = LineEdit()
-        self.p4_entry.setPlaceholderText("0")
-        self.p4_entry.setText("0")
         self.p4_entry.setFixedWidth(50)  # Reduced from 60
         p4_row.addWidget(self.p4_entry)
         

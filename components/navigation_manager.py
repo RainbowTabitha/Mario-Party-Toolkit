@@ -65,7 +65,7 @@ class NavigationManager:
             ("marioParty1", "Mario Party 1", "assets/logos/marioParty1.png"),
             ("marioParty2", "Mario Party 2", "assets/logos/marioParty2.png"),
             ("marioParty3", "Mario Party 3", "assets/logos/marioParty3.png"),
-            # ("marioParty4", "Mario Party 4", "assets/logos/marioParty4.png"),
+            ("marioParty4", "Mario Party 4", "assets/logos/marioParty4.png"),
             # ("marioParty5", "Mario Party 5", "assets/logos/marioParty5.png"),
             # ("marioParty6", "Mario Party 6", "assets/logos/marioParty6.png"),
             # ("marioParty7", "Mario Party 7", "assets/logos/marioParty7.png"),

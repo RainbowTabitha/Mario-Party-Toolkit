@@ -56,8 +56,8 @@ class ResourceManager:
         except Exception as e:
             print(f"⚠️  Error creating game icon from {logo_path}: {e}")
         
-        # Fallback to default game icon
-        return "🎮"
+        # Fallback to default game icon (FlunkentIcon.GAME)
+        return FluentIcon.GAME
 
     @staticmethod
     def get_injector_icon():
@@ -76,5 +76,5 @@ class ResourceManager:
         except Exception as e:
             print(f"⚠️  Error creating injector icon: {e}")
         
-        # Fallback to default code icon
-        return "🔧"
+        # Fallback to default code icon (FluentIcon.CODE)
+        return FluentIcon.CODE

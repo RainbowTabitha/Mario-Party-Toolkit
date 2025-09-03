@@ -15,6 +15,13 @@ from pages.game_tabs.handicap_tab import HandicapTab
 from pages.game_tabs.items_tab import ItemsTab
 from pages.game_tabs.item_replace_tab import ItemReplaceTab
 from pages.game_tabs.bonus_star_tab import BonusStarTab
+from pages.game_tabs.shop_prices_tab import ShopPricesTab
+from pages.game_tabs.shop_odds_tab import ShopOddsTab
+from pages.game_tabs.initial_items_tab import InitialItemsTab
+from pages.game_tabs.item_bag_tab import ItemBagTab
+from pages.game_tabs.space_replacement_tab import SpaceReplacementTab
+from pages.game_tabs.lottery_rewards_tab import LotteryRewardsTab
+from pages.game_tabs.battle_minigame_tab import BattleMinigameTab
 
 
 class MarioPartyPages:
@@ -231,22 +238,56 @@ class MarioPartyPages:
 
     def create_mp4_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
-        """Create tabs for Mario Party 4 - Advanced coin structure with many fields"""
+        """Create tabs for Mario Party 4 - Complete feature set with complex item logic"""
         # Coins Mods tab - MP4 has many coin fields (11 total)
         coins_tab = CoinsTab("marioParty4", "advanced")
         tab_widget.addTab(coins_tab, "Coins Mods")
-        
-        # Block Weights tab
-        block_tab = BlockWeightsTab("marioParty4")
-        tab_widget.addTab(block_tab, "Block Weights")
-        
+        self.all_tabs.append(coins_tab)
+
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty4")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
-        
+        self.all_tabs.append(mg_tab)
+
+        # Shop Prices tab - Complex item pricing system
+        shop_prices_tab = ShopPricesTab("marioParty4", "mp4")
+        tab_widget.addTab(shop_prices_tab, "Shop Prices")
+        self.all_tabs.append(shop_prices_tab)
+
+        # Shop Odds tab - Item appearance odds
+        shop_odds_tab = ShopOddsTab("marioParty4", "mp4")
+        tab_widget.addTab(shop_odds_tab, "Shop Odds")
+        self.all_tabs.append(shop_odds_tab)
+
+        # Initial Items tab - Starting item selection
+        initial_items_tab = InitialItemsTab("marioParty4")
+        tab_widget.addTab(initial_items_tab, "Initial Items")
+        self.all_tabs.append(initial_items_tab)
+
+        # Item Bag tab - Item bag modifications
+        item_bag_tab = ItemBagTab("marioParty4")
+        tab_widget.addTab(item_bag_tab, "Item Bag")
+        self.all_tabs.append(item_bag_tab)
+
+        # Space Replacement tab - Board space modifications
+        space_replace_tab = SpaceReplacementTab("marioParty4")
+        tab_widget.addTab(space_replace_tab, "Space Replacement")
+        self.all_tabs.append(space_replace_tab)
+
+        # Lottery Rewards tab - Lottery prize modifications
+        lottery_tab = LotteryRewardsTab("marioParty4")
+        tab_widget.addTab(lottery_tab, "Lottery Rewards")
+        self.all_tabs.append(lottery_tab)
+
+        # Battle Minigame tab - Battle minigame bounties
+        battle_tab = BattleMinigameTab("marioParty4")
+        tab_widget.addTab(battle_tab, "Battle Minigame")
+        self.all_tabs.append(battle_tab)
+
         # Star Handicaps tab
         handicap_tab = HandicapTab("marioParty4")
         tab_widget.addTab(handicap_tab, "Star Handicaps")
+        self.all_tabs.append(handicap_tab)
 
     def create_mp5_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)

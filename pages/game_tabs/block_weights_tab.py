@@ -161,27 +161,52 @@ class BlockWeightsTab(QWidget):
         # Warp Block Row
         warp_row = QHBoxLayout()
         warp_row.setSpacing(8)  # Reduced from 12
-        
+
         # Warp icon
         warp_icon = QLabel()
         warp_icon.setPixmap(QIcon(str(fetchResource("assets/items/warpBlock.png"))).pixmap(20, 20))  # Reduced from 24x24
         warp_icon.setStyleSheet("padding: 2px;")  # Reduced from 4px
         warp_row.addWidget(warp_icon)
-        
+
         # Warp label
         warp_label = BodyLabel("Warp Block:")
         warp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")  # Removed color
         warp_row.addWidget(warp_label)
-        
+
         # Warp input
         self.warp_entry = LineEdit()
         self.warp_entry.setPlaceholderText("1")
         self.warp_entry.setText("1")
         self.warp_entry.setFixedWidth(50)  # Reduced from 60
         warp_row.addWidget(self.warp_entry)
-        
+
         warp_row.addStretch()
         grid_layout.addLayout(warp_row)
+
+        # Stock Block Row
+        stock_row = QHBoxLayout()
+        stock_row.setSpacing(8)  # Reduced from 12
+
+        # Stock icon (using dice block icon as in original)
+        stock_icon = QLabel()
+        stock_icon.setPixmap(QIcon(str(fetchResource("assets/icons/diceBlock.png"))).pixmap(20, 20))  # Reduced from 24x24
+        stock_icon.setStyleSheet("padding: 2px;")  # Reduced from 4px
+        stock_row.addWidget(stock_icon)
+
+        # Stock label
+        stock_label = BodyLabel("Stock Block:")
+        stock_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")  # Removed color
+        stock_row.addWidget(stock_label)
+
+        # Stock input
+        self.stock_entry = LineEdit()
+        self.stock_entry.setPlaceholderText("1")
+        self.stock_entry.setText("1")
+        self.stock_entry.setFixedWidth(50)  # Reduced from 60
+        stock_row.addWidget(self.stock_entry)
+
+        stock_row.addStretch()
+        grid_layout.addLayout(stock_row)
         
         # Add grid layout to group
         group_layout.addLayout(grid_layout)
@@ -218,8 +243,9 @@ class BlockWeightsTab(QWidget):
                 speed_amount = MockEntry(self.speed_entry.text())
                 slow_amount = MockEntry(self.slow_entry.text())
                 warp_amount = MockEntry(self.warp_entry.text())
-                
-                itemsEvent_mp1(plus_amount, minus_amount, speed_amount, slow_amount, warp_amount)
+                stock_amount = MockEntry(self.stock_entry.text())
+
+                itemsEvent_mp1(plus_amount, minus_amount, speed_amount, slow_amount, warp_amount, stock_amount)
             else:
                 self.show_error("Block weights modification not available")
         except Exception as e:
