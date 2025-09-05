@@ -37,7 +37,7 @@ class CoinsTab(QWidget):
         layout.setContentsMargins(16, 12, 16, 12)
         
         # Title
-        title = SubtitleLabel("Coin Space Modifications")
+        title = SubtitleLabel("Coin Modifications")
         title.setAlignment(Qt.AlignCenter)
         layout.addWidget(title)
         
@@ -47,7 +47,7 @@ class CoinsTab(QWidget):
         layout.addWidget(desc)
         
         # Coin Modifications Group using QGroupBox with themed styling
-        group = QGroupBox("Space Modifications")
+        group = QGroupBox("Coin Modifications")
         
         # Store reference to group for theme updates
         self.coins_group = group

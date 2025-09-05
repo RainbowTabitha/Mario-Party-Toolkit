@@ -3,10 +3,10 @@
 # Shop Prices Tab Component for Mario Party 4
 # ============================================
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QLineEdit, QScrollArea, QFrame, QGroupBox, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QLineEdit, QScrollArea, QFrame, QGroupBox, QPushButton, QMessageBox, QRadioButton, QButtonGroup
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton
+from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardWidget
 
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
@@ -52,32 +52,63 @@ class ShopPricesTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
+        # Themed card container using Fluent design
+        card = CardWidget()
+        self.shop_prices_card = card
+        card_layout = QVBoxLayout()
+        card_layout.setSpacing(16)
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card.setLayout(card_layout)
+
+        # Add title to the card
+        card_title = SubtitleLabel("Item Shop Prices")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+
         # Scrollable area for the form
         scroll_area = QScrollArea()
+        self.scroll_area = scroll_area
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)  # Always show scrollbar
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setFrameShape(QFrame.NoFrame)
+        # Make scroll area blend with group background
+        scroll_area.setStyleSheet("QScrollArea { border: none; background: transparent; }")
+        scroll_area.viewport().setStyleSheet("background: transparent;")
 
         # Container widget for scroll area
         self.scroll_widget = QWidget()
+        self.scroll_widget.setStyleSheet("background: transparent;")
         scroll_layout = QVBoxLayout(self.scroll_widget)
         scroll_layout.setSpacing(16)
 
         # Game version selection
         version_layout = QHBoxLayout()
         version_layout.addWidget(BodyLabel("Game Version:"))
-        self.mp4_radio = QPushButton("Mario Party 4")
-        self.mp4dx_radio = QPushButton("Mario Party 4 Deluxe")
-        self.mp4_radio.setCheckable(True)
-        self.mp4dx_radio.setCheckable(True)
+
+        # Create radio button group
+        self.version_button_group = QButtonGroup()
+
+        self.mp4_radio = QRadioButton("Mario Party 4")
+        self.mp4dx_radio = QRadioButton("Mario Party 4 Deluxe")
+
+        self.version_button_group.addButton(self.mp4_radio)
+        self.version_button_group.addButton(self.mp4dx_radio)
+
         self.mp4_radio.setChecked(self.game_type == "mp4")
         self.mp4dx_radio.setChecked(self.game_type == "mp4dx")
+
         self.mp4_radio.clicked.connect(lambda: self.set_game_version("mp4"))
         self.mp4dx_radio.clicked.connect(lambda: self.set_game_version("mp4dx"))
+
         version_layout.addWidget(self.mp4_radio)
         version_layout.addWidget(self.mp4dx_radio)
         version_layout.addStretch()
-        scroll_layout.addLayout(version_layout)
+        # Place version selector at the top of the card (not inside scroller)
+        card_layout.addLayout(version_layout)
+
+        # Apply initial radio button styling
+        self.update_radio_button_theme()
 
         # Create header with column labels
         self.create_column_header(scroll_layout)
@@ -91,9 +122,15 @@ class ShopPricesTab(QWidget):
         spacer.setFrameShape(QFrame.NoFrame)
         scroll_layout.addWidget(spacer)
 
-        # Set scroll widget and add to layout
+        # Set scroll widget and add to card
         scroll_area.setWidget(self.scroll_widget)
-        layout.addWidget(scroll_area)
+        card_layout.addWidget(scroll_area)
+
+        # Theme the scrollbars to match current theme
+        self.apply_scrollbar_theme(scroll_area)
+
+        # Add card to main layout
+        layout.addWidget(card)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -101,6 +138,13 @@ class ShopPricesTab(QWidget):
         layout.addWidget(generate_btn)
 
         self.setLayout(layout)
+
+        # Ensure text colors match theme after widget shows
+        try:
+            from PyQt5.QtCore import QTimer
+            QTimer.singleShot(0, self.apply_content_text_theme)
+        except Exception:
+            self.apply_content_text_theme()
 
     def set_game_version(self, version):
         """Set the game version (mp4 or mp4dx)"""
@@ -114,6 +158,17 @@ class ShopPricesTab(QWidget):
 
         # Update the displayed items based on the new game version
         self.update_items_ui(self.scroll_widget.layout())
+
+        # Reapply theme styling to prevent palette glitches in dark mode
+        self.update_radio_button_theme()
+        if hasattr(self, 'scroll_widget'):
+            self.scroll_widget.setStyleSheet("background: transparent;")
+        # Ensure new inputs keep white background
+        for entry in getattr(self, 'price_entries', {}).values():
+            try:
+                self.apply_white_lineedit_style(entry)
+            except Exception:
+                continue
 
     def clear_item_rows(self, scroll_layout):
         """Clear all items by replacing the dynamic content container"""
@@ -138,11 +193,6 @@ class ShopPricesTab(QWidget):
         container_layout = QVBoxLayout(container)
         container_layout.setContentsMargins(0, 0, 0, 0)
         container_layout.setSpacing(8)
-
-        # Add version indicator
-        version_indicator = BodyLabel(f"Current Game Version: {self.game_type.upper()}")
-        version_indicator.setStyleSheet("color: blue; font-weight: bold; padding: 5px; margin-bottom: 10px;")
-        container_layout.addWidget(version_indicator)
 
         # Add the items
         self.create_version_items(container_layout)
@@ -233,6 +283,8 @@ class ShopPricesTab(QWidget):
                 # Leave fields blank - users can fill in custom values
                 entry.setFixedWidth(self.input_width)
                 entry.setObjectName(f"{item_key}_{stage.lower()}_{player_count}")
+                # Always render inputs with white background for readability
+                self.apply_white_lineedit_style(entry)
                 layout.addWidget(entry)
 
                 # Store reference for later access using dictionary
@@ -505,8 +557,8 @@ class ShopPricesTab(QWidget):
             items_to_create = [
                 ("Mini Mushroom", "assets/items/miniMushroom.png"),
                 ("Mega Mushroom", "assets/items/megaMushroom.png"),
-                ("Super Mini Mushroom", "assets/items/superMiniMushroom.png"),
-                ("Super Mega Mushroom", "assets/items/superMegaMushroom.png"),
+                ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
+                ("Sup Mega Mushroom", "assets/items/superMegaMushroom.png"),
                 ("Mini Mega Hammer", "assets/items/miniMegaHammer.png"),
                 ("Warp Pipe", "assets/items/warpPipe.png"),
                 ("Swap Card", "assets/items/swapCard.png"),
@@ -524,13 +576,13 @@ class ShopPricesTab(QWidget):
             items_to_create = [
                 ("Mini Mushroom", "assets/items/miniMushroom.png"),
                 ("Mega Mushroom", "assets/items/megaMushroom.png"),
-                ("Super Mini Mushroom", "assets/items/superMiniMushroom.png"),
-                ("Super Mega Mushroom", "assets/items/superMegaMushroom.png"),
+                ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
+                ("Sup Mega Mushroom", "assets/items/superMegaMushroom.png"),
                 ("Mushroom", "assets/items/mushroom.png"),
                 ("Golden Mushroom", "assets/items/goldenMushroom.png"),
                 ("Reverse Mushroom", "assets/items/reverseMushroom.png"),
                 ("Poison Mushroom", "assets/items/poisonMushroom.png"),
-                ("Triple Poison Mushroom", "assets/items/triplePoisonMushroom.png"),
+                ("Tri, Poison Mushroom", "assets/items/triplePoisonMushroom.png"),
                 ("Mini Mega Hammer", "assets/items/miniMegaHammer.png"),
                 ("Warp Pipe", "assets/items/warpPipe.png"),
                 ("Swap Card", "assets/items/swapCard.png"),
@@ -560,59 +612,206 @@ class ShopPricesTab(QWidget):
 
     def themeChanged(self):
         """Called when theme changes - update all styling"""
+        self.update_radio_button_theme()
+        # CardWidget handles its own theming automatically
+        if hasattr(self, 'scroll_area'):
+            self.apply_scrollbar_theme(self.scroll_area)
+        self.apply_content_text_theme()
+        # Reinforce white backgrounds after theme switch
+        for entry in getattr(self, 'price_entries', {}).values():
+            try:
+                self.apply_white_lineedit_style(entry)
+            except Exception:
+                continue
+
+    def update_radio_button_theme(self):
+        """Update radio button styling based on current theme"""
         from qfluentwidgets import isDarkTheme
 
-        # Update radio button styling
         if isDarkTheme():
-            # Dark theme styling
+            # Dark theme styling for radio buttons
             radio_style = """
-                QPushButton {
-                    background: #3c3c3c;
-                    border: 1px solid #555555;
-                    border-radius: 4px;
-                    padding: 6px 12px;
+                QRadioButton {
+                    background: transparent;
                     color: #ffffff;
+                    font-size: 14px;
                     font-weight: 500;
+                    spacing: 8px;
+                    padding: 4px;
                 }
-                QPushButton:checked {
+                QRadioButton::indicator {
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid #666666;
+                    border-radius: 8px;
+                    background: #3c3c3c;
+                }
+                QRadioButton::indicator:checked {
                     background: #0078d4;
-                    border: 1px solid #0078d4;
-                    color: #ffffff;
+                    border: 2px solid #0078d4;
                 }
-                QPushButton:hover {
-                    background: #4c4c4c;
-                    border: 1px solid #666666;
+                QRadioButton::indicator:hover {
+                    border: 2px solid #999999;
                 }
-                QPushButton:checked:hover {
+                QRadioButton::indicator:checked:hover {
                     background: #106ebe;
-                    border: 1px solid #106ebe;
+                    border: 2px solid #106ebe;
                 }
             """
         else:
-            # Light theme styling
+            # Light theme styling for radio buttons
             radio_style = """
-                QPushButton {
-                    background: #ffffff;
-                    border: 1px solid #cccccc;
-                    border-radius: 4px;
-                    padding: 6px 12px;
+                QRadioButton {
+                    background: transparent;
                     color: #333333;
+                    font-size: 14px;
                     font-weight: 500;
+                    spacing: 8px;
+                    padding: 4px;
                 }
-                QPushButton:checked {
+                QRadioButton::indicator {
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid #cccccc;
+                    border-radius: 8px;
+                    background: #ffffff;
+                }
+                QRadioButton::indicator:checked {
                     background: #0078d4;
-                    border: 1px solid #0078d4;
-                    color: #ffffff;
+                    border: 2px solid #0078d4;
                 }
-                QPushButton:hover {
-                    background: #f5f5f5;
-                    border: 1px solid #999999;
+                QRadioButton::indicator:hover {
+                    border: 2px solid #999999;
                 }
-                QPushButton:checked:hover {
+                QRadioButton::indicator:checked:hover {
                     background: #106ebe;
-                    border: 1px solid #106ebe;
+                    border: 2px solid #106ebe;
                 }
             """
 
+        # Apply the styling to radio buttons
         self.mp4_radio.setStyleSheet(radio_style)
         self.mp4dx_radio.setStyleSheet(radio_style)
+
+    def apply_scrollbar_theme(self, scroll_area):
+        """Apply themed styling to QScrollArea scrollbars (light/dark)"""
+        from qfluentwidgets import isDarkTheme
+        if isDarkTheme():
+            bar_style = """
+                QScrollBar:vertical {
+                    background: transparent;
+                    width: 12px;
+                    margin: 0px;
+                }
+                QScrollBar::handle:vertical {
+                    background: #5a5a5a;
+                    min-height: 24px;
+                    border-radius: 6px;
+                }
+                QScrollBar::handle:vertical:hover {
+                    background: #7a7a7a;
+                }
+                QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                    height: 0px;
+                }
+                QScrollBar:horizontal {
+                    background: transparent;
+                    height: 12px;
+                    margin: 0px;
+                }
+                QScrollBar::handle:horizontal {
+                    background: #5a5a5a;
+                    min-width: 24px;
+                    border-radius: 6px;
+                }
+                QScrollBar::handle:horizontal:hover {
+                    background: #7a7a7a;
+                }
+                QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+                    width: 0px;
+                }
+            """
+        else:
+            bar_style = """
+                QScrollBar:vertical {
+                    background: transparent;
+                    width: 12px;
+                    margin: 0px;
+                }
+                QScrollBar::handle:vertical {
+                    background: #c4c4c4;
+                    min-height: 24px;
+                    border-radius: 6px;
+                }
+                QScrollBar::handle:vertical:hover {
+                    background: #a0a0a0;
+                }
+                QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                    height: 0px;
+                }
+                QScrollBar:horizontal {
+                    background: transparent;
+                    height: 12px;
+                    margin: 0px;
+                }
+                QScrollBar::handle:horizontal {
+                    background: #c4c4c4;
+                    min-width: 24px;
+                    border-radius: 6px;
+                }
+                QScrollBar::handle:horizontal:hover {
+                    background: #a0a0a0;
+                }
+                QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+                    width: 0px;
+                }
+            """
+
+        # Apply the style to both scrollbars
+        try:
+            scroll_area.verticalScrollBar().setStyleSheet(bar_style)
+            scroll_area.horizontalScrollBar().setStyleSheet(bar_style)
+        except Exception:
+            pass
+
+    def apply_content_text_theme(self):
+        """Force text colors for labels and line edits to follow current palette"""
+        # Apply at container level so all children inherit
+        if hasattr(self, 'scroll_widget') and self.scroll_widget:
+            base_style = "background: transparent;"
+            text_rules = " QLabel { color: palette(text); } QLineEdit { color: palette(text); } "
+            # Merge with any existing style (keep background transparent)
+            self.scroll_widget.setStyleSheet(f"{base_style}{text_rules}")
+        # Also ensure individual entries keep white background/black text
+        for entry in getattr(self, 'price_entries', {}).values():
+            try:
+                self.apply_white_lineedit_style(entry)
+            except Exception:
+                continue
+
+    def apply_white_lineedit_style(self, widget):
+        """Apply a Windows-safe white background style to LineEdits"""
+        try:
+            widget.setAttribute(Qt.WA_StyledBackground, True)
+        except Exception:
+            pass
+        widget.setStyleSheet("""
+            QLineEdit {
+                background-color: #ffffff;
+                color: #000000;
+                selection-background-color: #cfe8ff;
+                selection-color: #000000;
+                border: 1px solid palette(mid);
+                border-radius: 6px;
+            }
+            QLineEdit:disabled {
+                background-color: #f0f0f0;
+                color: #808080;
+            }
+            QLineEdit:hover {
+                border: 1px solid #8c8c8c;
+            }
+            QLineEdit:focus {
+                border: 1px solid #0078d4;
+            }
+        """)

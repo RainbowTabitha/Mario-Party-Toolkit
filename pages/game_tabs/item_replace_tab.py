@@ -127,9 +127,13 @@ class ItemReplaceTab(QWidget):
 
             # Call appropriate item replacement function based on game
             if self.game_id == "marioParty2" and 'itemReplace_mp2' in globals():
-                itemReplace_mp2(item1, item2)
+                # For MP2, we need to pass the items list as the third parameter
+                items_list = ["None", "Mushroom", "Skeleton Key", "Plunder Chest", "Dueling Glove", "Warp Block", "Golden Mushroom", "Magic Lamp"]
+                itemReplace_mp2(item1, item2, items_list)
             elif self.game_id == "marioParty3" and 'itemReplace_mp3' in globals():
-                itemReplace_mp3(item1, item2)
+                # For MP3, we need to pass the items list as the third parameter
+                items_list = ["None", "Mushroom", "Skeleton Key", "Poison Mushroom", "Reverse Mushroo", "Cellular Shopper", "Warp Block", "Plunder Chest", "Bowser Phone", "Dueling Glove", "Lucky Lamp", "Golden Mushroom", "Boo Bell", "Boo Repellant", "Bowser Suit", "Magic Lamp", "Koopa Kard", "Barter Box", "Lucky Charm", "Wacky Watch"]
+                itemReplace_mp3(item1, item2, items_list)
             else:
                 self.show_error(f"Item replacement not available for {self.game_id}")
         except Exception as e:

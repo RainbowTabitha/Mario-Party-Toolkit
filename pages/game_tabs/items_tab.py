@@ -95,8 +95,16 @@ class ItemsTab(QWidget):
         """Create Mario Party 2 item entries"""
         # Mushroom
         mushroom_row = QHBoxLayout()
+        mushroom_row.setSpacing(12)
+
+        # Mushroom icon
+        mushroom_icon = QLabel()
+        mushroom_icon.setPixmap(QIcon(str(fetchResource("assets/items/mushroom.png"))).pixmap(24, 24))
+        mushroom_icon.setStyleSheet("padding: 2px;")
+        mushroom_row.addWidget(mushroom_icon)
+
         mushroom_label = BodyLabel("Mushroom:")
-        mushroom_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 120px;")
+        mushroom_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
         mushroom_row.addWidget(mushroom_label)
 
         self.mushroom_entry = LineEdit()
@@ -108,12 +116,20 @@ class ItemsTab(QWidget):
 
         # Skeleton Key
         key_row = QHBoxLayout()
+        key_row.setSpacing(12)
+
+        # Skeleton Key icon
+        key_icon = QLabel()
+        key_icon.setPixmap(QIcon(str(fetchResource("assets/items/skeletonKey.png"))).pixmap(24, 24))
+        key_icon.setStyleSheet("padding: 2px;")
+        key_row.addWidget(key_icon)
+
         key_label = BodyLabel("Skeleton Key:")
-        key_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 120px;")
+        key_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
         key_row.addWidget(key_label)
 
         self.key_entry = LineEdit()
-        self.key_entry.setFixedWidth(60)
+        self.key_entry.setFixedWidth(80)  # Make skeleton key wider
         key_row.addWidget(self.key_entry)
 
         key_row.addStretch()
@@ -121,8 +137,16 @@ class ItemsTab(QWidget):
 
         # Plunder Chest
         chest_row = QHBoxLayout()
+        chest_row.setSpacing(12)
+
+        # Plunder Chest icon
+        chest_icon = QLabel()
+        chest_icon.setPixmap(QIcon(str(fetchResource("assets/items/plunderChest.png"))).pixmap(24, 24))
+        chest_icon.setStyleSheet("padding: 2px;")
+        chest_row.addWidget(chest_icon)
+
         chest_label = BodyLabel("Plunder Chest:")
-        chest_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 120px;")
+        chest_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
         chest_row.addWidget(chest_label)
 
         self.chest_entry = LineEdit()
@@ -134,8 +158,16 @@ class ItemsTab(QWidget):
 
         # Dueling Glove
         glove_row = QHBoxLayout()
+        glove_row.setSpacing(12)
+
+        # Dueling Glove icon
+        glove_icon = QLabel()
+        glove_icon.setPixmap(QIcon(str(fetchResource("assets/items/duelingGlove.png"))).pixmap(24, 24))
+        glove_icon.setStyleSheet("padding: 2px;")
+        glove_row.addWidget(glove_icon)
+
         glove_label = BodyLabel("Dueling Glove:")
-        glove_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 120px;")
+        glove_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
         glove_row.addWidget(glove_label)
 
         self.glove_entry = LineEdit()
@@ -147,8 +179,16 @@ class ItemsTab(QWidget):
 
         # Warp Block
         warp_row = QHBoxLayout()
+        warp_row.setSpacing(12)
+
+        # Warp Block icon
+        warp_icon = QLabel()
+        warp_icon.setPixmap(QIcon(str(fetchResource("assets/items/warpBlock.png"))).pixmap(24, 24))
+        warp_icon.setStyleSheet("padding: 2px;")
+        warp_row.addWidget(warp_icon)
+
         warp_label = BodyLabel("Warp Block:")
-        warp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 120px;")
+        warp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
         warp_row.addWidget(warp_label)
 
         self.warp_entry = LineEdit()
@@ -160,8 +200,16 @@ class ItemsTab(QWidget):
 
         # Golden Mushroom
         golden_row = QHBoxLayout()
+        golden_row.setSpacing(12)
+
+        # Golden Mushroom icon
+        golden_icon = QLabel()
+        golden_icon.setPixmap(QIcon(str(fetchResource("assets/items/goldenMushroom.png"))).pixmap(24, 24))
+        golden_icon.setStyleSheet("padding: 2px;")
+        golden_row.addWidget(golden_icon)
+
         golden_label = BodyLabel("Golden Mushroom:")
-        golden_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 120px;")
+        golden_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
         golden_row.addWidget(golden_label)
 
         self.golden_entry = LineEdit()
@@ -173,8 +221,16 @@ class ItemsTab(QWidget):
 
         # Magic Lamp
         lamp_row = QHBoxLayout()
+        lamp_row.setSpacing(12)
+
+        # Magic Lamp icon
+        lamp_icon = QLabel()
+        lamp_icon.setPixmap(QIcon(str(fetchResource("assets/items/magicLamp.png"))).pixmap(24, 24))
+        lamp_icon.setStyleSheet("padding: 2px;")
+        lamp_row.addWidget(lamp_icon)
+
         lamp_label = BodyLabel("Magic Lamp:")
-        lamp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 120px;")
+        lamp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
         lamp_row.addWidget(lamp_label)
 
         self.lamp_entry = LineEdit()
@@ -314,8 +370,16 @@ class ItemsTab(QWidget):
 
         # Magic Lamp
         lamp_row = QHBoxLayout()
+        lamp_row.setSpacing(12)
+
+        # Magic Lamp icon
+        lamp_icon = QLabel()
+        lamp_icon.setPixmap(QIcon(str(fetchResource("assets/items/magicLamp.png"))).pixmap(24, 24))
+        lamp_icon.setStyleSheet("padding: 2px;")
+        lamp_row.addWidget(lamp_icon)
+
         lamp_label = BodyLabel("Magic Lamp:")
-        lamp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 120px;")
+        lamp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
         lamp_row.addWidget(lamp_label)
 
         self.lamp_entry = LineEdit()

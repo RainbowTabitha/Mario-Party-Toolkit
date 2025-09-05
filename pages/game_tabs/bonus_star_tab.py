@@ -118,7 +118,7 @@ class BonusStarTab(QWidget):
                 star2 = MockComboBox(self.star2_combo.currentText())
                 star3 = MockComboBox(self.star3_combo.currentText())
 
-                customBonusStarEvent_mp2(star1, star2, star3)
+                customBonusStarEvent_mp2(star1, star2, star3, self.stars2)
             else:
                 self.show_error("Bonus star replacement not available")
         except Exception as e:
