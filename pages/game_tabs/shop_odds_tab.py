@@ -58,7 +58,8 @@ class ShopOddsTab(QWidget):
 
         # Add title to the card
         card_title = SubtitleLabel("Item Shop Odds")
-        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_title.setObjectName("card_title")
+        self.card_title = card_title
         card_layout.addWidget(card_title)
 
         # Scrollable area for the form
@@ -131,8 +132,10 @@ class ShopOddsTab(QWidget):
         try:
             from PyQt5.QtCore import QTimer
             QTimer.singleShot(0, self.apply_content_text_theme)
+            QTimer.singleShot(0, self.update_card_title_theme)
         except Exception:
             self.apply_content_text_theme()
+            self.update_card_title_theme()
 
     def set_game_version(self, version):
         """Set the game version (mp4 or mp4dx)"""
@@ -152,6 +155,11 @@ class ShopOddsTab(QWidget):
         if hasattr(self, 'shop_odds_card'):
             # CardWidget handles its own theming automatically
             self.scroll_widget.setStyleSheet("background: transparent;")
+        # Refresh card title color so it doesn't revert
+        try:
+            self.update_card_title_theme()
+        except Exception:
+            pass
         self.apply_content_text_theme()
         # Ensure inputs keep white background after version toggle
         for attr in dir(self):
@@ -179,6 +187,15 @@ class ShopOddsTab(QWidget):
         """Update the items UI based on current game version"""
         # Clear existing dynamic content
         self.clear_item_rows(scroll_layout)
+        
+        # Clear all entry attributes to prevent accessing deleted widgets
+        for attr in list(dir(self)):
+            if attr.endswith('_entry'):
+                try:
+                    delattr(self, attr)
+                except (AttributeError, RuntimeError):
+                    # Ignore errors if attribute doesn't exist or widget is deleted
+                    continue
 
         # Create new dynamic content container
         dynamic_container = self.create_dynamic_content_container()
@@ -198,8 +215,8 @@ class ShopOddsTab(QWidget):
             all_items = [
                 ("Mini Mushroom", "assets/items/miniMushroom.png"),
                 ("Mega Mushroom", "assets/items/megaMushroom.png"),
-                ("Sup. Mini Mushroom", "assets/items/superMiniMushroom.png"),
-                ("Sup. Mega Mushroom", "assets/items/superMegaMushroom.png"),
+                ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
+                ("Sup Mega Mushroom", "assets/items/superMegaMushroom.png"),
                 ("Mini Mega Hammer", "assets/items/miniMegaHammer.png"),
                 ("Warp Pipe", "assets/items/warpPipe.png"),
                 ("Swap Card", "assets/items/swapCard.png"),
@@ -216,8 +233,8 @@ class ShopOddsTab(QWidget):
             all_items = [
                 ("Mini Mushroom", "assets/items/miniMushroom.png"),
                 ("Mega Mushroom", "assets/items/megaMushroom.png"),
-                ("Sup. Mini Mushroom", "assets/items/superMiniMushroom.png"),
-                ("Sup. Mega Mushroom", "assets/items/superMegaMushroom.png"),
+                ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
+                ("Sup Mega Mushroom", "assets/items/superMegaMushroom.png"),
                 ("Mushroom", "assets/items/mushroom.png"),
                 ("Golden Mushroom", "assets/items/goldenMushroom.png"),
                 ("Reverse Mushroom", "assets/items/reverseMushroom.png"),
@@ -477,9 +494,13 @@ class ShopOddsTab(QWidget):
                     for player_count in player_counts:
                         entry_name = f"{item_key}_{stage}_{player_count}_entry"
                         if hasattr(self, entry_name):
-                            entry = getattr(self, entry_name)
-                            param_name = f"{camel_case_name}{stage.capitalize()}Odds{player_count}"
-                            odds[param_name] = entry.text()
+                            try:
+                                entry = getattr(self, entry_name)
+                                param_name = f"{camel_case_name}{stage.capitalize()}Odds{player_count}"
+                                odds[param_name] = entry.text()
+                            except RuntimeError:
+                                # Widget has been deleted, skip this entry
+                                continue
 
         return odds
 
@@ -487,14 +508,24 @@ class ShopOddsTab(QWidget):
         """Show error message to user"""
         QMessageBox.critical(self, "Error", message)
 
+    def update_card_title_theme(self):
+        """Update CardWidget title styling based on current theme"""
+        if hasattr(self, 'card_title') and self.card_title:
+            from qfluentwidgets import isDarkTheme
+            if isDarkTheme():
+                self.card_title.setStyleSheet("color: #ffffff; font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+            else:
+                self.card_title.setStyleSheet("color: #333333; font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+
     def themeChanged(self):
         """Called when theme changes - update all styling"""
         self.update_radio_button_theme()
-        # CardWidget handles its own theming automatically
+        # Update CardWidget title theming
+        self.update_card_title_theme()
         if hasattr(self, 'scroll_area'):
             self.apply_scrollbar_theme(self.scroll_area)
         self.apply_content_text_theme()
-        # Reinforce white backgrounds after theme switch
+        # Reinforce white backgrounds aftert theme switch
         for attr in dir(self):
             if attr.endswith('_entry'):
                 try:

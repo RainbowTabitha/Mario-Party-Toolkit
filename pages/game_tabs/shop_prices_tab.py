@@ -62,7 +62,8 @@ class ShopPricesTab(QWidget):
 
         # Add title to the card
         card_title = SubtitleLabel("Item Shop Prices")
-        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_title.setObjectName("card_title")
+        self.card_title = card_title
         card_layout.addWidget(card_title)
 
         # Scrollable area for the form
@@ -143,8 +144,10 @@ class ShopPricesTab(QWidget):
         try:
             from PyQt5.QtCore import QTimer
             QTimer.singleShot(0, self.apply_content_text_theme)
+            QTimer.singleShot(0, self.update_card_title_theme)
         except Exception:
             self.apply_content_text_theme()
+            self.update_card_title_theme()
 
     def set_game_version(self, version):
         """Set the game version (mp4 or mp4dx)"""
@@ -163,6 +166,11 @@ class ShopPricesTab(QWidget):
         self.update_radio_button_theme()
         if hasattr(self, 'scroll_widget'):
             self.scroll_widget.setStyleSheet("background: transparent;")
+        # Refresh card title color so it doesn't revert
+        try:
+            self.update_card_title_theme()
+        except Exception:
+            pass
         # Ensure new inputs keep white background
         for entry in getattr(self, 'price_entries', {}).values():
             try:
@@ -493,9 +501,9 @@ class ShopPricesTab(QWidget):
                 camel_case_name = item_mapping[item_key]
                 for stage in stages:
                     for player_count in player_counts:
-                        entry_name = f"{item_key}_{stage}_{player_count}_entry"
-                        if hasattr(self, entry_name):
-                            entry = getattr(self, entry_name)
+                        entry_key = f"{item_key}_{stage}_{player_count}"
+                        if entry_key in self.price_entries:
+                            entry = self.price_entries[entry_key]
                             param_name = f"{camel_case_name}{stage.capitalize()}Price{player_count}"
                             prices[param_name] = entry.text()
 
@@ -610,10 +618,20 @@ class ShopPricesTab(QWidget):
         dynamic_container = self.create_dynamic_content_container()
         scroll_layout.addWidget(dynamic_container)
 
+    def update_card_title_theme(self):
+        """Update CardWidget title styling based on current theme"""
+        if hasattr(self, 'card_title') and self.card_title:
+            from qfluentwidgets import isDarkTheme
+            if isDarkTheme():
+                self.card_title.setStyleSheet("color: #ffffff; font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+            else:
+                self.card_title.setStyleSheet("color: #333333; font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+
     def themeChanged(self):
         """Called when theme changes - update all styling"""
         self.update_radio_button_theme()
-        # CardWidget handles its own theming automatically
+        # Update CardWidget title theming
+        self.update_card_title_theme()
         if hasattr(self, 'scroll_area'):
             self.apply_scrollbar_theme(self.scroll_area)
         self.apply_content_text_theme()

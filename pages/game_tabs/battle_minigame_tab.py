@@ -3,7 +3,7 @@
 # Battle Minigame Tab Component for Mario Party 4
 # ============================================
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QGroupBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton
@@ -42,6 +42,15 @@ class BattleMinigameTab(QWidget):
         desc = BodyLabel("Modify coin bounties awarded for winning battle minigames:")
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
+
+        # Themed group container
+        group = QGroupBox("Battle Minigame Bounties")
+        self.battle_minigame_group = group
+        self.update_battle_minigame_group_theme()
+        group_layout = QVBoxLayout()
+        group_layout.setSpacing(16)
+        group_layout.setContentsMargins(20, 16, 20, 16)
+        group.setLayout(group_layout)
 
         # Battle minigame bounties group
         bounties_layout = QVBoxLayout()
@@ -86,7 +95,10 @@ class BattleMinigameTab(QWidget):
             bounty_layout.addStretch()
             bounties_layout.addLayout(bounty_layout)
 
-        layout.addLayout(bounties_layout)
+        group_layout.addLayout(bounties_layout)
+
+        # Add group to main layout
+        layout.addWidget(group)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -163,4 +175,52 @@ class BattleMinigameTab(QWidget):
 
     def themeChanged(self):
         """Called when theme changes - update all styling"""
-        pass
+        self.update_battle_minigame_group_theme()
+
+    def update_battle_minigame_group_theme(self):
+        """Update group styling based on current theme"""
+        from qfluentwidgets import isDarkTheme
+        if isDarkTheme():
+            self.battle_minigame_group.setStyleSheet("""
+                QGroupBox {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: palette(text);
+                    border: 2px solid palette(mid);
+                    border-radius: 8px;
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    background: #3c3c3c;
+                }
+                QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left: 16px;
+                    padding: 0 8px 0 8px;
+                    background: palette(highlight);
+                    color: palette(highlighted-text);
+                    border-radius: 6px;
+                    font-weight: 700;
+                }
+            """)
+        else:
+            self.battle_minigame_group.setStyleSheet("""
+                QGroupBox {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: palette(text);
+                    border: 2px solid palette(mid);
+                    border-radius: 8px;
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    background: #ffffff;
+                }
+                QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left: 16px;
+                    padding: 0 8px 0 8px;
+                    background: palette(highlight);
+                    color: palette(highlighted-text);
+                    border-radius: 6px;
+                    font-weight: 700;
+                }
+            """)

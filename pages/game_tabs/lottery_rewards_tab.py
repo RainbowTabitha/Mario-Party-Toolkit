@@ -3,7 +3,7 @@
 # Lottery Rewards Tab Component for Mario Party 4
 # ============================================
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QComboBox, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QComboBox, QMessageBox, QGroupBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, ComboBox, PushButton
@@ -42,6 +42,15 @@ class LotteryRewardsTab(QWidget):
         desc = BodyLabel("Modify the prizes awarded by the Lottery space:")
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
+
+        # Themed group container
+        group = QGroupBox("Lottery Rewards")
+        self.lottery_rewards_group = group
+        self.update_lottery_rewards_group_theme()
+        group_layout = QVBoxLayout()
+        group_layout.setSpacing(16)
+        group_layout.setContentsMargins(20, 16, 20, 16)
+        group.setLayout(group_layout)
 
         # Lottery prizes group
         prizes_layout = QVBoxLayout()
@@ -142,7 +151,10 @@ class LotteryRewardsTab(QWidget):
         third_layout.addStretch()
         prizes_layout.addLayout(third_layout)
 
-        layout.addLayout(prizes_layout)
+        group_layout.addLayout(prizes_layout)
+
+        # Add group to main layout
+        layout.addWidget(group)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -223,4 +235,52 @@ class LotteryRewardsTab(QWidget):
 
     def themeChanged(self):
         """Called when theme changes - update all styling"""
-        pass
+        self.update_lottery_rewards_group_theme()
+
+    def update_lottery_rewards_group_theme(self):
+        """Update group styling based on current theme"""
+        from qfluentwidgets import isDarkTheme
+        if isDarkTheme():
+            self.lottery_rewards_group.setStyleSheet("""
+                QGroupBox {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: palette(text);
+                    border: 2px solid palette(mid);
+                    border-radius: 8px;
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    background: #3c3c3c;
+                }
+                QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left: 16px;
+                    padding: 0 8px 0 8px;
+                    background: palette(highlight);
+                    color: palette(highlighted-text);
+                    border-radius: 6px;
+                    font-weight: 700;
+                }
+            """)
+        else:
+            self.lottery_rewards_group.setStyleSheet("""
+                QGroupBox {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: palette(text);
+                    border: 2px solid palette(mid);
+                    border-radius: 8px;
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    background: #ffffff;
+                }
+                QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left: 16px;
+                    padding: 0 8px 0 8px;
+                    background: palette(highlight);
+                    color: palette(highlighted-text);
+                    border-radius: 6px;
+                    font-weight: 700;
+                }
+            """)

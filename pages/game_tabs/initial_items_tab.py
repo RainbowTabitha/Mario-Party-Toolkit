@@ -3,7 +3,7 @@
 # Initial Items Tab Component for Mario Party 4
 # ============================================
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QMessageBox, QGroupBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton
@@ -42,6 +42,15 @@ class InitialItemsTab(QWidget):
         desc = BodyLabel("Choose which items players start with at the beginning of the game:")
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
+
+        # Themed group container
+        group = QGroupBox("Initial Items")
+        self.initial_items_group = group
+        self.update_initial_items_group_theme()
+        group_layout = QVBoxLayout()
+        group_layout.setSpacing(16)
+        group_layout.setContentsMargins(20, 16, 20, 16)
+        group.setLayout(group_layout)
 
         # Item list for MP4
         self.mp4_items = [
@@ -89,7 +98,10 @@ class InitialItemsTab(QWidget):
             slot_layout.addStretch()
             items_group_layout.addLayout(slot_layout)
 
-        layout.addLayout(items_group_layout)
+        group_layout.addLayout(items_group_layout)
+
+        # Add group to main layout
+        layout.addWidget(group)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -168,4 +180,52 @@ class InitialItemsTab(QWidget):
 
     def themeChanged(self):
         """Called when theme changes - update all styling"""
-        pass
+        self.update_initial_items_group_theme()
+
+    def update_initial_items_group_theme(self):
+        """Update group styling based on current theme"""
+        from qfluentwidgets import isDarkTheme
+        if isDarkTheme():
+            self.initial_items_group.setStyleSheet("""
+                QGroupBox {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: palette(text);
+                    border: 2px solid palette(mid);
+                    border-radius: 8px;
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    background: #3c3c3c;
+                }
+                QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left: 16px;
+                    padding: 0 8px 0 8px;
+                    background: palette(highlight);
+                    color: palette(highlighted-text);
+                    border-radius: 6px;
+                    font-weight: 700;
+                }
+            """)
+        else:
+            self.initial_items_group.setStyleSheet("""
+                QGroupBox {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: palette(text);
+                    border: 2px solid palette(mid);
+                    border-radius: 8px;
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    background: #ffffff;
+                }
+                QGroupBox::title {
+                    subcontrol-origin: margin;
+                    left: 16px;
+                    padding: 0 8px 0 8px;
+                    background: palette(highlight);
+                    color: palette(highlighted-text);
+                    border-radius: 6px;
+                    font-weight: 700;
+                }
+            """)
