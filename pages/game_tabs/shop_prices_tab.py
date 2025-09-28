@@ -139,13 +139,6 @@ class ShopPricesTab(QWidget):
 
         self.setLayout(layout)
 
-        # Ensure text colors match theme after widget shows
-        try:
-            from PyQt5.QtCore import QTimer
-            QTimer.singleShot(0, self.apply_content_text_theme)
-        except Exception:
-            self.apply_content_text_theme()
-
     def set_game_version(self, version):
         """Set the game version (mp4 or mp4dx)"""
         self.game_type = version
@@ -164,11 +157,8 @@ class ShopPricesTab(QWidget):
         if hasattr(self, 'scroll_widget'):
             self.scroll_widget.setStyleSheet("background: transparent;")
         # Ensure new inputs keep white background
-        for entry in getattr(self, 'price_entries', {}).values():
-            try:
-                self.apply_white_lineedit_style(entry)
-            except Exception:
-                continue
+        # QFluentWidgets LineEdit handles theme changes automatically
+        # No manual styling needed
 
     def clear_item_rows(self, scroll_layout):
         """Clear all items by replacing the dynamic content container"""
@@ -236,7 +226,6 @@ class ShopPricesTab(QWidget):
         for stage in stages:
             for player_count in player_counts:
                 col_label = BodyLabel(f"{stage}\n{player_count}")
-                col_label.setStyleSheet(f"font-size: 12px; font-weight: 600; text-align: center; min-width: {self.input_width}px;")
                 col_label.setAlignment(Qt.AlignCenter)
                 header_layout.addWidget(col_label)
 
@@ -262,7 +251,6 @@ class ShopPricesTab(QWidget):
 
         # Item name
         name_label = BodyLabel(item_name)
-        name_label.setStyleSheet(f"font-size: 14px; font-weight: 600; min-width: {self.name_col_width}px;")
         item_layout.addWidget(name_label)
 
         # Price inputs for different stages
@@ -283,8 +271,7 @@ class ShopPricesTab(QWidget):
                 # Leave fields blank - users can fill in custom values
                 entry.setFixedWidth(self.input_width)
                 entry.setObjectName(f"{item_key}_{stage.lower()}_{player_count}")
-                # Always render inputs with white background for readability
-                self.apply_white_lineedit_style(entry)
+                # Let QFluentWidgets handle theme-aware styling automatically
                 layout.addWidget(entry)
 
                 # Store reference for later access using dictionary
@@ -616,13 +603,8 @@ class ShopPricesTab(QWidget):
         # Update CardWidget title theming
         if hasattr(self, 'scroll_area'):
             self.apply_scrollbar_theme(self.scroll_area)
-        self.apply_content_text_theme()
-        # Reinforce white backgrounds after theme switch
-        for entry in getattr(self, 'price_entries', {}).values():
-            try:
-                self.apply_white_lineedit_style(entry)
-            except Exception:
-                continue
+        # QFluentWidgets LineEdit handles theme changes automatically
+        # No manual styling needed
 
     def update_radio_button_theme(self):
         """Update radio button styling based on current theme"""
@@ -773,45 +755,3 @@ class ShopPricesTab(QWidget):
             scroll_area.horizontalScrollBar().setStyleSheet(bar_style)
         except Exception:
             pass
-
-    def apply_content_text_theme(self):
-        """Force text colors for labels and line edits to follow current palette"""
-        # Apply at container level so all children inherit
-        if hasattr(self, 'scroll_widget') and self.scroll_widget:
-            base_style = "background: transparent;"
-            text_rules = " QLabel { color: palette(text); } QLineEdit { color: palette(text); } "
-            # Merge with any existing style (keep background transparent)
-            self.scroll_widget.setStyleSheet(f"{base_style}{text_rules}")
-        # Also ensure individual entries keep white background/black text
-        for entry in getattr(self, 'price_entries', {}).values():
-            try:
-                self.apply_white_lineedit_style(entry)
-            except Exception:
-                continue
-
-    def apply_white_lineedit_style(self, widget):
-        """Apply a Windows-safe white background style to LineEdits"""
-        try:
-            widget.setAttribute(Qt.WA_StyledBackground, True)
-        except Exception:
-            pass
-        widget.setStyleSheet("""
-            QLineEdit {
-                background-color: #ffffff;
-                color: #000000;
-                selection-background-color: #cfe8ff;
-                selection-color: #000000;
-                border: 1px solid palette(mid);
-                border-radius: 6px;
-            }
-            QLineEdit:disabled {
-                background-color: #f0f0f0;
-                color: #808080;
-            }
-            QLineEdit:hover {
-                border: 1px solid #8c8c8c;
-            }
-            QLineEdit:focus {
-                border: 1px solid #0078d4;
-            }
-        """)
