@@ -43,14 +43,26 @@ class BattleMinigameTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
-        # Themed group container
-        group = QGroupBox("Battle Minigame Bounties")
-        self.battle_minigame_group = group
-        self.update_battle_minigame_group_theme()
-        group_layout = QVBoxLayout()
-        group_layout.setSpacing(16)
-        group_layout.setContentsMargins(20, 16, 20, 16)
-        group.setLayout(group_layout)
+        # Battle Minigame Card with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
+        
+        # Store reference to card
+        self.battle_minigame_group = card
+        
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(16)
+        
+        # Add title to the card
+        card_title = SubtitleLabel("Battle Minigame Bounties")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
 
         # Battle minigame bounties group
         bounties_layout = QVBoxLayout()
@@ -97,8 +109,8 @@ class BattleMinigameTab(QWidget):
 
         group_layout.addLayout(bounties_layout)
 
-        # Add group to main layout
-        layout.addWidget(group)
+        # Add card to main layout
+        layout.addWidget(card)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -178,49 +190,6 @@ class BattleMinigameTab(QWidget):
         self.update_battle_minigame_group_theme()
 
     def update_battle_minigame_group_theme(self):
-        """Update group styling based on current theme"""
-        from qfluentwidgets import isDarkTheme
-        if isDarkTheme():
-            self.battle_minigame_group.setStyleSheet("""
-                QGroupBox {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: palette(text);
-                    border: 2px solid palette(mid);
-                    border-radius: 8px;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    background: #3c3c3c;
-                }
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 16px;
-                    padding: 0 8px 0 8px;
-                    background: palette(highlight);
-                    color: palette(highlighted-text);
-                    border-radius: 6px;
-                    font-weight: 700;
-                }
-            """)
-        else:
-            self.battle_minigame_group.setStyleSheet("""
-                QGroupBox {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: palette(text);
-                    border: 2px solid palette(mid);
-                    border-radius: 8px;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    background: #ffffff;
-                }
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 16px;
-                    padding: 0 8px 0 8px;
-                    background: palette(highlight);
-                    color: palette(highlighted-text);
-                    border-radius: 6px;
-                    font-weight: 700;
-                }
-            """)
+        """Update card styling based on current theme - CardWidget handles this automatically"""
+        # CardWidget handles theme changes automatically
+        pass

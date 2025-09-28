@@ -43,14 +43,26 @@ class SpaceReplacementTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
-        # Themed group container
-        group = QGroupBox("Space Replacement")
-        self.space_replacement_group = group
-        self.update_space_replacement_group_theme()
-        group_layout = QVBoxLayout()
-        group_layout.setSpacing(16)
-        group_layout.setContentsMargins(20, 16, 20, 16)
-        group.setLayout(group_layout)
+        # Themed card container with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
+        
+        # Store reference to card
+        self.space_replacement_group = card
+        
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(16)
+        
+        # Add title to the card
+        card_title = SubtitleLabel("Space Replacement")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
 
         # Space types for MP4
         self.mp4_spaces = [
@@ -122,8 +134,8 @@ class SpaceReplacementTab(QWidget):
 
         group_layout.addLayout(replace_layout)
 
-        # Add group to main layout
-        layout.addWidget(group)
+        # Add card to main layout
+        layout.addWidget(card)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -198,55 +210,3 @@ class SpaceReplacementTab(QWidget):
     def show_error(self, message):
         """Show error message to user"""
         QMessageBox.critical(self, "Error", message)
-
-    def themeChanged(self):
-        """Called when theme changes - update all styling"""
-        self.update_space_replacement_group_theme()
-
-    def update_space_replacement_group_theme(self):
-        """Update group styling based on current theme"""
-        from qfluentwidgets import isDarkTheme
-        if isDarkTheme():
-            self.space_replacement_group.setStyleSheet("""
-                QGroupBox {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: palette(text);
-                    border: 2px solid palette(mid);
-                    border-radius: 8px;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    background: #3c3c3c;
-                }
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 16px;
-                    padding: 0 8px 0 8px;
-                    background: palette(highlight);
-                    color: palette(highlighted-text);
-                    border-radius: 6px;
-                    font-weight: 700;
-                }
-            """)
-        else:
-            self.space_replacement_group.setStyleSheet("""
-                QGroupBox {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: palette(text);
-                    border: 2px solid palette(mid);
-                    border-radius: 8px;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    background: #ffffff;
-                }
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 16px;
-                    padding: 0 8px 0 8px;
-                    background: palette(highlight);
-                    color: palette(highlighted-text);
-                    border-radius: 6px;
-                    font-weight: 700;
-                }
-            """)

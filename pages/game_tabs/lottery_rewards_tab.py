@@ -43,14 +43,26 @@ class LotteryRewardsTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
-        # Themed group container
-        group = QGroupBox("Lottery Rewards")
-        self.lottery_rewards_group = group
-        self.update_lottery_rewards_group_theme()
-        group_layout = QVBoxLayout()
-        group_layout.setSpacing(16)
-        group_layout.setContentsMargins(20, 16, 20, 16)
-        group.setLayout(group_layout)
+        # Lottery Rewards Card with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
+        
+        # Store reference to card
+        self.lottery_rewards_group = card
+        
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(16)
+        
+        # Add title to the card
+        card_title = SubtitleLabel("Lottery Rewards")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
 
         # Lottery prizes group
         prizes_layout = QVBoxLayout()
@@ -153,8 +165,8 @@ class LotteryRewardsTab(QWidget):
 
         group_layout.addLayout(prizes_layout)
 
-        # Add group to main layout
-        layout.addWidget(group)
+        # Add card to main layout
+        layout.addWidget(card)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")

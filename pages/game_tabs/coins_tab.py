@@ -46,17 +46,26 @@ class CoinsTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
         
-        # Coin Modifications Group using QGroupBox with themed styling
-        group = QGroupBox("Coin Modifications")
+        # Coin Modifications Card with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
         
-        # Store reference to group for theme updates
-        self.coins_group = group
+        # Store reference to card
+        self.coins_group = card
         
-        # Apply initial styling
-        self.update_coins_group_theme()
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(16)
         
-        group_layout = QVBoxLayout()
-        group.setLayout(group_layout)
+        # Add title to the card
+        card_title = SubtitleLabel("Coin Modifications")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
         
         # Blue Space Row
         blue_row = QHBoxLayout()
@@ -462,7 +471,7 @@ class CoinsTab(QWidget):
             hotel_row.addStretch()
             group_layout.addLayout(hotel_row)
         
-        layout.addWidget(group)
+        layout.addWidget(card)
         
         # Generate button with reduced margins
         generate_btn = PushButton("Generate Codes")

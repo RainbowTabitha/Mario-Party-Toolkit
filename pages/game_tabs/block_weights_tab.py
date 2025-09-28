@@ -38,20 +38,26 @@ class BlockWeightsTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
         
-        # Dice Block Weights Group
-        group = QGroupBox("Dice Block Weights")
+        # Dice Block Weights Card with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
         
-        # Store reference to group for theme updates
-        self.block_weights_group = group
+        # Store reference to card
+        self.block_weights_group = card
         
-        # Apply initial styling
-        self.update_block_weights_group_theme()
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(12)
         
-        # Group layout with reduced spacing
-        group_layout = QVBoxLayout()
-        group_layout.setSpacing(6)  # Reduced from 8
-        group_layout.setContentsMargins(16, 8, 16, 8)  # Reduced top/bottom margins
-        group.setLayout(group_layout)
+        # Add title to the card
+        card_title = SubtitleLabel("Dice Block Weights")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
         
         # Grid layout for the dice block rows
         grid_layout = QVBoxLayout()
@@ -211,8 +217,8 @@ class BlockWeightsTab(QWidget):
         # Add grid layout to group
         group_layout.addLayout(grid_layout)
         
-        # Add group to main layout
-        layout.addWidget(group)
+        # Add card to main layout
+        layout.addWidget(card)
         
         # Generate button
         generate_btn = PushButton("Generate Codes")

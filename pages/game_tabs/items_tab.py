@@ -55,24 +55,31 @@ class ItemsTab(QWidget):
             self.setLayout(layout)
             return
         
-        # Item Prices Group
-        group = QGroupBox("Item Prices")
+        # Item Prices Card with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
         
-        # Store reference to group for theme updates
-        self.items_group = group
+        # Store reference to card
+        self.items_group = card
         
-        # Apply initial styling
-        self.update_items_group_theme()
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(16)
         
-        group_layout = QVBoxLayout()
-        group_layout.setSpacing(12)
-        group_layout.setContentsMargins(16, 12, 16, 12)
-        group.setLayout(group_layout)
+        # Add title to the card
+        card_title = SubtitleLabel("Item Prices")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
         
         # Create item entries based on game
         self.create_item_entries(group_layout)
         
-        layout.addWidget(group)
+        layout.addWidget(card)
         
         # Generate button
         generate_btn = PushButton("Generate Codes")

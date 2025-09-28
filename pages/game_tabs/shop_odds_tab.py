@@ -58,7 +58,6 @@ class ShopOddsTab(QWidget):
 
         # Add title to the card
         card_title = SubtitleLabel("Item Shop Odds")
-        card_title.setObjectName("card_title")
         self.card_title = card_title
         card_layout.addWidget(card_title)
 
@@ -132,10 +131,8 @@ class ShopOddsTab(QWidget):
         try:
             from PyQt5.QtCore import QTimer
             QTimer.singleShot(0, self.apply_content_text_theme)
-            QTimer.singleShot(0, self.update_card_title_theme)
         except Exception:
             self.apply_content_text_theme()
-            self.update_card_title_theme()
 
     def set_game_version(self, version):
         """Set the game version (mp4 or mp4dx)"""
@@ -155,11 +152,6 @@ class ShopOddsTab(QWidget):
         if hasattr(self, 'shop_odds_card'):
             # CardWidget handles its own theming automatically
             self.scroll_widget.setStyleSheet("background: transparent;")
-        # Refresh card title color so it doesn't revert
-        try:
-            self.update_card_title_theme()
-        except Exception:
-            pass
         self.apply_content_text_theme()
         # Ensure inputs keep white background after version toggle
         for attr in dir(self):
@@ -508,20 +500,10 @@ class ShopOddsTab(QWidget):
         """Show error message to user"""
         QMessageBox.critical(self, "Error", message)
 
-    def update_card_title_theme(self):
-        """Update CardWidget title styling based on current theme"""
-        if hasattr(self, 'card_title') and self.card_title:
-            from qfluentwidgets import isDarkTheme
-            if isDarkTheme():
-                self.card_title.setStyleSheet("color: #ffffff; font-size: 16px; font-weight: 600; margin-bottom: 8px;")
-            else:
-                self.card_title.setStyleSheet("color: #333333; font-size: 16px; font-weight: 600; margin-bottom: 8px;")
-
     def themeChanged(self):
         """Called when theme changes - update all styling"""
         self.update_radio_button_theme()
         # Update CardWidget title theming
-        self.update_card_title_theme()
         if hasattr(self, 'scroll_area'):
             self.apply_scrollbar_theme(self.scroll_area)
         self.apply_content_text_theme()

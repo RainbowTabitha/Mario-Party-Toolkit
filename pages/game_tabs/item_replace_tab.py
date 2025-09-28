@@ -51,19 +51,26 @@ class ItemReplaceTab(QWidget):
             self.setLayout(layout)
             return
         
-        # Item Replacement Group
-        group = QGroupBox("Item Replacement")
+        # Item Replacement Card with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
         
-        # Store reference to group for theme updates
-        self.item_replace_group = group
+        # Store reference to card
+        self.item_replace_group = card
         
-        # Apply initial styling
-        self.update_item_replace_group_theme()
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(16)
         
-        group_layout = QVBoxLayout()
-        group_layout.setSpacing(16)
-        group_layout.setContentsMargins(20, 16, 20, 16)
-        group.setLayout(group_layout)
+        # Add title to the card
+        card_title = SubtitleLabel("Item Replacement")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
         
         # Item selection row
         selection_row = QHBoxLayout()
@@ -96,8 +103,8 @@ class ItemReplaceTab(QWidget):
         selection_row.addStretch()
         group_layout.addLayout(selection_row)
         
-        # Add group to main layout
-        layout.addWidget(group)
+        # Add card to main layout
+        layout.addWidget(card)
         
         # Generate button
         generate_btn = PushButton("Generate Codes")

@@ -32,18 +32,26 @@ class BonusStarTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
-        group = QGroupBox("Bonus Star Replacement")
+        # Bonus Star Replacement Card with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
         
-        # Store reference to group for theme updates
-        self.bonus_star_group = group
+        # Store reference to card
+        self.bonus_star_group = card
         
-        # Apply initial styling
-        self.update_bonus_star_group_theme()
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(16)
         
-        group_layout = QVBoxLayout()
-        group_layout.setSpacing(16)
-        group_layout.setContentsMargins(20, 16, 20, 16)
-        group.setLayout(group_layout)
+        # Add title to the card
+        card_title = SubtitleLabel("Bonus Star Replacement")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
 
         self.stars2 = [
             "None", "Minigame Star", "Coin Star", "Happening Star", "Red Star", "Blue Star", "Chance Time Star", "Bowser Space Star", "Battle Space Star", "Item Space Star", "Bank Space Star"
@@ -88,7 +96,7 @@ class BonusStarTab(QWidget):
         hap_row.addStretch()
         group_layout.addLayout(hap_row)
 
-        layout.addWidget(group)
+        layout.addWidget(card)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")

@@ -51,17 +51,26 @@ class MinigameTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
         
-        # Minigame Replacement Group
-        group = QGroupBox("Minigame Replacement")
+        # Minigame Replacement Card with acrylic effect
+        from qfluentwidgets import CardWidget
+        card = CardWidget()
         
-        # Store reference to group for theme updates
-        self.minigame_group = group
+        # Store reference to card
+        self.minigame_group = card
         
-        # Apply initial styling
-        self.update_minigame_group_theme()
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(20, 16, 20, 16)
+        card_layout.setSpacing(16)
         
-        group_layout = QVBoxLayout()
-        group.setLayout(group_layout)
+        # Add title to the card
+        card_title = SubtitleLabel("Minigame Replacement")
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        card_layout.addWidget(card_title)
+        
+        card.setLayout(card_layout)
+        
+        # Use card_layout instead of group_layout for adding content
+        group_layout = card_layout
         
         # Minigame selection row
         selection_row = QHBoxLayout()
@@ -90,8 +99,8 @@ class MinigameTab(QWidget):
         selection_row.addStretch()
         group_layout.addLayout(selection_row)
         
-        # Add group to main layout
-        layout.addWidget(group)
+        # Add card to main layout
+        layout.addWidget(card)
         
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -331,52 +340,9 @@ class MinigameTab(QWidget):
         )
     
     def update_minigame_group_theme(self):
-        """Update the minigame group styling based on current theme"""
-        from qfluentwidgets import isDarkTheme
-        if isDarkTheme():
-            self.minigame_group.setStyleSheet("""
-                QGroupBox {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: palette(text);
-                    border: 2px solid palette(mid);
-                    border-radius: 8px;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    background: #3c3c3c;
-                }
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 16px;
-                    padding: 0 8px 0 8px;
-                    background: palette(highlight);
-                    color: palette(highlighted-text);
-                    border-radius: 6px;
-                    font-weight: 700;
-                }
-            """)
-        else:
-            self.minigame_group.setStyleSheet("""
-                QGroupBox {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: palette(text);
-                    border: 2px solid palette(mid);
-                    border-radius: 8px;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    background: #ffffff;
-                }
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 16px;
-                    padding: 0 8px 0 8px;
-                    background: palette(highlight);
-                    color: palette(highlighted-text);
-                    border-radius: 6px;
-                    font-weight: 700;
-                }
-            """)
+        """Update card styling based on current theme - CardWidget handles this automatically"""
+        # CardWidget handles theme changes automatically
+        pass
     
     def themeChanged(self):
         """Called when theme changes - update all styling"""
