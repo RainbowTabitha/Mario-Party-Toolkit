@@ -7,7 +7,7 @@
 import os
 import platform
 from PyQt5.QtWidgets import QMainWindow, QSizePolicy
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QSettings
 from PyQt5.QtGui import QIcon
 
 from qfluentwidgets import FluentWindow, setTheme, Theme
@@ -51,23 +51,49 @@ class MainWindow(FluentWindow):
         self.setAttribute(Qt.WA_TranslucentBackground, False)
         self.setAttribute(Qt.WA_NoSystemBackground, False)
 
+    def load_theme_preference(self):
+        """Load theme preference from registry/settings"""
+        settings = QSettings("Mario Party Toolkit", "Settings")
+        # Default to system theme if no preference is saved
+        saved_theme = settings.value("theme", "system")
+        
+        if saved_theme == "dark":
+            return Theme.DARK
+        elif saved_theme == "light":
+            return Theme.LIGHT
+        else:  # system or any other value
+            # Use system theme as default
+            if DARKDETECT_AVAILABLE:
+                try:
+                    return Theme.DARK if darkdetect.isDark() else Theme.LIGHT
+                except Exception:
+                    return Theme.LIGHT
+            else:
+                return Theme.LIGHT
+
     def setup_theme(self):
-        """Set the initial theme based on system preference"""
-        if DARKDETECT_AVAILABLE:
-            try:
-                if darkdetect.isDark():
-                    setTheme(Theme.DARK)
-                    print("✓ Dark theme applied (system preference)")
-                else:
-                    setTheme(Theme.LIGHT)
-                    print("✓ Light theme applied (system preference)")
-            except Exception as e:
-                print(f"⚠️  Error detecting theme: {e}, using light theme")
-                setTheme(Theme.LIGHT)
-        else:
-            # Fallback to light theme
+        """Set the initial theme based on saved preference"""
+        try:
+            # Load saved theme preference
+            theme = self.load_theme_preference()
+            setTheme(theme)
+            
+            # Apply title bar styling after setting theme
+            self.apply_title_bar_style()
+            
+            # Use QTimer to apply styling again after window is fully initialized
+            QTimer.singleShot(100, self.apply_title_bar_style)
+            
+            if theme == Theme.DARK:
+                print("✓ Dark theme applied (saved preference)")
+            else:
+                print("✓ Light theme applied (saved preference)")
+                
+        except Exception as e:
+            print(f"⚠️  Error loading theme preference: {e}, using light theme")
             setTheme(Theme.LIGHT)
-            print("✓ Light theme applied (default)")
+            self.apply_title_bar_style()
+            QTimer.singleShot(100, self.apply_title_bar_style)
 
     def setup_theme_monitoring(self):
         """Setup monitoring for theme changes"""
@@ -127,23 +153,81 @@ class MainWindow(FluentWindow):
             self.oldPos = None
 
     def apply_title_bar_style(self):
-        """Apply custom styling to the title bar to ensure proper text visibility."""
+        """Apply minimal styling to fix only the title bar text visibility."""
         try:
-            # Apply custom stylesheet for the title bar
-            title_style = """
-            QMainWindow::title {
-                background-color: transparent;
-                color: palette(text);
-                font-weight: bold;
-                font-size: 14px;
-            }
+            # Import FluentWindow's theme detection
+            from qfluentwidgets import isDarkTheme
             
-            QMainWindow {
-                background-color: palette(window);
-                color: palette(text);
-            }
+            # Determine if we're in dark mode using FluentWindow's built-in detection
+            is_dark_theme = isDarkTheme()
+            
+            # Set only text color - don't change backgrounds or other styling
+            if is_dark_theme:
+                text_color = "#FFFFFF"
+            else:
+                text_color = "#000000"
+            
+            # Apply minimal styling - only target title text, not the entire window
+            title_style = f"""
+            /* Only style title label text color */
+            QLabel[objectName="titleLabel"] {{
+                color: {text_color} !important;
+            }}
+            
+            QWidget[objectName="titleBar"] QLabel {{
+                color: {text_color} !important;
+            }}
             """
-            self.setStyleSheet(title_style)
-            print("✓ Title bar styling applied")
+            
+            # Don't override the entire window stylesheet, just add our specific rule
+            current_style = self.styleSheet()
+            if "QLabel[objectName=\"titleLabel\"]" not in current_style:
+                self.setStyleSheet(current_style + title_style)
+            
+            # Try to find and style title components directly without changing backgrounds
+            self.force_title_bar_styling(text_color)
+            
+            print(f"✓ Title bar text color applied ({'Dark' if is_dark_theme else 'Light'} theme) - Text: {text_color}")
         except Exception as e:
             print(f"⚠️  Error applying title bar styling: {e}")
+    
+    def force_title_bar_styling(self, text_color):
+        """Find and style only the title text, preserving all other styling"""
+        try:
+            from PyQt5.QtWidgets import QLabel, QWidget
+            
+            # Find all QLabel widgets that might be the title
+            all_labels = self.findChildren(QLabel)
+            for label in all_labels:
+                # Check if this might be a title label
+                if (label.text() == "Mario Party Toolkit" or 
+                    label.objectName() in ["titleLabel", "title"] or
+                    "title" in label.objectName().lower()):
+                    # Only change text color, preserve existing styling
+                    current_style = label.styleSheet()
+                    # Remove any existing color declarations
+                    import re
+                    current_style = re.sub(r'color\s*:\s*[^;]+;?', '', current_style)
+                    # Add our color
+                    label.setStyleSheet(f"{current_style} color: {text_color} !important;")
+                    print(f"  → Styled title label: {label.objectName()} / '{label.text()}'")
+            
+            # Find title bar widgets and style only their text labels
+            all_widgets = self.findChildren(QWidget)
+            for widget in all_widgets:
+                if ("title" in widget.objectName().lower() and 
+                    "bar" in widget.objectName().lower()):
+                    print(f"  → Found title bar widget: {widget.objectName()}")
+                    
+                    # Style only text labels in title bar, not the container
+                    for child in widget.findChildren(QLabel):
+                        current_style = child.styleSheet()
+                        # Remove any existing color declarations
+                        import re
+                        current_style = re.sub(r'color\s*:\s*[^;]+;?', '', current_style)
+                        # Add our color
+                        child.setStyleSheet(f"{current_style} color: {text_color} !important;")
+                        print(f"    → Styled title bar label: '{child.text()}'")
+                        
+        except Exception as e:
+            print(f"  ⚠️ Error in force styling: {e}")

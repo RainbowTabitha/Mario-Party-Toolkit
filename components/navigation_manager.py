@@ -108,6 +108,9 @@ class NavigationManager:
             position=NavigationItemPosition.BOTTOM
         )
         
+        # Apply the current theme from settings
+        self.settings_page.apply_current_theme()
+        
         # Connect theme change signal to all game pages
         self.settings_page.themeChanged.connect(self.update_all_game_themes)
     
@@ -116,7 +119,12 @@ class NavigationManager:
         # Update all Mario Party game tabs
         if hasattr(self, 'mario_party_pages'):
             self.mario_party_pages.update_all_tabs_theme()
-        print("✓ Theme change signal received - updating all game pages")
+        
+        # Update main window title bar styling
+        if hasattr(self.main_window, 'apply_title_bar_style'):
+            self.main_window.apply_title_bar_style()
+        
+        print("✓ Theme change signal received - updating all game pages and title bar")
 
     def add_about_page(self):
         """Add the about page to navigation"""
