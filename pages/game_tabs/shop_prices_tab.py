@@ -6,7 +6,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QLineEdit, QScrollArea, QFrame, QGroupBox, QPushButton, QMessageBox, QRadioButton, QButtonGroup
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardWidget
+from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardWidget, ScrollArea
 
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
@@ -66,15 +66,14 @@ class ShopPricesTab(QWidget):
         card_layout.addWidget(card_title)
 
         # Scrollable area for the form
-        scroll_area = QScrollArea()
+        scroll_area = ScrollArea()
         self.scroll_area = scroll_area
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         scroll_area.setFrameShape(QFrame.NoFrame)
-        # Make scroll area blend with group background
-        scroll_area.setStyleSheet("QScrollArea { border: none; background: transparent; }")
         scroll_area.viewport().setStyleSheet("background: transparent;")
+
 
         # Container widget for scroll area
         self.scroll_widget = QWidget()
@@ -227,6 +226,7 @@ class ShopPricesTab(QWidget):
             for player_count in player_counts:
                 col_label = BodyLabel(f"{stage}\n{player_count}")
                 col_label.setAlignment(Qt.AlignCenter)
+                col_label.setFixedWidth(self.input_width)
                 header_layout.addWidget(col_label)
 
         header_layout.addStretch()
@@ -541,7 +541,8 @@ class ShopPricesTab(QWidget):
     def create_version_items(self, scroll_layout):
         """Create items for the current game version"""
         if self.game_type == "mp4":
-            items_to_create = [
+            # MP4 items only
+            all_items = [
                 ("Mini Mushroom", "assets/items/miniMushroom.png"),
                 ("Mega Mushroom", "assets/items/megaMushroom.png"),
                 ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
@@ -556,11 +557,10 @@ class ShopPricesTab(QWidget):
                 ("Crystal Ball", "assets/items/crystalBall.png"),
                 ("Magic Lamp", "assets/items/magicLamp.png"),
                 ("Item Bag", "assets/items/itemBag4.png"),
-                ("Bowser Phone", "assets/items/bowserPhone.png"),
-                ("Double Dip", "assets/items/doubleDip.png"),
             ]
-        else:  # MP4 DX
-            items_to_create = [
+        else:
+            # MP4DX items (includes all MP4 items plus additional ones)
+            all_items = [
                 ("Mini Mushroom", "assets/items/miniMushroom.png"),
                 ("Mega Mushroom", "assets/items/megaMushroom.png"),
                 ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
@@ -569,7 +569,7 @@ class ShopPricesTab(QWidget):
                 ("Golden Mushroom", "assets/items/goldenMushroom.png"),
                 ("Reverse Mushroom", "assets/items/reverseMushroom.png"),
                 ("Poison Mushroom", "assets/items/poisonMushroom.png"),
-                ("Tri, Poison Mushroom", "assets/items/triplePoisonMushroom.png"),
+                ("Tri. Poison Mushroom", "assets/items/triplePoisonMushroom.png"),
                 ("Mini Mega Hammer", "assets/items/miniMegaHammer.png"),
                 ("Warp Pipe", "assets/items/warpPipe.png"),
                 ("Swap Card", "assets/items/swapCard.png"),
@@ -577,12 +577,30 @@ class ShopPricesTab(QWidget):
                 ("Gaddlight", "assets/items/gaddlight.png"),
                 ("Chomp Call", "assets/items/chompCall.png"),
                 ("Bowser Suit", "assets/items/bowserSuit4.png"),
+                ("Crystal Ball", "assets/items/crystalBall.png"),
+                ("Magic Lamp", "assets/items/magicLamp.png"),
+                ("Item Bag", "assets/items/itemBag4.png"),
+                ("Cellular Shopper", "assets/items/celluarShopper.png"),
+                ("Skeleton Key", "assets/items/skeletonKey.png"),
+                ("Plunder Chest", "assets/items/plunderChest.png"),
+                ("Gaddbrush", "assets/items/gaddbrush.png"),
+                ("Warp Block", "assets/items/warpBlock.png"),
+                ("Fly Guy", "assets/items/flyGuy.png"),
+                ("Plus Block", "assets/items/plusBlock.png"),
+                ("Minus Block", "assets/items/minusBlock.png"),
+                ("Speed Block", "assets/items/speedBlock.png"),
+                ("Slow Block", "assets/items/slowBlock.png"),
+                ("Bowser Phone", "assets/items/bowserPhone.png"),
+                ("Double Dip", "assets/items/doubleDip.png"),
+                ("Hidden Block Card", "assets/items/hiddenBlockCard.png"),
+                ("Barter Box", "assets/items/barterBox.png"),
+                ("Super Warp Pipe", "assets/items/superWarpPipe.png"),
+                ("Chance Time Charm", "assets/items/chanceTimeCharm.png"),
+                ("Wacky Watch", "assets/items/wackyWatch.png"),
             ]
 
         # Create items (limited for stability)
-        for i, (item_name, item_icon) in enumerate(items_to_create):
-            if i >= 12:  # Allow more items for better UX
-                break
+        for i, (item_name, item_icon) in enumerate(all_items):
             self.create_item_row(scroll_layout, item_name, item_icon)
 
         # Add spacer at the end

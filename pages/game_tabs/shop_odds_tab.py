@@ -6,7 +6,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QScrollArea, QFrame, QGroupBox, QPushButton, QMessageBox, QRadioButton, QButtonGroup
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardWidget
+from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardWidget, ScrollArea
 
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
@@ -62,15 +62,14 @@ class ShopOddsTab(QWidget):
         card_layout.addWidget(card_title)
 
         # Scrollable area for the form
-        scroll_area = QScrollArea()
+        scroll_area = ScrollArea()
         self.scroll_area = scroll_area
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         scroll_area.setFrameShape(QFrame.NoFrame)
-        # Make scroll area blend with group background
-        scroll_area.setStyleSheet("QScrollArea { border: none; background: transparent; }")
         scroll_area.viewport().setStyleSheet("background: transparent;")
+
 
         # Container widget for scroll area
         self.scroll_widget = QWidget()
@@ -315,6 +314,7 @@ class ShopOddsTab(QWidget):
 
         # Item name
         name_label = BodyLabel(item_name)
+        name_label.setFixedWidth(self.name_col_width)
         item_layout.addWidget(name_label)
 
         # Odds inputs for different stages
