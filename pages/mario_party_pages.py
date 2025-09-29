@@ -23,8 +23,9 @@ from pages.game_tabs.space_replacement_global_tab import SpaceReplacementTab
 from pages.game_tabs.lottery_rewards_mp4_tab import LotteryRewardsTab
 from pages.game_tabs.capsule_mods_mp5_tab import CapsuleModsMp5Tab
 from pages.game_tabs.board_specific_mp5_tab import BoardSpecificMp5Tab
-from pages.game_tabs.battle_minigame_global_tab import BattleMinigameTab
+from pages.game_tabs.board_specific_mp7_tab import BoardSpecificMp7Tab
 from pages.game_tabs.items_mp7_tab import ItemsMP7Tab
+from pages.game_tabs.battle_minigame_global_tab import BattleMinigameTab
 
 
 class MarioPartyPages:
@@ -401,7 +402,7 @@ class MarioPartyPages:
         tab_widget.addTab(bonus_star_tab, "Bonus Star Replacement")
         
         # Board Specific tab
-        board_specific_tab = BoardSpecificMp5Tab("marioParty7")
+        board_specific_tab = BoardSpecificMp7Tab("marioParty7")
         tab_widget.addTab(board_specific_tab, "Board Specific")
 
     def create_mp8_tabs(self, tab_widget):

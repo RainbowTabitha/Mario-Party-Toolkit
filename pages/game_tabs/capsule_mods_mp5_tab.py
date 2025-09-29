@@ -39,7 +39,7 @@ class CapsuleModsMp5Tab(QWidget):
         title.setAlignment(Qt.AlignCenter)
         layout.addWidget(title)
 
-        desc = BodyLabel("Modify capsule prices and distribution weights for 30 items:")
+        desc = BodyLabel("Modify capsule prices and distribution weights:")
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
