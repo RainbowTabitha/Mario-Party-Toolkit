@@ -53,7 +53,7 @@ class ItemsMP7Tab(QWidget):
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        scroll_area.setStyleSheet("ScrollArea { background: transparent; border: none; }")
 
         # Container widget for scroll area content
         container = QWidget()

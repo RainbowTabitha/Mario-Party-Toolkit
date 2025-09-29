@@ -6,7 +6,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QScrollArea, QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardWidget
+from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardWidget, ScrollArea
 
 from utils.resource_manager import ResourceManager
 
@@ -44,11 +44,11 @@ class CapsuleModsMp5Tab(QWidget):
         layout.addWidget(desc)
 
         # Create scroll area for the capsule interface
-        scroll_area = QScrollArea()
+        scroll_area = ScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        scroll_area.setStyleSheet("ScrollArea { background: transparent; border: none; }")
 
         # Container widget for scroll area content
         container = QWidget()

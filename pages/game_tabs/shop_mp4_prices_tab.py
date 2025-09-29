@@ -57,11 +57,11 @@ class ShopPricesTab(QWidget):
         layout.addWidget(desc)
 
         # Create scroll area for the shop interface
-        scroll_area = QScrollArea()
+        scroll_area = ScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        scroll_area.setStyleSheet("ScrollArea { background: transparent; border: none; }")
 
         # Container widget for scroll area content
         container = QWidget()
