@@ -11,9 +11,10 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
 
-# Import battle coins event function for MP4
+# Import battle coins event function for MP4 and MP5
 try:
     from events.marioParty4_battle import battleCoins_mp4
+    from events.marioParty5_battle import battleCoins_mp5
 except ImportError:
     pass
 
@@ -158,7 +159,23 @@ class BattleMinigameTab(QWidget):
     def generate_codes(self):
         """Generate codes for battle minigame bounties"""
         try:
-            if 'battleCoins_mp4' in globals():
+            if self.game_id == "marioParty5" and 'battleCoins_mp5' in globals():
+                # Get bounty values
+                bounties = []
+                for i in range(1, 6):
+                    entry = getattr(self, f"bounty_{i}_entry")
+                    bounties.append(entry.text())
+
+                class MockEntry:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+
+                mock_bounties = [MockEntry(bounty) for bounty in bounties]
+
+                battleCoins_mp5(*mock_bounties)
+            elif 'battleCoins_mp4' in globals():
                 # Get bounty values
                 bounties = []
                 for i in range(1, 6):
@@ -176,7 +193,7 @@ class BattleMinigameTab(QWidget):
 
                 battleCoins_mp4(*mock_bounties)
             else:
-                self.show_error("Mario Party 4 battle minigame modification not available")
+                self.show_error("Battle minigame modification not available")
 
         except Exception as e:
             self.show_error(f"Error generating codes: {str(e)}")

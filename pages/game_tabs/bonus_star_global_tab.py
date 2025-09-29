@@ -9,6 +9,7 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton, InfoB
 
 try:
     from events.marioParty2_bonusStarReplace import customBonusStarEvent_mp2
+    from events.marioParty5_bonusStarReplace import customBonusStarEvent_mp5
 except ImportError:
     pass
 
@@ -57,13 +58,18 @@ class BonusStarTab(QWidget):
             "None", "Minigame Star", "Coin Star", "Happening Star", "Red Star", "Blue Star", "Chance Time Star", "Bowser Space Star", "Battle Space Star", "Item Space Star", "Bank Space Star"
         ]
 
+        # MP5 star list
+        self.stars5 = [
+            "None", "Blue Star", "Red Star", "Capsule Space Star", "Happening Star", "Bowser Star", "Donkey Kong Star", "Current Coins Star", "Minigame Star", "Coin Star", "Star Star"
+        ]
+
         # Minigame Star
         mg_row = QHBoxLayout()
         mg_label = BodyLabel("Replace Minigame Star with:")
         mg_label.setStyleSheet("font-size: 16px; min-width: 200px;")
         mg_row.addWidget(mg_label)
         self.star1_combo = ComboBox()
-        self.star1_combo.addItems(self.stars2)
+        self.star1_combo.addItems(self.stars5 if self.game_id == "marioParty5" else self.stars2)
         self.star1_combo.setCurrentText("Minigame Star")
         self.star1_combo.setFixedWidth(220)
         mg_row.addWidget(self.star1_combo)
@@ -76,7 +82,7 @@ class BonusStarTab(QWidget):
         coin_label.setStyleSheet("font-size: 16px; min-width: 200px;")
         coin_row.addWidget(coin_label)
         self.star2_combo = ComboBox()
-        self.star2_combo.addItems(self.stars2)
+        self.star2_combo.addItems(self.stars5 if self.game_id == "marioParty5" else self.stars2)
         self.star2_combo.setCurrentText("Coin Star")
         self.star2_combo.setFixedWidth(220)
         coin_row.addWidget(self.star2_combo)
@@ -89,7 +95,7 @@ class BonusStarTab(QWidget):
         hap_label.setStyleSheet("font-size: 16px; min-width: 200px;")
         hap_row.addWidget(hap_label)
         self.star3_combo = ComboBox()
-        self.star3_combo.addItems(self.stars2)
+        self.star3_combo.addItems(self.stars5 if self.game_id == "marioParty5" else self.stars2)
         self.star3_combo.setCurrentText("Happening Star")
         self.star3_combo.setFixedWidth(220)
         hap_row.addWidget(self.star3_combo)
@@ -111,7 +117,20 @@ class BonusStarTab(QWidget):
     def generate_codes(self):
         """Generate codes for bonus star replacement"""
         try:
-            if 'customBonusStarEvent_mp2' in globals():
+            if self.game_id == "marioParty5" and 'customBonusStarEvent_mp5' in globals():
+                class MockComboBox:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+                    def currentText(self):
+                        return self._text
+
+                star1 = MockComboBox(self.star1_combo.currentText())
+                star2 = MockComboBox(self.star2_combo.currentText())
+                star3 = MockComboBox(self.star3_combo.currentText())
+                customBonusStarEvent_mp5(star1, star2, star3, self.stars5)
+            elif 'customBonusStarEvent_mp2' in globals():
                 # Create mock objects to match the expected interface
                 class MockComboBox:
                     def __init__(self, text):

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # ============================================
-# Shop Prices Tab Component for Mario Party 4
+# Shop Odds Tab Component for Mario Party 4
 # ============================================
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QLineEdit, QScrollArea, QFrame, QGroupBox, QPushButton, QMessageBox, QRadioButton, QButtonGroup
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QScrollArea, QFrame, QGroupBox, QPushButton, QMessageBox, QRadioButton, QButtonGroup
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardWidget, ScrollArea
@@ -11,14 +11,14 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, CardW
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
 
-# Import shop price event functions for MP4
+# Import shop odds event functions for MP4
 try:
-    from events.marioParty4_items import itemsEvent_mp4ShopPrices, itemsEvent_mp4ShopDXPrices
+    from events.marioParty4_items2 import itemsEvent_mp4ShopOdds, itemsEvent_mp4ShopOddsDX
 except ImportError:
     pass
 
 
-class ShopPricesTab(QWidget):
+class ShopOddsTab(QWidget):
     def __init__(self, game_id, game_type="mp4"):
         super().__init__()
         self.game_id = game_id
@@ -27,15 +27,11 @@ class ShopPricesTab(QWidget):
         self.icon_width = 32
         self.name_col_width = 140
         self.input_width = 60
-
-        # Use dictionary to store widget references instead of dynamic attributes
-        self.price_entries = {}
-
         self.setup_ui()
 
     def setup_ui(self):
-        """Set up the shop prices tab UI"""
-        self.setObjectName(f"{self.game_id}ShopPricesTab")
+        """Set up the shop odds tab UI"""
+        self.setObjectName(f"{self.game_id}ShopOddsTab")
 
         # Main layout
         layout = QVBoxLayout()
@@ -43,25 +39,25 @@ class ShopPricesTab(QWidget):
         layout.setContentsMargins(16, 12, 16, 12)
 
         # Title
-        title = SubtitleLabel("Item Shop Price Modifications")
+        title = SubtitleLabel("Item Shop Odds Modifications")
         title.setAlignment(Qt.AlignCenter)
         layout.addWidget(title)
 
         # Description
-        desc = BodyLabel("Modify prices for items in the shop at different game stages:")
+        desc = BodyLabel("Modify odds for items appearing in the shop at different game stages:")
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
         # Themed card container using Fluent design
         card = CardWidget()
-        self.shop_prices_card = card
+        self.shop_odds_card = card
         card_layout = QVBoxLayout()
         card_layout.setSpacing(16)
         card_layout.setContentsMargins(20, 16, 20, 16)
         card.setLayout(card_layout)
 
         # Add title to the card
-        card_title = SubtitleLabel("Item Shop Prices")
+        card_title = SubtitleLabel("Item Shop Odds")
         self.card_title = card_title
         card_layout.addWidget(card_title)
 
@@ -109,11 +105,9 @@ class ShopPricesTab(QWidget):
         # Apply initial radio button styling
         self.update_radio_button_theme()
 
-        # Create header with column labels
-        self.create_column_header(scroll_layout)
-
-        # Create minimal items for testing
-        self.create_minimal_item(scroll_layout)
+        # Create dynamic content container for items
+        dynamic_container = self.create_dynamic_content_container()
+        scroll_layout.addWidget(dynamic_container)
 
         # Add some bottom spacing
         spacer = QFrame()
@@ -137,6 +131,9 @@ class ShopPricesTab(QWidget):
         layout.addWidget(generate_btn)
 
         self.setLayout(layout)
+        
+        # Initialize the items UI with proper grid alignment
+        self.update_items_ui(self.scroll_widget.layout())
 
     def set_game_version(self, version):
         """Set the game version (mp4 or mp4dx)"""
@@ -153,14 +150,19 @@ class ShopPricesTab(QWidget):
 
         # Reapply theme styling to prevent palette glitches in dark mode
         self.update_radio_button_theme()
-        if hasattr(self, 'scroll_widget'):
+        if hasattr(self, 'shop_odds_card'):
+            # CardWidget handles its own theming automatically
             self.scroll_widget.setStyleSheet("background: transparent;")
-        # Ensure new inputs keep white background
-        # QFluentWidgets LineEdit handles theme changes automatically
-        # No manual styling needed
+        # Ensure inputs keep white background after version toggle
+        for attr in dir(self):
+            if attr.endswith('_entry'):
+                try:
+                    widget = getattr(self, attr)
+                except Exception:
+                    continue
 
     def clear_item_rows(self, scroll_layout):
-        """Clear all items by replacing the dynamic content container"""
+        """Clear all items by removing the dynamic content container"""
         # Find and remove the dynamic content container
         for i in range(scroll_layout.count()):
             item = scroll_layout.itemAt(i)
@@ -172,8 +174,23 @@ class ShopPricesTab(QWidget):
                     widget.deleteLater()
                     break
 
-        # Clear the price entries dictionary to prevent accumulation
-        self.price_entries.clear()
+    def update_items_ui(self, scroll_layout):
+        """Update the items UI based on current game version"""
+        # Clear existing dynamic content
+        self.clear_item_rows(scroll_layout)
+        
+        # Clear all entry attributes to prevent accessing deleted widgets
+        for attr in list(dir(self)):
+            if attr.endswith('_entry'):
+                try:
+                    delattr(self, attr)
+                except (AttributeError, RuntimeError):
+                    # Ignore errors if attribute doesn't exist or widget is deleted
+                    continue
+
+        # Create new dynamic content container
+        dynamic_container = self.create_dynamic_content_container()
+        scroll_layout.addWidget(dynamic_container)
 
     def create_dynamic_content_container(self):
         """Create a container widget for dynamic content"""
@@ -183,24 +200,80 @@ class ShopPricesTab(QWidget):
         container_layout.setContentsMargins(0, 0, 0, 0)
         container_layout.setSpacing(8)
 
-        # Add the items
-        self.create_version_items(container_layout)
+        # Create all items list based on current game version
+        if self.game_type == "mp4":
+            # MP4 items only
+            all_items = [
+                ("Mini Mushroom", "assets/items/miniMushroom.png"),
+                ("Mega Mushroom", "assets/items/megaMushroom.png"),
+                ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
+                ("Sup Mega Mushroom", "assets/items/superMegaMushroom.png"),
+                ("Mini Mega Hammer", "assets/items/miniMegaHammer.png"),
+                ("Warp Pipe", "assets/items/warpPipe.png"),
+                ("Swap Card", "assets/items/swapCard.png"),
+                ("Sparky Sticker", "assets/items/sparkySticker.png"),
+                ("Gaddlight", "assets/items/gaddlight.png"),
+                ("Chomp Call", "assets/items/chompCall.png"),
+                ("Bowser Suit", "assets/items/bowserSuit4.png"),
+                ("Crystal Ball", "assets/items/crystalBall.png"),
+                ("Magic Lamp", "assets/items/magicLamp.png"),
+                ("Item Bag", "assets/items/itemBag4.png"),
+            ]
+        else:
+            # MP4DX items (includes all MP4 items plus additional ones)
+            all_items = [
+                ("Mini Mushroom", "assets/items/miniMushroom.png"),
+                ("Mega Mushroom", "assets/items/megaMushroom.png"),
+                ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
+                ("Sup Mega Mushroom", "assets/items/superMegaMushroom.png"),
+                ("Mushroom", "assets/items/mushroom.png"),
+                ("Golden Mushroom", "assets/items/goldenMushroom.png"),
+                ("Reverse Mushroom", "assets/items/reverseMushroom.png"),
+                ("Poison Mushroom", "assets/items/poisonMushroom.png"),
+                ("Tri. Poison Mushroom", "assets/items/triplePoisonMushroom.png"),
+                ("Mini Mega Hammer", "assets/items/miniMegaHammer.png"),
+                ("Warp Pipe", "assets/items/warpPipe.png"),
+                ("Swap Card", "assets/items/swapCard.png"),
+                ("Sparky Sticker", "assets/items/sparkySticker.png"),
+                ("Gaddlight", "assets/items/gaddlight.png"),
+                ("Chomp Call", "assets/items/chompCall.png"),
+                ("Bowser Suit", "assets/items/bowserSuit4.png"),
+                ("Crystal Ball", "assets/items/crystalBall.png"),
+                ("Magic Lamp", "assets/items/magicLamp.png"),
+                ("Item Bag", "assets/items/itemBag4.png"),
+                ("Cellular Shopper", "assets/items/celluarShopper.png"),
+                ("Skeleton Key", "assets/items/skeletonKey.png"),
+                ("Plunder Chest", "assets/items/plunderChest.png"),
+                ("Gaddbrush", "assets/items/gaddbrush.png"),
+                ("Warp Block", "assets/items/warpBlock.png"),
+                ("Fly Guy", "assets/items/flyGuy.png"),
+                ("Plus Block", "assets/items/plusBlock.png"),
+                ("Minus Block", "assets/items/minusBlock.png"),
+                ("Speed Block", "assets/items/speedBlock.png"),
+                ("Slow Block", "assets/items/slowBlock.png"),
+                ("Bowser Phone", "assets/items/bowserPhone.png"),
+                ("Double Dip", "assets/items/doubleDip.png"),
+                ("Hidden Block Card", "assets/items/hiddenBlockCard.png"),
+                ("Barter Box", "assets/items/barterBox.png"),
+                ("Super Warp Pipe", "assets/items/superWarpPipe.png"),
+                ("Chance Time Charm", "assets/items/chanceTimeCharm.png"),
+                ("Wacky Watch", "assets/items/wackyWatch.png"),
+            ]
+
+        # Create header with column labels
+        self.create_column_header(container_layout)
+
+        # Create all items without categories
+        for item_name, item_icon in all_items:
+            self.create_item_row(container_layout, item_name, item_icon)
+
+        # Add some bottom spacing to avoid overlap with the Generate button
+        spacer = QFrame()
+        spacer.setFixedHeight(12)
+        spacer.setFrameShape(QFrame.NoFrame)
+        container_layout.addWidget(spacer)
 
         return container
-
-    def update_min_coins_ui(self):
-        """Update the min_coins UI based on current game version"""
-        # Note: UI updates disabled for stability
-        print(f"Min coins UI update requested for game type: {self.game_type}")
-
-    def update_items_ui(self, scroll_layout):
-        """Update the items UI based on current game version"""
-        # Clear existing dynamic content
-        self.clear_item_rows(scroll_layout)
-
-        # Create new dynamic content container
-        dynamic_container = self.create_dynamic_content_container()
-        scroll_layout.addWidget(dynamic_container)
 
     def create_column_header(self, parent_layout):
         """Create column header with clear labels"""
@@ -213,20 +286,15 @@ class ShopPricesTab(QWidget):
         icon_placeholder.setFixedWidth(self.icon_width)
         header_layout.addWidget(icon_placeholder)
 
-        # Item name column
-        item_header = BodyLabel("Item")
-        item_header.setStyleSheet(f"font-size: 14px; font-weight: 700; min-width: {self.name_col_width}px;")
-        header_layout.addWidget(item_header)
-
-        # Price columns for different stages and player counts
+        # Odds columns for different stages and player counts
         stages = ["Early Game", "Mid Game", "Late Game"]
         player_counts = ["1 Player", "2 Players", "3-4 Players"]
 
         for stage in stages:
             for player_count in player_counts:
                 col_label = BodyLabel(f"{stage}\n{player_count}")
+                
                 col_label.setAlignment(Qt.AlignCenter)
-                col_label.setFixedWidth(self.input_width)
                 header_layout.addWidget(col_label)
 
         header_layout.addStretch()
@@ -251,101 +319,30 @@ class ShopPricesTab(QWidget):
 
         # Item name
         name_label = BodyLabel(item_name)
+        name_label.setFixedWidth(self.name_col_width)
         item_layout.addWidget(name_label)
 
-        # Price inputs for different stages
+        # Odds inputs for different stages
         stages = ["Early", "Mid", "Late"]
         item_key = item_name.lower().replace(" ", "_")
-        self.create_price_inputs(item_layout, item_key, stages)
+        self.create_odds_inputs(item_layout, item_key, stages)
 
         item_layout.addStretch()
         parent_layout.addLayout(item_layout)
 
-    def create_price_inputs(self, layout, item_key, stages):
-        """Create price input fields for different game stages"""
+    def create_odds_inputs(self, layout, item_key, stages):
+        """Create odds input fields for different game stages"""
         for stage in stages:
             # Create inputs for player counts (1, 2, 3-4 players)
             for player_count in ["1", "2", "34"]:
                 entry = LineEdit()
-
                 # Leave fields blank - users can fill in custom values
                 entry.setFixedWidth(self.input_width)
                 entry.setObjectName(f"{item_key}_{stage.lower()}_{player_count}")
-                # Let QFluentWidgets handle theme-aware styling automatically
                 layout.addWidget(entry)
 
-                # Store reference for later access using dictionary
-                self.price_entries[f"{item_key}_{stage.lower()}_{player_count}"] = entry
-
-    def get_default_price(self, item_key, stage, player_count):
-        """Get default price for item based on game version"""
-        if self.game_type == "mp4dx":
-            # MP4DX defaults
-            defaults = {
-                "mini_mushroom": "5",
-                "mega_mushroom": "5",
-                "super_mini_mushroom": "10",
-                "super_mega_mushroom": "15",
-                "mushroom": "5",
-                "golden_mushroom": "10",
-                "reverse_mushroom": "10",
-                "poison_mushroom": "5",
-                "triple_poison_mushroom": "15",
-                "mini_mega_hammer": "10",
-                "warp_pipe": "10",
-                "swap_card": "15",
-                "sparky_sticker": "5",
-                "gaddlight": "15",
-                "chomp_call": "10",
-                "bowser_suit": "12",
-                "crystal_ball": "25",
-                "magic_lamp": "30",
-                "item_bag": "30",
-                "celluar_shopper": "5",
-                "skeleton_key": "5",
-                "plunder_chest": "15",
-                "gaddbrush": "15",
-                "warp_block": "5",
-                "fly_guy": "12",
-                "plus_block": "10",
-                "minus_block": "10",
-                "speed_block": "12",
-                "slow_block": "12",
-                "bowser_phone": "10",
-                "double_dip": "12",
-                "hidden_block_card": "40",
-                "barter_box": "40",
-                "super_warp_pipe": "40",
-                "chance_time_charm": "40",
-                "wacky_watch": "100"
-            }
-        else:  # MP4 defaults
-            defaults = {
-                "mini_mushroom": "5",
-                "mega_mushroom": "5",
-                "super_mini_mushroom": "15",  # Different from MP4DX
-                "super_mega_mushroom": "15",
-                "mini_mega_hammer": "10",
-                "warp_pipe": "10",
-                "swap_card": "15",
-                "sparky_sticker": "15",  # Different from MP4DX
-                "gaddlight": "15",
-                "chomp_call": "15",  # Different from MP4DX
-                "bowser_suit": "0",   # Different from MP4DX
-                "crystal_ball": "25",
-                "magic_lamp": "30",
-                "item_bag": "30",
-                "bowser_phone": "10",
-                "double_dip": "12",
-                "hidden_block_card": "40",
-                "barter_box": "40",
-                "plus_block": "10",
-                "minus_block": "10",
-                "speed_block": "12",
-                "slow_block": "12"
-            }
-
-        return defaults.get(item_key, "5")
+                # Store reference for later access
+                setattr(self, f"{item_key}_{stage.lower()}_{player_count}_entry", entry)
 
     def create_image_label(self, image_path, width=32, height=32):
         """Create a QLabel with an image from the assets folder"""
@@ -383,31 +380,28 @@ class ShopPricesTab(QWidget):
     def generate_codes(self):
         """Generate codes for the current game version"""
         try:
-            # Note: min_coins functionality is not currently implemented in the backend
-            # min_coins = self.min_coins_entry.text()
-
-            # Collect all item prices
-            item_prices = self.collect_item_prices()
+            # Collect all item odds
+            item_odds = self.collect_item_odds()
 
             if self.game_type == "mp4dx":
-                if 'itemsEvent_mp4ShopDXPrices' in globals():
+                if 'itemsEvent_mp4ShopOddsDX' in globals():
                     # Call MP4DX function with collected parameters
-                    itemsEvent_mp4ShopDXPrices(**item_prices)
+                    itemsEvent_mp4ShopOddsDX(**item_odds)
                 else:
-                    self.show_error("Mario Party 4 Deluxe shop price modification not available")
+                    self.show_error("Mario Party 4 Deluxe shop odds modification not available")
             else:
-                if 'itemsEvent_mp4ShopPrices' in globals():
+                if 'itemsEvent_mp4ShopOdds' in globals():
                     # Call MP4 function with collected parameters
-                    itemsEvent_mp4ShopPrices(**item_prices)
+                    itemsEvent_mp4ShopOdds(**item_odds)
                 else:
-                    self.show_error("Mario Party 4 shop price modification not available")
+                    self.show_error("Mario Party 4 shop odds modification not available")
 
         except Exception as e:
             self.show_error(f"Error generating codes: {str(e)}")
 
-    def collect_item_prices(self):
-        """Collect all item prices from the form"""
-        prices = {}
+    def collect_item_odds(self):
+        """Collect all item odds from the form"""
+        odds = {}
 
         # Get the appropriate item list based on game type
         if self.game_type == "mp4":
@@ -416,7 +410,9 @@ class ShopPricesTab(QWidget):
                 "mini_mushroom", "mega_mushroom", "super_mini_mushroom", "super_mega_mushroom",
                 "mini_mega_hammer", "warp_pipe", "swap_card", "sparky_sticker",
                 "gaddlight", "chomp_call", "bowser_suit", "crystal_ball",
-                "magic_lamp", "item_bag"
+                "magic_lamp", "item_bag", "bowser_phone", "double_dip",
+                "hidden_block_card", "barter_box", "plus_block", "minus_block",
+                "speed_block", "slow_block"
             ]
         else:
             # MP4DX items (includes all MP4 items plus additional ones)
@@ -480,140 +476,21 @@ class ShopPricesTab(QWidget):
                 camel_case_name = item_mapping[item_key]
                 for stage in stages:
                     for player_count in player_counts:
-                        entry_key = f"{item_key}_{stage}_{player_count}"
-                        if entry_key in self.price_entries:
-                            entry = self.price_entries[entry_key]
-                            param_name = f"{camel_case_name}{stage.capitalize()}Price{player_count}"
-                            prices[param_name] = entry.text()
-
-        return prices
-
-    def calculate_minimum_coins(self):
-        """Calculate minimum coins for MP4 based on lowest non-zero item price"""
-        if self.game_type != "mp4" or not hasattr(self, 'min_coins_entry') or self.min_coins_entry is None:
-            return
-
-        try:
-            min_price = float('inf')
-
-            # Get all MP4 items
-            item_list = [
-                "mini_mushroom", "mega_mushroom", "super_mini_mushroom", "super_mega_mushroom",
-                "mini_mega_hammer", "warp_pipe", "swap_card", "sparky_sticker",
-                "gaddlight", "chomp_call", "bowser_suit", "crystal_ball",
-                "magic_lamp", "item_bag", "bowser_phone", "double_dip",
-                "hidden_block_card", "barter_box", "plus_block", "minus_block",
-                "speed_block", "slow_block"
-            ]
-
-            stages = ["early", "mid", "late"]
-            player_counts = ["1", "2", "34"]
-
-            # Find the lowest non-zero price
-            for item_key in item_list:
-                for stage in stages:
-                    for player_count in player_counts:
-                        entry_key = f"{item_key}_{stage}_{player_count}"
-                        if entry_key in self.price_entries:
-                            entry = self.price_entries[entry_key]
+                        entry_name = f"{item_key}_{stage}_{player_count}_entry"
+                        if hasattr(self, entry_name):
                             try:
-                                price = int(entry.text().strip())
-                                if price > 0 and price < min_price:
-                                    min_price = price
-                            except ValueError:
-                                continue  # Skip invalid entries
+                                entry = getattr(self, entry_name)
+                                param_name = f"{camel_case_name}{stage.capitalize()}Odds{player_count}"
+                                odds[param_name] = entry.text()
+                            except RuntimeError:
+                                # Widget has been deleted, skip this entry
+                                continue
 
-            # Update the minimum coins field if we found a valid price
-            if min_price != float('inf'):
-                self.min_coins_entry.setText(str(min_price))
-            else:
-                self.min_coins_entry.setText("0")  # Fallback if no valid prices found
-
-        except Exception as e:
-            print(f"Error calculating minimum coins: {e}")
-            if hasattr(self, 'min_coins_entry') and self.min_coins_entry:
-                self.min_coins_entry.setText("0")
+        return odds
 
     def show_error(self, message):
         """Show error message to user"""
         QMessageBox.critical(self, "Error", message)
-
-    def create_version_items(self, scroll_layout):
-        """Create items for the current game version"""
-        if self.game_type == "mp4":
-            # MP4 items only
-            all_items = [
-                ("Mini Mushroom", "assets/items/miniMushroom.png"),
-                ("Mega Mushroom", "assets/items/megaMushroom.png"),
-                ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
-                ("Sup Mega Mushroom", "assets/items/superMegaMushroom.png"),
-                ("Mini Mega Hammer", "assets/items/miniMegaHammer.png"),
-                ("Warp Pipe", "assets/items/warpPipe.png"),
-                ("Swap Card", "assets/items/swapCard.png"),
-                ("Sparky Sticker", "assets/items/sparkySticker.png"),
-                ("Gaddlight", "assets/items/gaddlight.png"),
-                ("Chomp Call", "assets/items/chompCall.png"),
-                ("Bowser Suit", "assets/items/bowserSuit4.png"),
-                ("Crystal Ball", "assets/items/crystalBall.png"),
-                ("Magic Lamp", "assets/items/magicLamp.png"),
-                ("Item Bag", "assets/items/itemBag4.png"),
-            ]
-        else:
-            # MP4DX items (includes all MP4 items plus additional ones)
-            all_items = [
-                ("Mini Mushroom", "assets/items/miniMushroom.png"),
-                ("Mega Mushroom", "assets/items/megaMushroom.png"),
-                ("Sup Mini Mushroom", "assets/items/superMiniMushroom.png"),
-                ("Sup Mega Mushroom", "assets/items/superMegaMushroom.png"),
-                ("Mushroom", "assets/items/mushroom.png"),
-                ("Golden Mushroom", "assets/items/goldenMushroom.png"),
-                ("Reverse Mushroom", "assets/items/reverseMushroom.png"),
-                ("Poison Mushroom", "assets/items/poisonMushroom.png"),
-                ("Tri. Poison Mushroom", "assets/items/triplePoisonMushroom.png"),
-                ("Mini Mega Hammer", "assets/items/miniMegaHammer.png"),
-                ("Warp Pipe", "assets/items/warpPipe.png"),
-                ("Swap Card", "assets/items/swapCard.png"),
-                ("Sparky Sticker", "assets/items/sparkySticker.png"),
-                ("Gaddlight", "assets/items/gaddlight.png"),
-                ("Chomp Call", "assets/items/chompCall.png"),
-                ("Bowser Suit", "assets/items/bowserSuit4.png"),
-                ("Crystal Ball", "assets/items/crystalBall.png"),
-                ("Magic Lamp", "assets/items/magicLamp.png"),
-                ("Item Bag", "assets/items/itemBag4.png"),
-                ("Cellular Shopper", "assets/items/celluarShopper.png"),
-                ("Skeleton Key", "assets/items/skeletonKey.png"),
-                ("Plunder Chest", "assets/items/plunderChest.png"),
-                ("Gaddbrush", "assets/items/gaddbrush.png"),
-                ("Warp Block", "assets/items/warpBlock.png"),
-                ("Fly Guy", "assets/items/flyGuy.png"),
-                ("Plus Block", "assets/items/plusBlock.png"),
-                ("Minus Block", "assets/items/minusBlock.png"),
-                ("Speed Block", "assets/items/speedBlock.png"),
-                ("Slow Block", "assets/items/slowBlock.png"),
-                ("Bowser Phone", "assets/items/bowserPhone.png"),
-                ("Double Dip", "assets/items/doubleDip.png"),
-                ("Hidden Block Card", "assets/items/hiddenBlockCard.png"),
-                ("Barter Box", "assets/items/barterBox.png"),
-                ("Super Warp Pipe", "assets/items/superWarpPipe.png"),
-                ("Chance Time Charm", "assets/items/chanceTimeCharm.png"),
-                ("Wacky Watch", "assets/items/wackyWatch.png"),
-            ]
-
-        # Create items (limited for stability)
-        for i, (item_name, item_icon) in enumerate(all_items):
-            self.create_item_row(scroll_layout, item_name, item_icon)
-
-        # Add spacer at the end
-        spacer = QFrame()
-        spacer.setFixedHeight(12)
-        spacer.setFrameShape(QFrame.NoFrame)
-        scroll_layout.addWidget(spacer)
-
-    def create_minimal_item(self, scroll_layout):
-        """Create initial items based on the current game version"""
-        # Create dynamic content container
-        dynamic_container = self.create_dynamic_content_container()
-        scroll_layout.addWidget(dynamic_container)
 
     def themeChanged(self):
         """Called when theme changes - update all styling"""
@@ -621,8 +498,13 @@ class ShopPricesTab(QWidget):
         # Update CardWidget title theming
         if hasattr(self, 'scroll_area'):
             self.apply_scrollbar_theme(self.scroll_area)
-        # QFluentWidgets LineEdit handles theme changes automatically
-        # No manual styling needed
+        # Reinforce white backgrounds aftert theme switch
+        for attr in dir(self):
+            if attr.endswith('_entry'):
+                try:
+                    widget = getattr(self, attr)
+                except Exception:
+                    continue
 
     def update_radio_button_theme(self):
         """Update radio button styling based on current theme"""
@@ -767,7 +649,6 @@ class ShopPricesTab(QWidget):
                 }
             """
 
-        # Apply the style to both scrollbars
         try:
             scroll_area.verticalScrollBar().setStyleSheet(bar_style)
             scroll_area.horizontalScrollBar().setStyleSheet(bar_style)

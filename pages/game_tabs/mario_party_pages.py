@@ -9,7 +9,7 @@ from PyQt5.QtCore import Qt
 from qfluentwidgets import BodyLabel
 
 from pages.game_tabs.coins_global_tab import CoinsTab
-from pages.game_tabs.block_weights_mp1_tab import BlockWeightsTab
+from pages.game_tabs.block_weights_mp1_tab_mp1_tab import BlockWeightsTab
 from pages.game_tabs.minigame_global_tab import MinigameTab
 from pages.game_tabs.handicap_global_tab import HandicapTab
 from pages.game_tabs.shop_mp2_mp3_tab import ItemsTab

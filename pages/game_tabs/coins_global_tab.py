@@ -11,11 +11,13 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, CheckBox, PushBut
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
 
-# Import coins event functions for MP1, MP2, and MP3
+# Import coins event functions for MP1, MP2, MP3, MP4, and MP5
 try:
     from events.marioParty1_coins import coinsEvent_mp1
     from events.marioParty2_coins import coinsEvent_mp2
     from events.marioParty3_coins import coinsEvent_mp3
+    from events.marioParty4_coins import coinsEvent_mp4
+    from events.marioParty5_coins import coinsEvent_mp5
 except ImportError:
     pass
 
@@ -84,8 +86,10 @@ class CoinsTab(QWidget):
         self.blue_entry.setFixedWidth(60)
         blue_row.addWidget(self.blue_entry)
                 
-        self.blue_checkbox = CheckBox("Double on Last 5")
-        blue_row.addWidget(self.blue_checkbox)
+        # Only show "Double on Last 5" checkbox for MP1, MP2, MP3
+        if self.game_id in ["marioParty1", "marioParty2", "marioParty3"]:
+            self.blue_checkbox = CheckBox("Double on Last 5")
+            blue_row.addWidget(self.blue_checkbox)
         
         blue_row.addStretch()
         group_layout.addLayout(blue_row)
@@ -107,8 +111,10 @@ class CoinsTab(QWidget):
         self.red_entry.setFixedWidth(60)
         red_row.addWidget(self.red_entry)
         
-        self.red_checkbox = CheckBox("Double on Last 5")
-        red_row.addWidget(self.red_checkbox)
+        # Only show "Double on Last 5" checkbox for MP1, MP2, MP3
+        if self.game_id in ["marioParty1", "marioParty2", "marioParty3"]:
+            self.red_checkbox = CheckBox("Double on Last 5")
+            red_row.addWidget(self.red_checkbox)
         
         red_row.addStretch()
         group_layout.addLayout(red_row)
@@ -134,8 +140,8 @@ class CoinsTab(QWidget):
         star_row.addStretch()
         group_layout.addLayout(star_row)
         
-        # Koopa Bank Row (only for MP2+)
-        if self.game_type != "basic" or self.game_id in ["marioParty2", "marioParty3", "marioParty4", "marioParty5", "marioParty6", "marioParty7", "marioParty8", "marioParty9", "marioPartyDS"]:
+        # Koopa Bank Row (only for MP2/MP3)
+        if self.game_id in ["marioParty2", "marioParty3", "marioParty5"]:
             koopa_row = QHBoxLayout()
             koopa_row.setSpacing(12)
             
@@ -257,7 +263,6 @@ class CoinsTab(QWidget):
             mega_row.addWidget(mega_label)
             
             self.mega_entry = LineEdit()
-            self.mega_entry.setPlaceholderText("10")
 
             self.mega_entry.setFixedWidth(60)
             mega_row.addWidget(self.mega_entry)
@@ -277,8 +282,6 @@ class CoinsTab(QWidget):
             bowser_row.addWidget(bowser_label)
             
             self.bowser_entry = LineEdit()
-            self.bowser_entry.setPlaceholderText("30")
-            self.bowser_entry.setText("30")
             self.bowser_entry.setFixedWidth(60)
             bowser_row.addWidget(self.bowser_entry)
             
@@ -297,13 +300,65 @@ class CoinsTab(QWidget):
             lottery_row.addWidget(lottery_label)
             
             self.lottery_entry = LineEdit()
-            self.lottery_entry.setPlaceholderText("5")
-            self.lottery_entry.setText("5")
             self.lottery_entry.setFixedWidth(60)
             lottery_row.addWidget(self.lottery_entry)
             
             lottery_row.addStretch()
             group_layout.addLayout(lottery_row)
+            
+            # Boo Star Steal Price Row
+            boo_star_row = QHBoxLayout()
+            boo_star_row.setSpacing(12)
+            
+            boo_star_image = self.create_image_label("assets/eventTags/booHouseStars.png", 32, 32)
+            boo_star_row.addWidget(boo_star_image)
+            
+            boo_star_label = BodyLabel("Boo Star Steal:")
+            boo_star_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            boo_star_row.addWidget(boo_star_label)
+            
+            self.boo_star_entry = LineEdit()
+            self.boo_star_entry.setFixedWidth(60)
+            boo_star_row.addWidget(self.boo_star_entry)
+            
+            boo_star_row.addStretch()
+            group_layout.addLayout(boo_star_row)
+            
+            # Boo Coin Steal Price Row
+            boo_coins_row = QHBoxLayout()
+            boo_coins_row.setSpacing(12)
+            
+            boo_coins_image = self.create_image_label("assets/eventTags/booHouseCoins.png", 32, 32)
+            boo_coins_row.addWidget(boo_coins_image)
+            
+            boo_coins_label = BodyLabel("Boo Coin Steal:")
+            boo_coins_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            boo_coins_row.addWidget(boo_coins_label)
+            
+            self.boo_coins_entry = LineEdit()
+            self.boo_coins_entry.setFixedWidth(60)
+            boo_coins_row.addWidget(self.boo_coins_entry)
+            
+            boo_coins_row.addStretch()
+            group_layout.addLayout(boo_coins_row)
+            
+            # Boo Minimum Coins Row
+            boo_minimum_row = QHBoxLayout()
+            boo_minimum_row.setSpacing(12)
+            
+            boo_minimum_image = self.create_image_label("assets/eventTags/booHouseCoins.png", 32, 32)
+            boo_minimum_row.addWidget(boo_minimum_image)
+            
+            boo_minimum_label = BodyLabel("Boo Min Coins:")
+            boo_minimum_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            boo_minimum_row.addWidget(boo_minimum_label)
+            
+            self.boo_minimum_entry = LineEdit()
+            self.boo_minimum_entry.setFixedWidth(60)
+            boo_minimum_row.addWidget(self.boo_minimum_entry)
+            
+            boo_minimum_row.addStretch()
+            group_layout.addLayout(boo_minimum_row)
         
         # Mario Party 5 specific fields
         if self.game_id == "marioParty5":
@@ -319,8 +374,6 @@ class CoinsTab(QWidget):
             wiggler_row.addWidget(wiggler_label)
             
             self.wiggler_entry = LineEdit()
-            self.wiggler_entry.setPlaceholderText("20")
-            self.wiggler_entry.setText("20")
             self.wiggler_entry.setFixedWidth(60)
             wiggler_row.addWidget(self.wiggler_entry)
             
@@ -339,13 +392,29 @@ class CoinsTab(QWidget):
             chomp_row.addWidget(chomp_label)
             
             self.chomp_entry = LineEdit()
-            self.chomp_entry.setPlaceholderText("15")
-            self.chomp_entry.setText("15")
             self.chomp_entry.setFixedWidth(60)
             chomp_row.addWidget(self.chomp_entry)
             
             chomp_row.addStretch()
             group_layout.addLayout(chomp_row)
+
+            # Chain Chomp Min Steal (base) Row
+            chomp_min_row = QHBoxLayout()
+            chomp_min_row.setSpacing(12)
+
+            chomp_min_image = self.create_image_label("assets/eventTags/chainChomp.png", 32, 32)
+            chomp_min_row.addWidget(chomp_min_image)
+
+            chomp_min_label = BodyLabel("Chomp Min (Coins):")
+            chomp_min_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            chomp_min_row.addWidget(chomp_min_label)
+
+            self.chomp_min_entry = LineEdit()
+            self.chomp_min_entry.setFixedWidth(60)
+            chomp_min_row.addWidget(self.chomp_min_entry)
+
+            chomp_min_row.addStretch()
+            group_layout.addLayout(chomp_min_row)
         
         # Mario Party 6 specific fields
         if self.game_id == "marioParty6":
@@ -361,8 +430,6 @@ class CoinsTab(QWidget):
             pink_boo_coins_row.addWidget(pink_boo_coins_label)
             
             self.pink_boo_coins_entry = LineEdit()
-            self.pink_boo_coins_entry.setPlaceholderText("5")
-            self.pink_boo_coins_entry.setText("5")
             self.pink_boo_coins_entry.setFixedWidth(60)
             pink_boo_coins_row.addWidget(self.pink_boo_coins_entry)
             
@@ -381,8 +448,6 @@ class CoinsTab(QWidget):
             pink_boo_stars_row.addWidget(pink_boo_stars_label)
             
             self.pink_boo_stars_entry = LineEdit()
-            self.pink_boo_stars_entry.setPlaceholderText("50")
-            self.pink_boo_stars_entry.setText("50")
             self.pink_boo_stars_entry.setFixedWidth(60)
             pink_boo_stars_row.addWidget(self.pink_boo_stars_entry)
             
@@ -403,8 +468,6 @@ class CoinsTab(QWidget):
             bitsize_row.addWidget(bitsize_label)
             
             self.bitsize_entry = LineEdit()
-            self.bitsize_entry.setPlaceholderText("5")
-            self.bitsize_entry.setText("5")
             self.bitsize_entry.setFixedWidth(60)
             bitsize_row.addWidget(self.bitsize_entry)
             
@@ -423,8 +486,6 @@ class CoinsTab(QWidget):
             bowlo_row.addWidget(bowlo_label)
             
             self.bowlo_entry = LineEdit()
-            self.bowlo_entry.setPlaceholderText("3")
-            self.bowlo_entry.setText("3")
             self.bowlo_entry.setFixedWidth(60)
             bowlo_row.addWidget(self.bowlo_entry)
             
@@ -443,8 +504,6 @@ class CoinsTab(QWidget):
             vampire_row.addWidget(vampire_label)
             
             self.vampire_entry = LineEdit()
-            self.vampire_entry.setPlaceholderText("5")
-            self.vampire_entry.setText("5")
             self.vampire_entry.setFixedWidth(60)
             vampire_row.addWidget(self.vampire_entry)
             
@@ -463,8 +522,6 @@ class CoinsTab(QWidget):
             hotel_row.addWidget(hotel_label)
             
             self.hotel_entry = LineEdit()
-            self.hotel_entry.setPlaceholderText("255")
-            self.hotel_entry.setText("255")
             self.hotel_entry.setFixedWidth(60)
             hotel_row.addWidget(self.hotel_entry)
             
@@ -626,6 +683,81 @@ class CoinsTab(QWidget):
                     coinsEvent_mp3(blue_amount, blue_tick, red_amount, red_tick, star_amount, boo_coins, boo_stars, koopa_amount)
                 else:
                     self.show_error("Mario Party 3 coins modification not available")
+            except Exception as e:
+                self.show_error(f"Error generating codes: {str(e)}")
+        elif self.game_id == "marioParty4":
+            try:
+                if 'coinsEvent_mp4' in globals():
+                    # Create mock objects to match the expected interface
+                    class MockEntry:
+                        def __init__(self, text):
+                            self._text = text
+                        def get(self):
+                            return self._text
+                        def text(self):
+                            return self._text
+                    
+                    class MockCheckBox:
+                        def __init__(self, checked):
+                            self._checked = checked
+                        def get(self):
+                            return self._checked
+                        def isChecked(self):
+                            return self._checked
+                    
+                    # Create mock objects with current values
+                    blue_amount = MockEntry(self.blue_entry.text())
+                    red_amount = MockEntry(self.red_entry.text())
+                    mg_amount = MockEntry(self.mg_entry.text()) if hasattr(self, 'mg_entry') else MockEntry("10")
+                    star_amount = MockEntry(self.star_entry.text())
+                    mega_amount = MockEntry(self.mega_entry.text()) if hasattr(self, 'mega_entry') else MockEntry("20")
+                    boo_star_amount = MockEntry(self.boo_star_entry.text()) if hasattr(self, 'boo_star_entry') else MockEntry("15")
+                    boo_coins_amount = MockEntry(self.boo_coins_entry.text()) if hasattr(self, 'boo_coins_entry') else MockEntry("10")
+                    lottery_amount = MockEntry(self.lottery_entry.text()) if hasattr(self, 'lottery_entry') else MockEntry("50")
+                    boo_minimum_amount = MockEntry(self.boo_minimum_entry.text()) if hasattr(self, 'boo_minimum_entry') else MockEntry("5")
+                    bowser_amount = MockEntry(self.bowser_entry.text()) if hasattr(self, 'bowser_entry') else MockEntry("30")
+                    initial_amount = MockEntry(self.initial_entry.text()) if hasattr(self, 'initial_entry') else MockEntry("10")
+                    
+                    coinsEvent_mp4(blue_amount, red_amount, mg_amount, star_amount, mega_amount, boo_star_amount, boo_coins_amount, lottery_amount, boo_minimum_amount, bowser_amount, initial_amount)
+                else:
+                    self.show_error("Mario Party 4 coins modification not available")
+            except Exception as e:
+                self.show_error(f"Error generating codes: {str(e)}")
+        elif self.game_id == "marioParty5":
+            try:
+                if 'coinsEvent_mp5' in globals():
+                    class MockEntry:
+                        def __init__(self, text):
+                            self._text = text
+                        def get(self):
+                            return self._text
+                        def text(self):
+                            return self._text
+
+                    # Create mock objects with current values
+                    blue_amount = MockEntry(self.blue_entry.text())
+                    red_amount = MockEntry(self.red_entry.text())
+                    mg_amount = MockEntry(self.mg_entry.text() if hasattr(self, 'mg_entry') else "")
+                    star_amount = MockEntry(self.star_entry.text())
+                    wiggler_amount = MockEntry(self.wiggler_entry.text() if hasattr(self, 'wiggler_entry') else "")
+                    chomp_star_amount = MockEntry(self.chomp_entry.text() if hasattr(self, 'chomp_entry') else "")
+                    chomp_weight_amount = MockEntry(self.chomp_min_entry.text() if hasattr(self, 'chomp_min_entry') else "")
+                    koopa_amount = MockEntry(self.koopa_entry.text() if hasattr(self, 'koopa_entry') else "")
+                    initial_amount = MockEntry(self.initial_entry.text() if hasattr(self, 'initial_entry') else "")
+
+                    coinsEvent_mp5(
+                        blue_amount,
+                        red_amount,
+                        mg_amount,
+                        star_amount,
+                        wiggler_amount,
+                        chomp_star_amount,
+                        chomp_weight_amount,
+                        koopa_amount,
+                        initial_amount
+                    )
+                else:
+                    self.show_error("Mario Party 5 coins modification not available")
             except Exception as e:
                 self.show_error(f"Error generating codes: {str(e)}")
         else:
