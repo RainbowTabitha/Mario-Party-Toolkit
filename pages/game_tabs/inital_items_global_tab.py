@@ -11,10 +11,11 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
 
-# Import initial items event functions for MP4 and MP6
+# Import initial items event functions for MP4, MP6, and MP7
 try:
     from events.marioParty4_initialItems import initialItemsEvent_mp4
     from events.marioParty6_initialItems import initialItemsEvent_mp6
+    from events.marioParty7_initialItems import initialItemsEvent_mp7
 except ImportError:
     pass
 
@@ -92,6 +93,39 @@ class InitialItemsTab(QWidget):
                 "Snack",
                 "Boo-away"
             ]
+        elif self.game_id == "marioParty7":
+            self.items = [
+                "None",
+                "Mushroom",
+                "Golden Mushroom",
+                "Slow Mushroom",
+                "Metal Mushroom",
+                "Flutter",
+                "Cannon",
+                "Snack",
+                "Lakitu",
+                "Hammer Bro",
+                "Piranha Plant",
+                "Spear Guy",
+                "Kamek",
+                "Toady",
+                "Mr. Blizzard",
+                "Bandit",
+                "Pink Boo",
+                "Spiny",
+                "Zap",
+                "Tweester",
+                "Thwomp",
+                "Warp Pipe",
+                "Bob-omb",
+                "Fireball",
+                "Flower",
+                "Egg",
+                "Vacuum",
+                "Magic",
+                "Triple Mushroom",
+                "Koopa Kid"
+            ]
         else:
             # Default MP4 items
             self.items = [
@@ -116,8 +150,10 @@ class InitialItemsTab(QWidget):
         items_group_layout = QVBoxLayout()
         items_group_layout.setSpacing(16)
 
-        # Item slots
-        for i in range(1, 4):
+        # Item slots - 5 slots for MP7, 3 slots for others
+        num_slots = 5 if self.game_id == "marioParty7" else 3
+        
+        for i in range(1, num_slots + 1):
             slot_layout = QHBoxLayout()
             slot_layout.setSpacing(12)
 
@@ -209,6 +245,29 @@ class InitialItemsTab(QWidget):
                 mock_items_list = self.items
 
                 initialItemsEvent_mp6(mock_item1, mock_item2, mock_item3, mock_items_list)
+            elif self.game_id == "marioParty7" and 'initialItemsEvent_mp7' in globals():
+                # Get selected items (5 slots for MP7)
+                item1 = self.item_slot_1_combo.currentText()
+                item2 = self.item_slot_2_combo.currentText()
+                item3 = self.item_slot_3_combo.currentText()
+                item4 = self.item_slot_4_combo.currentText()
+                item5 = self.item_slot_5_combo.currentText()
+
+                # Create mock entry objects to match expected interface
+                class MockEntry:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+
+                mock_item1 = MockEntry(item1)
+                mock_item2 = MockEntry(item2)
+                mock_item3 = MockEntry(item3)
+                mock_item4 = MockEntry(item4)
+                mock_item5 = MockEntry(item5)
+                mock_items_list = self.items
+
+                initialItemsEvent_mp7(mock_item1, mock_item2, mock_item3, mock_item4, mock_item5, mock_items_list)
             elif 'initialItemsEvent_mp4' in globals():
                 # Get selected items
                 item1 = self.item_slot_1_combo.currentText()

@@ -11,10 +11,11 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
 
-# Import space replacement event functions for MP4 and MP6
+# Import space replacement event functions for MP4, MP6, and MP7
 try:
     from events.marioParty4_spaceReplace import spaceReplaceEvent_mp4
     from events.marioParty6_spaceReplace import spaceReplaceEvent_mp6
+    from events.marioParty7_spaceReplace import spaceReplaceEvent_mp7
 except ImportError:
     pass
 
@@ -216,6 +217,24 @@ class SpaceReplacementTab(QWidget):
                 mock_slot = MockEntry(slot)
 
                 spaceReplaceEvent_mp6(mock_from, mock_to, mock_slot)
+            elif self.game_id == "marioParty7" and 'spaceReplaceEvent_mp7' in globals():
+                # Get replacement values
+                from_space = self.from_combo.currentText()
+                to_space = self.with_combo.currentText()
+                slot = self.slot_combo.currentText()
+
+                # Create mock entry objects to match expected interface
+                class MockEntry:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+
+                mock_from = MockEntry(from_space)
+                mock_to = MockEntry(to_space)
+                mock_slot = MockEntry(slot)
+
+                spaceReplaceEvent_mp7(mock_from, mock_to, mock_slot)
             elif 'spaceReplaceEvent_mp4' in globals():
                 # Get replacement values
                 from_space = self.from_combo.currentText()

@@ -11,6 +11,7 @@ try:
     from events.marioParty2_bonusStarReplace import customBonusStarEvent_mp2
     from events.marioParty5_bonusStarReplace import customBonusStarEvent_mp5
     from events.marioParty6_bonusStarReplace import customBonusStarEvent_mp6
+    from events.marioParty7_bonusStarReplace import customBonusStarEvent_mp7
 except ImportError:
     pass
 
@@ -144,6 +145,19 @@ class BonusStarTab(QWidget):
                 star2 = MockComboBox(self.star2_combo.currentText())
                 star3 = MockComboBox(self.star3_combo.currentText())
                 customBonusStarEvent_mp6(star1, star2, star3, self.stars6)
+            elif self.game_id == "marioParty7" and 'customBonusStarEvent_mp7' in globals():
+                class MockComboBox:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+                    def currentText(self):
+                        return self._text
+
+                star1 = MockComboBox(self.star1_combo.currentText())
+                star2 = MockComboBox(self.star2_combo.currentText())
+                star3 = MockComboBox(self.star3_combo.currentText())
+                customBonusStarEvent_mp7(star1, star2, star3, self.stars7)
             elif 'customBonusStarEvent_mp2' in globals():
                 # Create mock objects to match the expected interface
                 class MockComboBox:

@@ -24,6 +24,7 @@ from pages.game_tabs.lottery_rewards_mp4_tab import LotteryRewardsTab
 from pages.game_tabs.capsule_mods_mp5_tab import CapsuleModsMp5Tab
 from pages.game_tabs.board_specific_mp5_tab import BoardSpecificMp5Tab
 from pages.game_tabs.battle_minigame_global_tab import BattleMinigameTab
+from pages.game_tabs.items_mp7_tab import ItemsMP7Tab
 
 
 class MarioPartyPages:
@@ -341,7 +342,7 @@ class MarioPartyPages:
         tab_widget.addTab(mg_tab, "Minigame Replacement")
         
         # Item Mods tab (Orb Mods)
-        item_tab = ItemReplaceTab("marioParty6")
+        item_tab = ItemReplaceTab("marioParty6") # FIX111
         tab_widget.addTab(item_tab, "Orb Mods")
         
         # Space Replacement tab
@@ -370,15 +371,38 @@ class MarioPartyPages:
         # Coins Mods tab - MP7 has advanced coin fields + Last 5 star cost option
         coins_global_tab = CoinsTab("marioParty7", "advanced")
         tab_widget.addTab(coins_global_tab, "Coins Mods")
-    
         
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty7")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
         
+        # Item Mods tab (Orb Mods)
+        item_tab = ItemsMP7Tab("marioParty7")
+        tab_widget.addTab(item_tab, "Orb Mods")
+        
+        # Space Replacement tab
+        space_tab = SpaceReplacementTab("marioParty7")
+        tab_widget.addTab(space_tab, "Space Replacement")
+        
+        # Initial Items tab
+        initial_items_tab = InitialItemsTab("marioParty7")
+        tab_widget.addTab(initial_items_tab, "Initial Orbs")
+        
+        # Battle Minigame tab
+        battle_tab = BattleMinigameTab("marioParty7")
+        tab_widget.addTab(battle_tab, "Battle Minigame")
+        
         # Star Handicaps tab
         handicap_global_tab = HandicapTab("marioParty7")
         tab_widget.addTab(handicap_global_tab, "Star Handicaps")
+        
+        # Bonus Star Replacement tab
+        bonus_star_tab = BonusStarTab("marioParty7")
+        tab_widget.addTab(bonus_star_tab, "Bonus Star Replacement")
+        
+        # Board Specific tab
+        board_specific_tab = BoardSpecificMp5Tab("marioParty7")
+        tab_widget.addTab(board_specific_tab, "Board Specific")
 
     def create_mp8_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
