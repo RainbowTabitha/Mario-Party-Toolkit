@@ -32,6 +32,10 @@ class ShopOddsTab(QWidget):
     def setup_ui(self):
         """Set up the shop odds tab UI"""
         self.setObjectName(f"{self.game_id}ShopOddsTab")
+        
+        # Set transparent background
+        self.setAttribute(Qt.WA_TranslucentBackground, True)
+        self.setStyleSheet("QWidget#marioParty4ShopOddsTab { background: transparent; }")
 
         # Main layout
         layout = QVBoxLayout()
@@ -48,34 +52,31 @@ class ShopOddsTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
-        # Themed card container using Fluent design
-        card = CardWidget()
-        self.shop_odds_card = card
-        card_layout = QVBoxLayout()
-        card_layout.setSpacing(16)
-        card_layout.setContentsMargins(20, 16, 20, 16)
-        card.setLayout(card_layout)
+        # Create scroll area for the shop interface
+        scroll_area = ScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+
+        # Container widget for scroll area content
+        container = QWidget()
+        container.setStyleSheet("QWidget { background: transparent; }")
+        container_layout = QVBoxLayout(container)
+        container_layout.setContentsMargins(20, 16, 20, 16)
+        container_layout.setSpacing(16)
+
+        # Create shop modifications card
+        shop_card = CardWidget()
+        shop_card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }")
+        shop_card_layout = QVBoxLayout(shop_card)
+        shop_card_layout.setContentsMargins(20, 16, 20, 16)
+        shop_card_layout.setSpacing(16)
 
         # Add title to the card
         card_title = SubtitleLabel("Item Shop Odds")
-        self.card_title = card_title
-        card_layout.addWidget(card_title)
-
-        # Scrollable area for the form
-        scroll_area = ScrollArea()
-        self.scroll_area = scroll_area
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setFrameShape(QFrame.NoFrame)
-        scroll_area.viewport().setStyleSheet("background: transparent;")
-
-
-        # Container widget for scroll area
-        self.scroll_widget = QWidget()
-        self.scroll_widget.setStyleSheet("background: transparent;")
-        scroll_layout = QVBoxLayout(self.scroll_widget)
-        scroll_layout.setSpacing(16)
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        shop_card_layout.addWidget(card_title)
 
         # Game version selection
         version_layout = QHBoxLayout()
@@ -99,31 +100,23 @@ class ShopOddsTab(QWidget):
         version_layout.addWidget(self.mp4_radio)
         version_layout.addWidget(self.mp4dx_radio)
         version_layout.addStretch()
-        # Place version selector at the top of the card (not inside scroller)
-        card_layout.addLayout(version_layout)
+        shop_card_layout.addLayout(version_layout)
 
         # Apply initial radio button styling
         self.update_radio_button_theme()
 
-        # Create dynamic content container for items
+        # Create grid layout for item cards
+        items_grid = QVBoxLayout()
+        items_grid.setSpacing(12)
+
+        # Create items based on game version
         dynamic_container = self.create_dynamic_content_container()
-        scroll_layout.addWidget(dynamic_container)
+        items_grid.addWidget(dynamic_container)
 
-        # Add some bottom spacing
-        spacer = QFrame()
-        spacer.setFixedHeight(12)
-        spacer.setFrameShape(QFrame.NoFrame)
-        scroll_layout.addWidget(spacer)
-
-        # Set scroll widget and add to card
-        scroll_area.setWidget(self.scroll_widget)
-        card_layout.addWidget(scroll_area)
-
-        # Theme the scrollbars to match current theme
-        self.apply_scrollbar_theme(scroll_area)
-
-        # Add card to main layout
-        layout.addWidget(card)
+        shop_card_layout.addLayout(items_grid)
+        container_layout.addWidget(shop_card)
+        scroll_area.setWidget(container)
+        layout.addWidget(scroll_area)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -131,9 +124,6 @@ class ShopOddsTab(QWidget):
         layout.addWidget(generate_btn)
 
         self.setLayout(layout)
-        
-        # Initialize the items UI with proper grid alignment
-        self.update_items_ui(self.scroll_widget.layout())
 
     def set_game_version(self, version):
         """Set the game version (mp4 or mp4dx)"""
@@ -145,15 +135,8 @@ class ShopOddsTab(QWidget):
             self.mp4_radio.setChecked(False)
             self.mp4dx_radio.setChecked(True)
 
-        # Update the displayed items based on the new game version
-        self.update_items_ui(self.scroll_widget.layout())
-
         # Reapply theme styling to prevent palette glitches in dark mode
         self.update_radio_button_theme()
-        if hasattr(self, 'shop_odds_card'):
-            # CardWidget handles its own theming automatically
-            self.scroll_widget.setStyleSheet("background: transparent;")
-        # Ensure inputs keep white background after version toggle
         for attr in dir(self):
             if attr.endswith('_entry'):
                 try:
@@ -260,18 +243,9 @@ class ShopOddsTab(QWidget):
                 ("Wacky Watch", "assets/items/wackyWatch.png"),
             ]
 
-        # Create header with column labels
-        self.create_column_header(container_layout)
-
-        # Create all items without categories
+        # Create items using card-based layout
         for item_name, item_icon in all_items:
             self.create_item_row(container_layout, item_name, item_icon)
-
-        # Add some bottom spacing to avoid overlap with the Generate button
-        spacer = QFrame()
-        spacer.setFixedHeight(12)
-        spacer.setFrameShape(QFrame.NoFrame)
-        container_layout.addWidget(spacer)
 
         return container
 
@@ -308,30 +282,63 @@ class ShopOddsTab(QWidget):
         parent_layout.addWidget(separator)
 
     def create_item_row(self, parent_layout, item_name, item_icon):
-        """Create a single row for an item"""
-        item_layout = QHBoxLayout()
-        item_layout.setSpacing(12)
-        item_layout.setContentsMargins(10, 5, 10, 5)
+        """Create a single card for an item"""
+        # Create individual card for each item
+        item_card = CardWidget()
+        item_card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }")
+        item_card_layout = QVBoxLayout(item_card)
+        item_card_layout.setContentsMargins(16, 12, 16, 12)
+        item_card_layout.setSpacing(8)
 
-        # Item icon
-        icon_label = self.create_image_label(item_icon, self.icon_width, self.icon_width)
-        item_layout.addWidget(icon_label)
+        # Item title
+        title = BodyLabel(item_name)
+        title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px;")
+        item_card_layout.addWidget(title)
 
-        # Item name
-        name_label = BodyLabel(item_name)
-        name_label.setFixedWidth(self.name_col_width)
-        item_layout.addWidget(name_label)
+        # Parameters layout
+        params_layout = QHBoxLayout()
+        params_layout.setSpacing(16)
+
+        # Add item icon
+        icon = self.create_image_label(item_icon, 32, 32)
+        params_layout.addWidget(icon)
 
         # Odds inputs for different stages
         stages = ["Early", "Mid", "Late"]
         item_key = item_name.lower().replace(" ", "_")
-        self.create_odds_inputs(item_layout, item_key, stages)
+        self.create_odds_inputs_card(params_layout, item_key, stages)
 
-        item_layout.addStretch()
-        parent_layout.addLayout(item_layout)
+        item_card_layout.addLayout(params_layout)
+        parent_layout.addWidget(item_card)
+
+    def create_odds_inputs_card(self, layout, item_key, stages):
+        """Create odds input fields for different game stages in card format"""
+        for stage in stages:
+            # Create stage section
+            stage_layout = QVBoxLayout()
+            stage_layout.setSpacing(4)
+
+            stage_label = BodyLabel(f"{stage}:")
+            stage_label.setStyleSheet("font-size: 12px; font-weight: 600;")
+            stage_layout.addWidget(stage_label)
+
+            # Create inputs for player counts (1, 2, 3-4 players)
+            for player_count in ["1", "2", "34"]:
+                entry = LineEdit()
+                entry.setPlaceholderText(f"{player_count}P")
+                entry.setFixedWidth(60)
+                entry.setFixedHeight(30)
+                entry.setObjectName(f"{item_key}_{stage.lower()}_{player_count}")
+                
+                stage_layout.addWidget(entry)
+
+                # Store reference for later access
+                setattr(self, f"{item_key}_{stage.lower()}_{player_count}_entry", entry)
+
+            layout.addLayout(stage_layout)
 
     def create_odds_inputs(self, layout, item_key, stages):
-        """Create odds input fields for different game stages"""
+        """Create odds input fields for different game stages (legacy method)"""
         for stage in stages:
             # Create inputs for player counts (1, 2, 3-4 players)
             for player_count in ["1", "2", "34"]:

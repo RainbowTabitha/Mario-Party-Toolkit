@@ -36,6 +36,10 @@ class ShopPricesTab(QWidget):
     def setup_ui(self):
         """Set up the shop prices tab UI"""
         self.setObjectName(f"{self.game_id}ShopPricesTab")
+        
+        # Set transparent background
+        self.setAttribute(Qt.WA_TranslucentBackground, True)
+        self.setStyleSheet("QWidget#marioParty4ShopPricesTab { background: transparent; }")
 
         # Main layout
         layout = QVBoxLayout()
@@ -52,34 +56,31 @@ class ShopPricesTab(QWidget):
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
-        # Themed card container using Fluent design
-        card = CardWidget()
-        self.shop_prices_card = card
-        card_layout = QVBoxLayout()
-        card_layout.setSpacing(16)
-        card_layout.setContentsMargins(20, 16, 20, 16)
-        card.setLayout(card_layout)
+        # Create scroll area for the shop interface
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+
+        # Container widget for scroll area content
+        container = QWidget()
+        container.setStyleSheet("QWidget { background: transparent; }")
+        container_layout = QVBoxLayout(container)
+        container_layout.setContentsMargins(20, 16, 20, 16)
+        container_layout.setSpacing(16)
+
+        # Create shop modifications card
+        shop_card = CardWidget()
+        shop_card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }")
+        shop_card_layout = QVBoxLayout(shop_card)
+        shop_card_layout.setContentsMargins(20, 16, 20, 16)
+        shop_card_layout.setSpacing(16)
 
         # Add title to the card
         card_title = SubtitleLabel("Item Shop Prices")
-        self.card_title = card_title
-        card_layout.addWidget(card_title)
-
-        # Scrollable area for the form
-        scroll_area = ScrollArea()
-        self.scroll_area = scroll_area
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setFrameShape(QFrame.NoFrame)
-        scroll_area.viewport().setStyleSheet("background: transparent;")
-
-
-        # Container widget for scroll area
-        self.scroll_widget = QWidget()
-        self.scroll_widget.setStyleSheet("background: transparent;")
-        scroll_layout = QVBoxLayout(self.scroll_widget)
-        scroll_layout.setSpacing(16)
+        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        shop_card_layout.addWidget(card_title)
 
         # Game version selection
         version_layout = QHBoxLayout()
@@ -103,33 +104,22 @@ class ShopPricesTab(QWidget):
         version_layout.addWidget(self.mp4_radio)
         version_layout.addWidget(self.mp4dx_radio)
         version_layout.addStretch()
-        # Place version selector at the top of the card (not inside scroller)
-        card_layout.addLayout(version_layout)
+        shop_card_layout.addLayout(version_layout)
 
         # Apply initial radio button styling
         self.update_radio_button_theme()
 
-        # Create header with column labels
-        self.create_column_header(scroll_layout)
+        # Create grid layout for item cards
+        items_grid = QVBoxLayout()
+        items_grid.setSpacing(12)
 
-        # Create minimal items for testing
-        self.create_minimal_item(scroll_layout)
+        # Create items based on game version
+        self.create_version_items(items_grid)
 
-        # Add some bottom spacing
-        spacer = QFrame()
-        spacer.setFixedHeight(12)
-        spacer.setFrameShape(QFrame.NoFrame)
-        scroll_layout.addWidget(spacer)
-
-        # Set scroll widget and add to card
-        scroll_area.setWidget(self.scroll_widget)
-        card_layout.addWidget(scroll_area)
-
-        # Theme the scrollbars to match current theme
-        self.apply_scrollbar_theme(scroll_area)
-
-        # Add card to main layout
-        layout.addWidget(card)
+        shop_card_layout.addLayout(items_grid)
+        container_layout.addWidget(shop_card)
+        scroll_area.setWidget(container)
+        layout.addWidget(scroll_area)
 
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -137,9 +127,6 @@ class ShopPricesTab(QWidget):
         layout.addWidget(generate_btn)
 
         self.setLayout(layout)
-        
-        # Initialize the items UI with proper grid alignment
-        self.update_items_ui(self.scroll_widget.layout())
 
     def set_game_version(self, version):
         """Set the game version (mp4 or mp4dx)"""
@@ -151,16 +138,8 @@ class ShopPricesTab(QWidget):
             self.mp4_radio.setChecked(False)
             self.mp4dx_radio.setChecked(True)
 
-        # Update the displayed items based on the new game version
-        self.update_items_ui(self.scroll_widget.layout())
-
         # Reapply theme styling to prevent palette glitches in dark mode
         self.update_radio_button_theme()
-        if hasattr(self, 'scroll_widget'):
-            self.scroll_widget.setStyleSheet("background: transparent;")
-        # Ensure new inputs keep white background
-        # QFluentWidgets LineEdit handles theme changes automatically
-        # No manual styling needed
 
     def clear_item_rows(self, scroll_layout):
         """Clear all items by replacing the dynamic content container"""
@@ -237,30 +216,63 @@ class ShopPricesTab(QWidget):
         parent_layout.addWidget(separator)
 
     def create_item_row(self, parent_layout, item_name, item_icon):
-        """Create a single row for an item"""
-        item_layout = QHBoxLayout()
-        item_layout.setSpacing(12)
-        item_layout.setContentsMargins(10, 5, 10, 5)
+        """Create a single card for an item"""
+        # Create individual card for each item
+        item_card = CardWidget()
+        item_card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }")
+        item_card_layout = QVBoxLayout(item_card)
+        item_card_layout.setContentsMargins(16, 12, 16, 12)
+        item_card_layout.setSpacing(8)
 
-        # Item icon
-        icon_label = self.create_image_label(item_icon, self.icon_width, self.icon_width)
-        item_layout.addWidget(icon_label)
+        # Item title
+        title = BodyLabel(item_name)
+        title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px;")
+        item_card_layout.addWidget(title)
 
-        # Item name
-        name_label = BodyLabel(item_name)
-        name_label.setFixedWidth(self.name_col_width)
-        item_layout.addWidget(name_label)
+        # Parameters layout
+        params_layout = QHBoxLayout()
+        params_layout.setSpacing(16)
+
+        # Add item icon
+        icon = self.create_image_label(item_icon, 32, 32)
+        params_layout.addWidget(icon)
 
         # Price inputs for different stages
         stages = ["Early", "Mid", "Late"]
         item_key = item_name.lower().replace(" ", "_")
-        self.create_price_inputs(item_layout, item_key, stages)
+        self.create_price_inputs_card(params_layout, item_key, stages)
 
-        item_layout.addStretch()
-        parent_layout.addLayout(item_layout)
+        item_card_layout.addLayout(params_layout)
+        parent_layout.addWidget(item_card)
+
+    def create_price_inputs_card(self, layout, item_key, stages):
+        """Create price input fields for different game stages in card format"""
+        for stage in stages:
+            # Create stage section
+            stage_layout = QVBoxLayout()
+            stage_layout.setSpacing(4)
+
+            stage_label = BodyLabel(f"{stage}:")
+            stage_label.setStyleSheet("font-size: 12px; font-weight: 600;")
+            stage_layout.addWidget(stage_label)
+
+            # Create inputs for player counts (1, 2, 3-4 players)
+            for player_count in ["1", "2", "34"]:
+                entry = LineEdit()
+                entry.setPlaceholderText(f"{player_count}P")
+                entry.setFixedWidth(60)
+                entry.setFixedHeight(30)
+                entry.setObjectName(f"{item_key}_{stage.lower()}_{player_count}")
+                
+                stage_layout.addWidget(entry)
+
+                # Store reference for later access using dictionary
+                self.price_entries[f"{item_key}_{stage.lower()}_{player_count}"] = entry
+
+            layout.addLayout(stage_layout)
 
     def create_price_inputs(self, layout, item_key, stages):
-        """Create price input fields for different game stages"""
+        """Create price input fields for different game stages (legacy method)"""
         for stage in stages:
             # Create inputs for player counts (1, 2, 3-4 players)
             for player_count in ["1", "2", "34"]:
@@ -536,7 +548,7 @@ class ShopPricesTab(QWidget):
         """Show error message to user"""
         QMessageBox.critical(self, "Error", message)
 
-    def create_version_items(self, scroll_layout):
+    def create_version_items(self, parent_layout):
         """Create items for the current game version"""
         if self.game_type == "mp4":
             # MP4 items only
@@ -597,15 +609,9 @@ class ShopPricesTab(QWidget):
                 ("Wacky Watch", "assets/items/wackyWatch.png"),
             ]
 
-        # Create items (limited for stability)
+        # Create items using card-based layout
         for i, (item_name, item_icon) in enumerate(all_items):
-            self.create_item_row(scroll_layout, item_name, item_icon)
-
-        # Add spacer at the end
-        spacer = QFrame()
-        spacer.setFixedHeight(12)
-        spacer.setFrameShape(QFrame.NoFrame)
-        scroll_layout.addWidget(spacer)
+            self.create_item_row(parent_layout, item_name, item_icon)
 
     def create_minimal_item(self, scroll_layout):
         """Create initial items based on the current game version"""
