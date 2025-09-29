@@ -22,20 +22,14 @@ class AboutPage(QWidget):
         """Set up the modern about page UI"""
         self.setObjectName("aboutPage")
         
-        # Set transparent background
-        self.setAttribute(Qt.WA_TranslucentBackground, True)
-        self.setStyleSheet("QWidget#aboutPage { background: transparent; }")
-        
         # Main scroll area for the entire page
         main_scroll = ScrollArea(self)
         main_scroll.setWidgetResizable(True)
         main_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         main_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        main_scroll.setStyleSheet("QScrollArea { background: transparent; border: none; }")
         
         # Container widget for scroll area content
         container = QWidget()
-        container.setStyleSheet("QWidget { background: transparent; }")
         main_layout = QVBoxLayout(container)
         main_layout.setContentsMargins(40, 30, 40, 30)
         main_layout.setSpacing(30)
@@ -99,7 +93,7 @@ class AboutPage(QWidget):
         description.setWordWrap(True)
         version_desc_layout.addWidget(description)
         
-        subtitle = BodyLabel("Is it a mario party modding tool? Yes.", self)
+        subtitle = BodyLabel("Built with PyQt5 and featuring a modern Fluent Design interface", self)
         subtitle.setAlignment(Qt.AlignCenter)
         subtitle.setWordWrap(True)
         version_desc_layout.addWidget(subtitle)
@@ -110,7 +104,6 @@ class AboutPage(QWidget):
     def create_features_card(self):
         """Create the features card"""
         card = CardWidget(self)
-        card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }")
         card_layout = QVBoxLayout(card)
         card_layout.setContentsMargins(25, 20, 25, 20)
         card_layout.setSpacing(15)
@@ -121,11 +114,15 @@ class AboutPage(QWidget):
         
         # Features list
         features_list = [
-            "🎮 Mario Party 1-9 + DS Support",
-            "💰 Generic Price Modifications",
+            "🎮 Mario Party 1-9 & DS Support",
+            "💰 Coin and Star Modifications",
+            "🎲 Dice Block Weight Adjustments",
             "🏆 Minigame Replacements",
+            "⭐ Player Handicap System",
+            "🎁 Item Effect Modifications",
             "🔧 Code Injection Support",
             "🌙 Dark/Light Theme Support",
+            "🖥️ Cross-Platform Compatibility",
             "📱 Responsive Modern UI",
             "⚡ Native Integration",
             "🔄 Real-time Code Generation"
@@ -142,7 +139,6 @@ class AboutPage(QWidget):
     def create_license_card(self):
         """Create the license card with scrollable MIT license"""
         card = CardWidget(self)
-        card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }")
         card_layout = QVBoxLayout(card)
         card_layout.setContentsMargins(25, 20, 25, 20)
         card_layout.setSpacing(15)
@@ -154,7 +150,7 @@ class AboutPage(QWidget):
         # License text in scrollable area
         license_text = """MIT License
 
-Copyright (c) 2023 - 2025 Tabitha Hanegan (furtabs)
+Copyright (c) 2023 - 2024 Nayla Hanegan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -179,7 +175,6 @@ SOFTWARE."""
         license_scroll.setReadOnly(True)
         license_scroll.setMaximumHeight(300)
         license_scroll.setMinimumHeight(200)
-        license_scroll.setStyleSheet("TextEdit { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }")
         card_layout.addWidget(license_scroll)
         
         return card
@@ -187,7 +182,6 @@ SOFTWARE."""
     def create_credits_card(self):
         """Create the credits card"""
         card = CardWidget(self)
-        card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }")
         card_layout = QVBoxLayout(card)
         card_layout.setContentsMargins(25, 20, 25, 20)
         card_layout.setSpacing(15)
@@ -203,7 +197,7 @@ SOFTWARE."""
         author_title = StrongBodyLabel("Main Developer", card)
         author_section.addWidget(author_title)
         
-        author_info = BodyLabel("Tabitha Hanegan (tabitha@tabs.gay)", card)
+        author_info = BodyLabel("Nayla Hanegan (naylahanegan@gmail.com)", card)
         author_section.addWidget(author_info)
         
         card_layout.addLayout(author_section)
@@ -216,11 +210,10 @@ SOFTWARE."""
         contributors_section.addWidget(contributors_title)
         
         contributors_list = [
-            "🔬 Rainchus - Sustainital resesrach with Mario Party.",
-            "🐺 WolfGC64 - Inspiring me to actually learn to write codes",
-            "⚙️ Ralf - Posting some codes that I can use as a reference",
-            "🔬 Dark - Helping me get off my ass and actually learn to write codes.",
-            "🎮 gamemasterplc - Foundational reserach, inspiring me to want to write codes."
+            "🔬 Rainchus - Mario Party 1-3 coin modifications research",
+            "🐺 WolfGC64 - Mario Party 3-8 star cost and various game mechanics",
+            "⚙️ Ralf - Mario Party 4-7 foundational code research",
+            "🎮 gamemasterplc - Mario Party 4-7 advanced modifications"
         ]
         
         for contributor in contributors_list:
