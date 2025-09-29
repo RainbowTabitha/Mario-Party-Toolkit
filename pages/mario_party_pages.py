@@ -334,15 +334,35 @@ class MarioPartyPages:
         """Create tabs for Mario Party 6 - Advanced coin structure with Pink Boo"""
         # Coins Mods tab - MP6 has advanced coin fields + Pink Boo options
         coins_global_tab = CoinsTab("marioParty6", "advanced")
-        tab_widget.addTab(coins_global_tab)
+        tab_widget.addTab(coins_global_tab, "Coins Mods")
         
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty6")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
         
+        # Item Mods tab (Orb Mods)
+        item_tab = ItemReplaceTab("marioParty6")
+        tab_widget.addTab(item_tab, "Orb Mods")
+        
+        # Space Replacement tab
+        space_tab = SpaceReplacementTab("marioParty6")
+        tab_widget.addTab(space_tab, "Space Replacement")
+        
+        # Initial Items tab
+        initial_items_tab = InitialItemsTab("marioParty6")
+        tab_widget.addTab(initial_items_tab, "Initial Orbs")
+        
+        # Battle Minigame tab
+        battle_tab = BattleMinigameTab("marioParty6")
+        tab_widget.addTab(battle_tab, "Battle Minigame")
+        
         # Star Handicaps tab
         handicap_global_tab = HandicapTab("marioParty6")
         tab_widget.addTab(handicap_global_tab, "Star Handicaps")
+        
+        # Bonus Star Replacement tab
+        bonus_star_tab = BonusStarTab("marioParty6")
+        tab_widget.addTab(bonus_star_tab, "Bonus Star Replacement")
 
     def create_mp7_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)

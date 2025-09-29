@@ -11,10 +11,11 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
 
-# Import battle coins event function for MP4 and MP5
+# Import battle coins event function for MP4, MP5, and MP6
 try:
     from events.marioParty4_battle import battleCoins_mp4
     from events.marioParty5_battle import battleCoins_mp5
+    from events.marioParty6_battle import battleCoins_mp6
 except ImportError:
     pass
 
@@ -175,6 +176,22 @@ class BattleMinigameTab(QWidget):
                 mock_bounties = [MockEntry(bounty) for bounty in bounties]
 
                 battleCoins_mp5(*mock_bounties)
+            elif self.game_id == "marioParty6" and 'battleCoins_mp6' in globals():
+                # Get bounty values
+                bounties = []
+                for i in range(1, 6):
+                    entry = getattr(self, f"bounty_{i}_entry")
+                    bounties.append(entry.text())
+
+                class MockEntry:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+
+                mock_bounties = [MockEntry(bounty) for bounty in bounties]
+
+                battleCoins_mp6(*mock_bounties)
             elif 'battleCoins_mp4' in globals():
                 # Get bounty values
                 bounties = []
