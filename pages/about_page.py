@@ -121,15 +121,11 @@ class AboutPage(QWidget):
         
         # Features list
         features_list = [
-            "🎮 Mario Party 1-9 & DS Support",
-            "💰 Coin and Star Modifications",
-            "🎲 Dice Block Weight Adjustments",
+            "🎮 Mario Party 1-9 + DS Support",
+            "💰 Generic Price Modifications",
             "🏆 Minigame Replacements",
-            "⭐ Player Handicap System",
-            "🎁 Item Effect Modifications",
             "🔧 Code Injection Support",
             "🌙 Dark/Light Theme Support",
-            "🖥️ Cross-Platform Compatibility",
             "📱 Responsive Modern UI",
             "⚡ Native Integration",
             "🔄 Real-time Code Generation"
