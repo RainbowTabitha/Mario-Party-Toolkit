@@ -80,7 +80,7 @@ class CapsuleModsMp5Tab(QWidget):
             ("Tweester", "assets/items/tweesterCapsule.png", "tweesterCapsulePrice5", "tweesterCapsuleWeight5"),
             ("Lakitu", "assets/items/lakituCapsule.png", "lakituCapsulePrice5", "lakituCapsuleWeight5"),
             ("Miracle", "assets/items/miracleCapsule.png", "miracleCapsulePrice5", "miracleCapsuleWeight5"),
-            ("Bone", "assets/items/boneCapsule.png", "boneCapsulePrice5", "boneCapsuleWeight5"),
+            ("Bone", "assets/items/snackCapsule.png", "boneCapsulePrice5", "boneCapsuleWeight5"),
             ("Chance", "assets/items/chanceCapsule.png", "chanceCapsulePrice5", "chanceCapsuleWeight5"),
             ("Chain Chomp", "assets/items/chainChompCapsule.png", "chainChompCapsulePrice5", "chainChompCapsuleWeight5"),
             ("Bowser", "assets/items/bowserCapsule.png", "bowserCapsulePrice5", "bowserCapsuleWeight5"),
