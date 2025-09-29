@@ -67,11 +67,11 @@ class NavigationManager:
             ("marioParty3", "Mario Party 3", "assets/logos/marioParty3.png"),
             ("marioParty4", "Mario Party 4", "assets/logos/marioParty4.png"),
             ("marioParty5", "Mario Party 5", "assets/logos/marioParty5.png"),
-            # ("marioParty6", "Mario Party 6", "assets/logos/marioParty6.png"),
-            # ("marioParty7", "Mario Party 7", "assets/logos/marioParty7.png"),
-            # ("marioParty8", "Mario Party 8", "assets/logos/marioParty8.png"),
-            # ("marioParty9", "Mario Party 9", "assets/logos/marioParty9.png"),
-            # ("marioPartyDS", "Mario Party DS", "assets/logos/marioPartyDS.png"),
+            ("marioParty6", "Mario Party 6", "assets/logos/marioParty6.png"),
+            ("marioParty7", "Mario Party 7", "assets/logos/marioParty7.png"),
+            ("marioParty8", "Mario Party 8", "assets/logos/marioParty8.png"),
+            ("marioParty9", "Mario Party 9", "assets/logos/marioParty9.png"),
+            ("marioPartyDS", "Mario Party DS", "assets/logos/marioPartyDS.png"),
         ]
         
         for game_id, game_name, logo_path in games:

@@ -18,6 +18,9 @@ try:
     from events.marioParty3_coins import coinsEvent_mp3
     from events.marioParty4_coins import coinsEvent_mp4
     from events.marioParty5_coins import coinsEvent_mp5
+    from events.marioParty6_coins import coinsEvent_mp6
+    from events.marioParty7_coins import coinsEvent_mp7
+    from events.marioParty8_coins import coinsEvent_mp8
 except ImportError:
     pass
 
@@ -418,6 +421,24 @@ class CoinsTab(QWidget):
         
         # Mario Party 6 specific fields
         if self.game_id == "marioParty6":
+            # Character Space Row
+            character_row = QHBoxLayout()
+            character_row.setSpacing(12)
+            
+            character_image = self.create_image_label("assets/eventTags/characterSpace.png", 32, 32)
+            character_row.addWidget(character_image)
+            
+            character_label = BodyLabel("Character Space:")
+            character_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            character_row.addWidget(character_label)
+            
+            self.character_entry = LineEdit()
+            self.character_entry.setFixedWidth(60)
+            character_row.addWidget(self.character_entry)
+            
+            character_row.addStretch()
+            group_layout.addLayout(character_row)
+            
             # Pink Boo Coins Row
             pink_boo_coins_row = QHBoxLayout()
             pink_boo_coins_row.setSpacing(12)
@@ -436,6 +457,24 @@ class CoinsTab(QWidget):
             pink_boo_coins_row.addStretch()
             group_layout.addLayout(pink_boo_coins_row)
             
+            # Pink Boo Minimum Row
+            pink_boo_min_row = QHBoxLayout()
+            pink_boo_min_row.setSpacing(12)
+            
+            pink_boo_min_image = self.create_image_label("assets/eventTags/pinkBooCoins.png", 32, 32)
+            pink_boo_min_row.addWidget(pink_boo_min_image)
+            
+            pink_boo_min_label = BodyLabel("Pink Boo Min:")
+            pink_boo_min_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            pink_boo_min_row.addWidget(pink_boo_min_label)
+            
+            self.pink_boo_min_entry = LineEdit()
+            self.pink_boo_min_entry.setFixedWidth(60)
+            pink_boo_min_row.addWidget(self.pink_boo_min_entry)
+            
+            pink_boo_min_row.addStretch()
+            group_layout.addLayout(pink_boo_min_row)
+            
             # Pink Boo Stars Row
             pink_boo_stars_row = QHBoxLayout()
             pink_boo_stars_row.setSpacing(12)
@@ -453,6 +492,24 @@ class CoinsTab(QWidget):
             
             pink_boo_stars_row.addStretch()
             group_layout.addLayout(pink_boo_stars_row)
+            
+            # Zap Orb Row
+            zap_row = QHBoxLayout()
+            zap_row.setSpacing(12)
+            
+            zap_image = self.create_image_label("assets/items/zapCapsule.png", 32, 32)
+            zap_row.addWidget(zap_image)
+            
+            zap_label = BodyLabel("Zap Orb:")
+            zap_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            zap_row.addWidget(zap_label)
+            
+            self.zap_entry = LineEdit()
+            self.zap_entry.setFixedWidth(60)
+            zap_row.addWidget(self.zap_entry)
+            
+            zap_row.addStretch()
+            group_layout.addLayout(zap_row)
         
         # Mario Party 8 specific fields
         if self.game_id == "marioParty8":
@@ -758,6 +815,46 @@ class CoinsTab(QWidget):
                     )
                 else:
                     self.show_error("Mario Party 5 coins modification not available")
+            except Exception as e:
+                self.show_error(f"Error generating codes: {str(e)}")
+        elif self.game_id == "marioParty6":
+            try:
+                if 'coinsEvent_mp6' in globals():
+                    # Create mock objects to match the expected interface
+                    class MockEntry:
+                        def __init__(self, text):
+                            self._text = text
+                        def get(self):
+                            return self._text
+                        def text(self):
+                            return self._text
+                    
+                    # Create mock objects with current values
+                    blue_amount = MockEntry(self.blue_entry.text())
+                    red_amount = MockEntry(self.red_entry.text())
+                    character_amount = MockEntry(self.character_entry.text() if hasattr(self, 'character_entry') else "")
+                    mg_amount = MockEntry(self.mg_entry.text() if hasattr(self, 'mg_entry') else "")
+                    star_amount = MockEntry(self.star_entry.text())
+                    pink_boo_coins_amount = MockEntry(self.pink_boo_coins_entry.text() if hasattr(self, 'pink_boo_coins_entry') else "")
+                    pink_boo_min_amount = MockEntry(self.pink_boo_min_entry.text() if hasattr(self, 'pink_boo_min_entry') else "")
+                    pink_boo_stars_amount = MockEntry(self.pink_boo_stars_entry.text() if hasattr(self, 'pink_boo_stars_entry') else "")
+                    initial_amount = MockEntry(self.initial_entry.text() if hasattr(self, 'initial_entry') else "")
+                    zap_amount = MockEntry(self.zap_entry.text() if hasattr(self, 'zap_entry') else "")
+
+                    coinsEvent_mp6(
+                        blue_amount,
+                        red_amount,
+                        character_amount,
+                        mg_amount,
+                        star_amount,
+                        pink_boo_coins_amount,
+                        pink_boo_min_amount,
+                        pink_boo_stars_amount,
+                        initial_amount,
+                        zap_amount
+                    )
+                else:
+                    self.show_error("Mario Party 6 coins modification not available")
             except Exception as e:
                 self.show_error(f"Error generating codes: {str(e)}")
         else:

@@ -11,9 +11,10 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
 
-# Import space replacement event functions for MP4
+# Import space replacement event functions for MP4 and MP6
 try:
     from events.marioParty4_spaceReplace import spaceReplaceEvent_mp4
+    from events.marioParty6_spaceReplace import spaceReplaceEvent_mp6
 except ImportError:
     pass
 
@@ -64,18 +65,32 @@ class SpaceReplacementTab(QWidget):
         # Use card_layout instead of group_layout for adding content
         group_layout = card_layout
 
-        # Space types for MP4
-        self.mp4_spaces = [
-            "Blue Space",
-            "Red Space",
-            "Happening Space",
-            "Fortune Space",
-            "Bowser Space",
-            "Battle Space",
-            "Item Space",
-            "Warp Space",
-            "Chance Time Space"
-        ]
+        # Space types - different for each game
+        if self.game_id == "marioParty6":
+            self.spaces = [
+                "None",
+                "Invisible Space",
+                "Blue Space",
+                "Red Space",
+                "Happening Space",
+                "Chance Time Space",
+                "Duel Space",
+                "Bowser/DK Space",
+                "Orb Space"
+            ]
+        else:
+            # Default MP4 spaces
+            self.spaces = [
+                "Blue Space",
+                "Red Space",
+                "Happening Space",
+                "Fortune Space",
+                "Bowser Space",
+                "Battle Space",
+                "Item Space",
+                "Warp Space",
+                "Chance Time Space"
+            ]
 
         # Space replacement section
         replace_layout = QVBoxLayout()
@@ -90,7 +105,7 @@ class SpaceReplacementTab(QWidget):
         from_layout.addWidget(from_label)
 
         self.from_combo = ComboBox()
-        self.from_combo.addItems(self.mp4_spaces)
+        self.from_combo.addItems(self.spaces)
         self.from_combo.setCurrentText("Blue Space")
         self.from_combo.setFixedWidth(150)
         from_layout.addWidget(self.from_combo)
@@ -107,7 +122,7 @@ class SpaceReplacementTab(QWidget):
         with_layout.addWidget(with_label)
 
         self.with_combo = ComboBox()
-        self.with_combo.addItems(self.mp4_spaces)
+        self.with_combo.addItems(self.spaces)
         self.with_combo.setCurrentText("Red Space")
         self.with_combo.setFixedWidth(150)
         with_layout.addWidget(self.with_combo)
@@ -183,7 +198,25 @@ class SpaceReplacementTab(QWidget):
     def generate_codes(self):
         """Generate codes for space replacement"""
         try:
-            if 'spaceReplaceEvent_mp4' in globals():
+            if self.game_id == "marioParty6" and 'spaceReplaceEvent_mp6' in globals():
+                # Get replacement values
+                from_space = self.from_combo.currentText()
+                to_space = self.with_combo.currentText()
+                slot = self.slot_combo.currentText()
+
+                # Create mock entry objects to match expected interface
+                class MockEntry:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+
+                mock_from = MockEntry(from_space)
+                mock_to = MockEntry(to_space)
+                mock_slot = MockEntry(slot)
+
+                spaceReplaceEvent_mp6(mock_from, mock_to, mock_slot)
+            elif 'spaceReplaceEvent_mp4' in globals():
                 # Get replacement values
                 from_space = self.from_combo.currentText()
                 to_space = self.with_combo.currentText()
@@ -202,7 +235,7 @@ class SpaceReplacementTab(QWidget):
 
                 spaceReplaceEvent_mp4(mock_from, mock_to, mock_slot)
             else:
-                self.show_error("Mario Party 4 space replacement modification not available")
+                self.show_error("Space replacement modification not available")
 
         except Exception as e:
             self.show_error(f"Error generating codes: {str(e)}")

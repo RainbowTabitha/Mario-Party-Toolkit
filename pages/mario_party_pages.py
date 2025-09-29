@@ -150,7 +150,7 @@ class MarioPartyPages:
 
     def create_mp1_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
-        """Create tabs for Mario Party 1 - Basic coin structure"""
+        """Create tabs for Mario Party 1"""
         # Coins Mods tab - MP1 only has 3 basic coin fields
         coins_global_tab = CoinsTab("marioParty1", "basic")
         tab_widget.addTab(coins_global_tab, "Coins Mods")
@@ -382,7 +382,7 @@ class MarioPartyPages:
 
     def create_mp8_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
-        """Create tabs for Mario Party 8 - Basic coin structure"""
+        """Create tabs for Mario Party 8"""
         # Coins Mods tab - MP8 has basic coin fields
         coins_global_tab = CoinsTab("marioParty8", "basic")
         tab_widget.addTab(coins_global_tab, "Coins Mods")
@@ -397,32 +397,16 @@ class MarioPartyPages:
 
     def create_mp9_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
-        """Create tabs for Mario Party 9 - Basic coin structure"""
-        # Coins Mods tab - MP9 has basic coin fields
-        coins_global_tab = CoinsTab("marioParty9", "basic")
-        tab_widget.addTab(coins_global_tab, "Coins Mods")
+        """Create tabs for Mario Party 9"""
 
-        
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty9")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
-        
-        # Star Handicaps tab
-        handicap_global_tab = HandicapTab("marioParty9")
-        tab_widget.addTab(handicap_global_tab, "Star Handicaps")
 
     def create_mpds_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
-        """Create tabs for Mario Party DS - Basic coin structure"""
-        # Coins Mods tab - MPDS has basic coin fields
-        coins_global_tab = CoinsTab("marioPartyDS", "basic")
-        tab_widget.addTab(coins_global_tab, "Coins Mods")
-    
-        
+        """Create tabs for Mario Party DS"""
+
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioPartyDS")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
-        
-        # Star Handicaps tab
-        handicap_global_tab = HandicapTab("marioPartyDS")
-        tab_widget.addTab(handicap_global_tab, "Star Handicaps")

@@ -11,9 +11,10 @@ from qfluentwidgets import SubtitleLabel, BodyLabel, ComboBox, PushButton
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
 
-# Import initial items event function for MP4
+# Import initial items event functions for MP4 and MP6
 try:
     from events.marioParty4_initialItems import initialItemsEvent_mp4
+    from events.marioParty6_initialItems import initialItemsEvent_mp6
 except ImportError:
     pass
 
@@ -64,24 +65,52 @@ class InitialItemsTab(QWidget):
         # Use card_layout instead of group_layout for adding content
         group_layout = card_layout
 
-        # Item list for MP4
-        self.mp4_items = [
-            "None",
-            "Mini Mushroom",
-            "Mega Mushroom",
-            "Super Mini Mushroom",
-            "Super Mega Mushroom",
-            "Mini Mega Hammer",
-            "Warp Pipe",
-            "Swap Card",
-            "Sparky Sticker",
-            "Gaddlight",
-            "Chomp Call",
-            "Bowser Suit",
-            "Crystal Ball",
-            "Magic Lamp",
-            "Item Bag"
-        ]
+        # Item list - different for each game
+        if self.game_id == "marioParty6":
+            self.items = [
+                "None",
+                "Mushroom",
+                "Golden Mushroom",
+                "Sluggish 'Shroom",
+                "Metal Mushroom",
+                "Bullet Bill",
+                "Warp Pipe",
+                "Flutter",
+                "Spiny",
+                "Goomba",
+                "Piranha Plant",
+                "Klepto",
+                "Toady",
+                "Kamek",
+                "Mr. Blizzard",
+                "Podoboo",
+                "Zap",
+                "Tweester",
+                "Thwomp",
+                "Bob-omb",
+                "Paratroopa",
+                "Snack",
+                "Boo-away"
+            ]
+        else:
+            # Default MP4 items
+            self.items = [
+                "None",
+                "Mini Mushroom",
+                "Mega Mushroom",
+                "Super Mini Mushroom",
+                "Super Mega Mushroom",
+                "Mini Mega Hammer",
+                "Warp Pipe",
+                "Swap Card",
+                "Sparky Sticker",
+                "Gaddlight",
+                "Chomp Call",
+                "Bowser Suit",
+                "Crystal Ball",
+                "Magic Lamp",
+                "Item Bag"
+            ]
 
         # Create item selection section
         items_group_layout = QVBoxLayout()
@@ -99,7 +128,7 @@ class InitialItemsTab(QWidget):
 
             # Item combo box
             combo = ComboBox()
-            combo.addItems(self.mp4_items)
+            combo.addItems(self.items)
             combo.setCurrentText("None")
             combo.setFixedWidth(200)
             slot_layout.addWidget(combo)
@@ -161,7 +190,7 @@ class InitialItemsTab(QWidget):
     def generate_codes(self):
         """Generate codes for initial items"""
         try:
-            if 'initialItemsEvent_mp4' in globals():
+            if self.game_id == "marioParty6" and 'initialItemsEvent_mp6' in globals():
                 # Get selected items
                 item1 = self.item_slot_1_combo.currentText()
                 item2 = self.item_slot_2_combo.currentText()
@@ -177,11 +206,30 @@ class InitialItemsTab(QWidget):
                 mock_item1 = MockEntry(item1)
                 mock_item2 = MockEntry(item2)
                 mock_item3 = MockEntry(item3)
-                mock_items_list = self.mp4_items
+                mock_items_list = self.items
+
+                initialItemsEvent_mp6(mock_item1, mock_item2, mock_item3, mock_items_list)
+            elif 'initialItemsEvent_mp4' in globals():
+                # Get selected items
+                item1 = self.item_slot_1_combo.currentText()
+                item2 = self.item_slot_2_combo.currentText()
+                item3 = self.item_slot_3_combo.currentText()
+
+                # Create mock entry objects to match expected interface
+                class MockEntry:
+                    def __init__(self, text):
+                        self._text = text
+                    def get(self):
+                        return self._text
+
+                mock_item1 = MockEntry(item1)
+                mock_item2 = MockEntry(item2)
+                mock_item3 = MockEntry(item3)
+                mock_items_list = self.items
 
                 initialItemsEvent_mp4(mock_item1, mock_item2, mock_item3, mock_items_list)
             else:
-                self.show_error("Mario Party 4 initial items modification not available")
+                self.show_error("Initial items modification not available")
 
         except Exception as e:
             self.show_error(f"Error generating codes: {str(e)}")
