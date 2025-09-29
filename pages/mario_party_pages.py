@@ -342,10 +342,6 @@ class MarioPartyPages:
         mg_tab = MinigameTab("marioParty6")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
         
-        # Item Mods tab (Orb Mods)
-        item_tab = ItemReplaceTab("marioParty6") # FIX111
-        tab_widget.addTab(item_tab, "Orb Mods")
-        
         # Space Replacement tab
         space_tab = SpaceReplacementTab("marioParty6")
         tab_widget.addTab(space_tab, "Space Replacement")
