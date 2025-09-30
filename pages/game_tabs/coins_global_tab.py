@@ -511,6 +511,134 @@ class CoinsTab(QWidget):
             zap_row.addStretch()
             group_layout.addLayout(zap_row)
         
+        # Mario Party 7 specific fields
+        if self.game_id == "marioParty7":
+            # Character Space Row
+            character_row = QHBoxLayout()
+            character_row.setSpacing(12)
+            
+            character_image = self.create_image_label("assets/eventTags/characterSpace.png", 32, 32)
+            character_row.addWidget(character_image)
+            
+            character_label = BodyLabel("Character Space:")
+            character_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            character_row.addWidget(character_label)
+            
+            self.character_entry = LineEdit()
+            self.character_entry.setFixedWidth(60)
+            character_row.addWidget(self.character_entry)
+            
+            character_row.addStretch()
+            group_layout.addLayout(character_row)
+            
+            # Star Last 5 Row
+            star_last5_row = QHBoxLayout()
+            star_last5_row.setSpacing(12)
+            
+            star_last5_image = self.create_image_label("assets/eventTags/starSpace.png", 32, 32)
+            star_last5_row.addWidget(star_last5_image)
+            
+            star_last5_label = BodyLabel("Star Last 5:")
+            star_last5_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            star_last5_row.addWidget(star_last5_label)
+            
+            self.star_last5_entry = LineEdit()
+            self.star_last5_entry.setFixedWidth(60)
+            star_last5_row.addWidget(self.star_last5_entry)
+            
+            star_last5_row.addStretch()
+            group_layout.addLayout(star_last5_row)
+            
+            # Hammer Bro Row
+            hammer_bro_row = QHBoxLayout()
+            hammer_bro_row.setSpacing(12)
+            
+            hammer_bro_image = self.create_image_label("assets/items/hammerBroCapsule.png", 32, 32)
+            hammer_bro_row.addWidget(hammer_bro_image)
+            
+            hammer_bro_label = BodyLabel("Hammer Bro:")
+            hammer_bro_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            hammer_bro_row.addWidget(hammer_bro_label)
+            
+            self.hammer_bro_entry = LineEdit()
+            self.hammer_bro_entry.setFixedWidth(60)
+            hammer_bro_row.addWidget(self.hammer_bro_entry)
+            
+            hammer_bro_row.addStretch()
+            group_layout.addLayout(hammer_bro_row)
+            
+            # Zap Orb Row
+            zap_row = QHBoxLayout()
+            zap_row.setSpacing(12)
+            
+            zap_image = self.create_image_label("assets/items/zapCapsule.png", 32, 32)
+            zap_row.addWidget(zap_image)
+            
+            zap_label = BodyLabel("Zap Orb:")
+            zap_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            zap_row.addWidget(zap_label)
+            
+            self.zap_entry = LineEdit()
+            self.zap_entry.setFixedWidth(60)
+            zap_row.addWidget(self.zap_entry)
+            
+            zap_row.addStretch()
+            group_layout.addLayout(zap_row)
+            
+            # Fireball Row
+            fireball_row = QHBoxLayout()
+            fireball_row.setSpacing(12)
+            
+            fireball_image = self.create_image_label("assets/items/fireballCapsule.png", 32, 32)
+            fireball_row.addWidget(fireball_image)
+            
+            fireball_label = BodyLabel("Fireball:")
+            fireball_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            fireball_row.addWidget(fireball_label)
+            
+            self.fireball_entry = LineEdit()
+            self.fireball_entry.setFixedWidth(60)
+            fireball_row.addWidget(self.fireball_entry)
+            
+            fireball_row.addStretch()
+            group_layout.addLayout(fireball_row)
+            
+            # Vacuum Row
+            vacuum_row = QHBoxLayout()
+            vacuum_row.setSpacing(12)
+            
+            vacuum_image = self.create_image_label("assets/items/vacuumCapsule.png", 32, 32)
+            vacuum_row.addWidget(vacuum_image)
+            
+            vacuum_label = BodyLabel("Vacuum:")
+            vacuum_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            vacuum_row.addWidget(vacuum_label)
+            
+            self.vacuum_entry = LineEdit()
+            self.vacuum_entry.setFixedWidth(60)
+            vacuum_row.addWidget(self.vacuum_entry)
+            
+            vacuum_row.addStretch()
+            group_layout.addLayout(vacuum_row)
+            
+            # Flower Row
+            flower_row = QHBoxLayout()
+            flower_row.setSpacing(12)
+            
+            flower_image = self.create_image_label("assets/items/flowerCapsule.png", 32, 32)
+            flower_row.addWidget(flower_image)
+            
+            flower_label = BodyLabel("Flower:")
+            flower_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            flower_row.addWidget(flower_label)
+            
+            self.flower_entry = LineEdit()
+            self.flower_entry.setFixedWidth(60)
+            flower_row.addWidget(self.flower_entry)
+            
+            flower_row.addStretch()
+            group_layout.addLayout(flower_row)
+
         # Mario Party 8 specific fields
         if self.game_id == "marioParty8":
             # Bitsize Row
@@ -855,6 +983,86 @@ class CoinsTab(QWidget):
                     )
                 else:
                     self.show_error("Mario Party 6 coins modification not available")
+            except Exception as e:
+                self.show_error(f"Error generating codes: {str(e)}")
+        elif self.game_id == "marioParty7":
+            try:
+                if 'coinsEvent_mp7' in globals():
+                    # Create mock objects to match the expected interface
+                    class MockEntry:
+                        def __init__(self, text):
+                            self._text = text
+                        def get(self):
+                            return self._text
+                        def text(self):
+                            return self._text
+                    
+                    # Create mock objects with current values
+                    blue_amount = MockEntry(self.blue_entry.text())
+                    red_amount = MockEntry(self.red_entry.text())
+                    character_amount = MockEntry(self.character_entry.text() if hasattr(self, 'character_entry') else "")
+                    mg_amount = MockEntry(self.mg_entry.text() if hasattr(self, 'mg_entry') else "")
+                    star_amount = MockEntry(self.star_entry.text())
+                    star_last5_amount = MockEntry(self.star_last5_entry.text() if hasattr(self, 'star_last5_entry') else "")
+                    hammer_bro_amount = MockEntry(self.hammer_bro_entry.text() if hasattr(self, 'hammer_bro_entry') else "")
+                    zap_amount = MockEntry(self.zap_entry.text() if hasattr(self, 'zap_entry') else "")
+                    fireball_amount = MockEntry(self.fireball_entry.text() if hasattr(self, 'fireball_entry') else "")
+                    vacuum_amount = MockEntry(self.vacuum_entry.text() if hasattr(self, 'vacuum_entry') else "")
+                    flower_amount = MockEntry(self.flower_entry.text() if hasattr(self, 'flower_entry') else "")
+                    initial_amount = MockEntry(self.initial_entry.text() if hasattr(self, 'initial_entry') else "")
+
+                    coinsEvent_mp7(
+                        blue_amount,
+                        red_amount,
+                        character_amount,
+                        mg_amount,
+                        star_amount,
+                        star_last5_amount,
+                        hammer_bro_amount,
+                        zap_amount,
+                        fireball_amount,
+                        vacuum_amount,
+                        flower_amount,
+                        initial_amount
+                    )
+                else:
+                    self.show_error("Mario Party 7 coins modification not available")
+            except Exception as e:
+                self.show_error(f"Error generating codes: {str(e)}")
+        elif self.game_id == "marioParty8":
+            try:
+                if 'coinsEvent_mp8' in globals():
+                    # Create mock objects to match the expected interface
+                    class MockEntry:
+                        def __init__(self, text):
+                            self._text = text
+                        def get(self):
+                            return self._text
+                        def text(self):
+                            return self._text
+                    
+                    # Create mock objects with current values
+                    blue_amount = MockEntry(self.blue_entry.text())
+                    red_amount = MockEntry(self.red_entry.text())
+                    mg_amount = MockEntry(self.mg_entry.text() if hasattr(self, 'mg_entry') else "")
+                    star_amount = MockEntry(self.star_entry.text())
+                    bitsize_amount = MockEntry(self.bitsize_entry.text() if hasattr(self, 'bitsize_entry') else "")
+                    hotel_amount = MockEntry(self.hotel_entry.text() if hasattr(self, 'hotel_entry') else "")
+                    bowlo_amount = MockEntry(self.bowlo_entry.text() if hasattr(self, 'bowlo_entry') else "")
+                    vampire_amount = MockEntry(self.vampire_entry.text() if hasattr(self, 'vampire_entry') else "")
+
+                    coinsEvent_mp8(
+                        blue_amount,
+                        red_amount,
+                        mg_amount,
+                        star_amount,
+                        bitsize_amount,
+                        hotel_amount,
+                        bowlo_amount,
+                        vampire_amount
+                    )
+                else:
+                    self.show_error("Mario Party 8 coins modification not available")
             except Exception as e:
                 self.show_error(f"Error generating codes: {str(e)}")
         else:
