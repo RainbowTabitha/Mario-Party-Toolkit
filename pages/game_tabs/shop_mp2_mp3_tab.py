@@ -143,7 +143,7 @@ class ItemsTab(QWidget):
         # Item title (like MP7)
         title = BodyLabel(item_name)
         if is_red:
-            title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px; color: red;")
+            title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px; color: palette(highlight);")
         else:
             title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px;")
         group_layout.addWidget(title)
@@ -187,7 +187,7 @@ class ItemsTab(QWidget):
         
         # Add pricing note for red items
         pricing_note = BodyLabel("Note: Items shown in red must have equal prices to work properly.")
-        pricing_note.setStyleSheet("font-size: 14px; color: red; font-weight: 600; margin-bottom: 16px; padding: 8px; background: rgba(255, 0, 0, 0.1); border-radius: 4px;")
+        pricing_note.setStyleSheet("font-size: 14px; color: palette(highlight); font-weight: 600; margin-bottom: 16px; padding: 8px; background: rgba(255, 0, 0, 0.1); border-radius: 4px;")
         group_layout.addWidget(pricing_note)
         
         # Create grid layout for items (similar to MP7)
@@ -241,7 +241,7 @@ class ItemsTab(QWidget):
 
         # Title for red items section
         title = BodyLabel("Items Requiring Equal Prices")
-        title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 8px; color: red;")
+        title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 8px; color: palette(highlight);")
         red_layout.addWidget(title)
 
         # Create horizontal layout for icons only
@@ -262,7 +262,7 @@ class ItemsTab(QWidget):
             
             # Add item name
             name_label = BodyLabel(item_name)
-            name_label.setStyleSheet("font-size: 11px; font-weight: 600; color: red; text-align: center;")
+            name_label.setStyleSheet("font-size: 11px; font-weight: 600; color: palette(highlight); text-align: center;")
             name_label.setAlignment(Qt.AlignCenter)
             item_layout.addWidget(name_label)
             
@@ -275,7 +275,7 @@ class ItemsTab(QWidget):
         price_layout.setSpacing(8)
         
         price_label = BodyLabel("Price for all items above:")
-        price_label.setStyleSheet("font-size: 12px; font-weight: 600; color: red;")
+        price_label.setStyleSheet("font-size: 12px; font-weight: 600; color: palette(highlight);")
         price_layout.addWidget(price_label)
         
         # Single price entry for all red items
@@ -302,7 +302,7 @@ class ItemsTab(QWidget):
         # Item title (like MP7)
         title = BodyLabel(item_name)
         if is_red:
-            title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px; color: red;")
+            title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px; color: palette(highlight);")
         else:
             title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px;")
         group_layout.addWidget(title)

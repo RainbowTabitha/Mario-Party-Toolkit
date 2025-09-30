@@ -284,7 +284,7 @@ class ShopOddsTab(QWidget):
         separator = QFrame()
         separator.setFrameShape(QFrame.HLine)
         separator.setFrameShadow(QFrame.Sunken)
-        separator.setStyleSheet("color: #cccccc;")
+        separator.setStyleSheet("color: palette(mid);")
         parent_layout.addWidget(separator)
 
     def create_item_row(self, parent_layout, item_name, item_icon):

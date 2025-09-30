@@ -56,7 +56,7 @@ class BoardSpecificMp7Tab(QWidget):
         pyramid_card.setLayout(pyramid_layout)
 
         pyramid_title = BodyLabel("Pyramid Park Features")
-        pyramid_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #8B4513;")
+        pyramid_title.setStyleSheet("font-size: 18px; font-weight: bold; color: palette(highlight);")
         pyramid_layout.addWidget(pyramid_title)
 
         # Spinx Event
@@ -122,7 +122,7 @@ class BoardSpecificMp7Tab(QWidget):
         windmillville_card.setLayout(windmillville_layout)
 
         windmillville_title = BodyLabel("Windmillville Features")
-        windmillville_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #4169E1;")
+        windmillville_title.setStyleSheet("font-size: 18px; font-weight: bold; color: palette(highlight);")
         windmillville_layout.addWidget(windmillville_title)
 
         # Glider Event

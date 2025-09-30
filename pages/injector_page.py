@@ -7,23 +7,25 @@
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QFileDialog, QMessageBox
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
-from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, TextEdit, CardWidget, ScrollArea
+from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, PushButton, TextEdit, CardWidget, ScrollArea, MessageBox
 from functions import createDialog, fetchResource
 import os
 import sys
 import subprocess
 import shutil
-import tkinter.filedialog
 
 
 class InjectionWorker(QThread):
     """Worker thread for code injection to prevent UI freezing"""
     finished = pyqtSignal(bool, str)
+    save_file_requested = pyqtSignal(str, str, str)  # extension, initial_name, file_types
     
-    def __init__(self, file_path, codes_text):
+    def __init__(self, file_path, codes_text, parent_widget):
         super().__init__()
         self.file_path = file_path
         self.codes_text = codes_text
+        self.parent_widget = parent_widget
+        self.save_file_path = None
     
     def run(self):
         try:
@@ -98,9 +100,14 @@ class InjectionWorker(QThread):
         else:
             subprocess.run([fetchResource("dependencies/darwin/wit"), "copy", folder_path_raw, "--dest=tmp/game.wbfs"], check=True)
         
-        file_path = tkinter.filedialog.asksaveasfilename(defaultextension=".wbfs", initialfile=gameName[:-4] + " (Modded).wbfs", filetypes=[("WBFS Files", "*.wbfs")])
-        if file_path:
-            shutil.move("tmp/game.wbfs", file_path)
+        # Request save file dialog from main thread
+        self.save_file_requested.emit(".wbfs", gameName[:-4] + " (Modded).wbfs", "WBFS Files (*.wbfs)")
+        # Wait for the result
+        while self.save_file_path is None:
+            self.msleep(100)
+        
+        if self.save_file_path:
+            shutil.move("tmp/game.wbfs", self.save_file_path)
     
     def handle_n64_rom(self, iso_path, gameName):
         if sys.platform == "win32":
@@ -108,9 +115,14 @@ class InjectionWorker(QThread):
         else:
             subprocess.run([fetchResource("dependencies/darwin/GSInject"), "tmp/codes.txt", iso_path, "tmp/tmp.z64"], check=True)
         
-        file_path = tkinter.filedialog.asksaveasfilename(defaultextension=".z64", initialfile=gameName[:-4] + " (Modded).z64", filetypes=[("Z64 Files", "*.z64")])
-        if file_path:
-            shutil.move("tmp/game.z64", file_path)
+        # Request save file dialog from main thread
+        self.save_file_requested.emit(".z64", gameName[:-4] + " (Modded).z64", "Z64 Files (*.z64)")
+        # Wait for the result
+        while self.save_file_path is None:
+            self.msleep(100)
+        
+        if self.save_file_path:
+            shutil.move("tmp/game.z64", self.save_file_path)
     
     def handle_regular_iso(self, iso_path, gameName):
         if sys.platform == "win32":
@@ -137,9 +149,14 @@ class InjectionWorker(QThread):
         else:
             subprocess.run([fetchResource("dependencies/darwin/pyisotools"), folder_path_raw, "B", "--dest=../../game.iso"], check=True)
         
-        file_path = tkinter.filedialog.asksaveasfilename(defaultextension=".iso", initialfile=gameName[:-4] + " (Modded).iso", filetypes=[("ISO Files", "*.iso")])
-        if file_path:
-            shutil.move("tmp/game.iso", file_path)
+        # Request save file dialog from main thread
+        self.save_file_requested.emit(".iso", gameName[:-4] + " (Modded).iso", "ISO Files (*.iso)")
+        # Wait for the result
+        while self.save_file_path is None:
+            self.msleep(100)
+        
+        if self.save_file_path:
+            shutil.move("tmp/game.iso", self.save_file_path)
 
 
 class InjectorPage(QWidget):
@@ -203,6 +220,7 @@ class InjectorPage(QWidget):
         self.codes_text_edit = TextEdit()
         self.codes_text_edit.setPlaceholderText("Paste your codes here...")
         self.codes_text_edit.setMaximumHeight(200)
+        self.codes_text_edit.setStyleSheet("TextEdit { color: palette(text); }")
         self.codes_text_edit.textChanged.connect(self.on_codes_changed)
         codes_layout.addWidget(self.codes_text_edit)
         
@@ -261,9 +279,25 @@ class InjectorPage(QWidget):
         self.inject_btn.setText("Injecting...")
         
         # Start injection worker thread
-        self.injection_worker = InjectionWorker(self.selected_file_path, codes_text)
+        self.injection_worker = InjectionWorker(self.selected_file_path, codes_text, self)
         self.injection_worker.finished.connect(self.on_injection_finished)
+        self.injection_worker.save_file_requested.connect(self.handle_save_file_request)
         self.injection_worker.start()
+    
+    def handle_save_file_request(self, extension, initial_name, file_types):
+        """Handle save file request from worker thread"""
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Modified Game File",
+            initial_name,
+            f"{file_types};;All Files (*.*)"
+        )
+        
+        # Set the result back to the worker thread
+        if file_path:
+            self.injection_worker.save_file_path = file_path
+        else:
+            self.injection_worker.save_file_path = ""  # User cancelled
     
     def on_injection_finished(self, success, message):
         """Handle injection completion"""

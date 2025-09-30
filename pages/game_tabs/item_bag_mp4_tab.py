@@ -48,7 +48,7 @@ class ItemBagTab(QWidget):
         placeholder_layout.setAlignment(Qt.AlignCenter)
 
         placeholder_label = BodyLabel("Item Bag modifications coming soon...")
-        placeholder_label.setStyleSheet("font-size: 16px; color: gray;")
+        placeholder_label.setStyleSheet("font-size: 16px; color: palette(mid);")
         placeholder_layout.addWidget(placeholder_label)
 
         layout.addLayout(placeholder_layout)
