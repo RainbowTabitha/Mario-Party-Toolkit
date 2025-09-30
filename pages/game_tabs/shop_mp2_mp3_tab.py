@@ -106,25 +106,15 @@ class ItemsTab(QWidget):
         items_grid = QVBoxLayout()
         items_grid.setSpacing(12)
         
-        # Define MP2 items with their properties
+        # Define MP2 items with their properties (only 7 items exist in MP2)
         self.mp2_items = [
             ("Mushroom", "assets/items/mushroom.png", "mushroom", False),
             ("Skeleton Key", "assets/items/skeletonKey.png", "key", False),
             ("Plunder Chest", "assets/items/plunderChest.png", "chest", False),
-            ("Bowser Phone", "assets/items/bowserPhone.png", "phone", False),
             ("Dueling Glove", "assets/items/duelingGlove.png", "glove", False),
             ("Warp Block", "assets/items/warpBlock.png", "warp", False),
             ("Golden Mushroom", "assets/items/goldenMushroom.png", "golden", False),
-            ("Magic Lamp", "assets/items/magicLamp.png", "lamp", False),
-            ("Poison Mushroom", "assets/items/poisonMushroom.png", "poison", False),
-            ("Reverse Mushroom", "assets/items/reverseMushroom.png", "reverse", False),
-            ("Lucky Lamp", "assets/items/luckyLamp.png", "lucky", False),
-            ("Warp Block", "assets/items/warpBlock.png", "warp2", False),
-            ("Cellular Shopper", "assets/items/celluarShopper.png", "shopper", False),
-            ("Boo Bell", "assets/items/booBell.png", "bell", False),
-            ("Boo Repellant", "assets/items/booRepellent.png", "repellant", False),
-            ("Bowser Suit", "assets/items/bowserSuit.png", "suit", False),
-            ("Item Bag", "assets/items/itemBag3.png", "bag", False)
+            ("Magic Lamp", "assets/items/magicLamp.png", "lamp", False)
         ]
         
         # Create entries for each item
@@ -198,33 +188,100 @@ class ItemsTab(QWidget):
         items_grid = QVBoxLayout()
         items_grid.setSpacing(12)
         
-        # Define MP3 items with their properties
+        # Define MP3 items with their properties (grouped: red items first, then normal items)
         self.mp3_items = [
+            # Red items (require equal prices) - grouped together
             ("Mushroom", "assets/items/mushroom.png", "mushroom", True),  # Red text
             ("Skeleton Key", "assets/items/skeletonKey.png", "key", True),  # Red text
+            ("Warp Block", "assets/items/warpBlock.png", "warp", True),  # Red text
+            ("Poison Mushroom", "assets/items/poisonMushroom.png", "poison", True),  # Red text
+            ("Reverse Mushroom", "assets/items/reverseMushroom.png", "reverse", True),  # Red text
+            ("Warp Block", "assets/items/warpBlock.png", "warp2", True),  # Red text (duplicate)
+            ("Cellular Shopper", "assets/items/celluarShopper.png", "shopper", True),  # Red text
+            
+            # Normal items (no special pricing requirements)
             ("Plunder Chest", "assets/items/plunderChest.png", "chest", False),
             ("Bowser Phone", "assets/items/bowserPhone.png", "phone", False),
             ("Dueling Glove", "assets/items/duelingGlove.png", "glove", False),
-            ("Warp Block", "assets/items/warpBlock.png", "warp", True),  # Red text
             ("Golden Mushroom", "assets/items/goldenMushroom.png", "golden", False),
             ("Magic Lamp", "assets/items/magicLamp.png", "lamp", False),
-            ("Poison Mushroom", "assets/items/poisonMushroom.png", "poison", True),  # Red text
-            ("Reverse Mushroom", "assets/items/reverseMushroom.png", "reverse", True),  # Red text
             ("Lucky Lamp", "assets/items/luckyLamp.png", "lucky", False),
-            ("Warp Block", "assets/items/warpBlock.png", "warp2", True),  # Red text (duplicate)
-            ("Cellular Shopper", "assets/items/celluarShopper.png", "shopper", True),  # Red text
             ("Boo Bell", "assets/items/booBell.png", "bell", False),
-            ("Boo Repellant", "assets/items/booRepellant.png", "repellant", False),
+            ("Boo Repellant", "assets/items/booRepellent.png", "repellant", False),
             ("Bowser Suit", "assets/items/bowserSuit.png", "suit", False),
-            ("Item Bag", "assets/items/itemBag.png", "bag", False)
+            ("Item Bag", "assets/items/itemBag3.png", "bag", False)
         ]
         
-        # Create entries for each item
+        # Create red items group (one box for all red items)
+        red_items_box = self.create_red_items_group()
+        items_grid.addWidget(red_items_box)
+        
+        # Create entries for normal items
         for item_name, icon_path, item_key, is_red in self.mp3_items:
-            item_group = self.create_mp3_item_group(item_name, icon_path, item_key, is_red)
-            items_grid.addWidget(item_group)
+            if not is_red:  # Only create individual cards for normal items
+                item_group = self.create_mp3_item_group(item_name, icon_path, item_key, is_red)
+                items_grid.addWidget(item_group)
         
         group_layout.addLayout(items_grid)
+    
+    def create_red_items_group(self):
+        """Create a single box containing all red items with icons arranged horizontally"""
+        # Create card widget for red items
+        red_card = CardWidget()
+        red_card.setStyleSheet("CardWidget { background: rgba(255, 0, 0, 0.1); border: 2px solid rgba(255, 0, 0, 0.3); }")
+        red_layout = QVBoxLayout(red_card)
+        red_layout.setContentsMargins(16, 12, 16, 12)
+        red_layout.setSpacing(8)
+
+        # Title for red items section
+        title = BodyLabel("Items Requiring Equal Prices")
+        title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 8px; color: red;")
+        red_layout.addWidget(title)
+
+        # Create horizontal layout for icons only
+        icons_layout = QHBoxLayout()
+        icons_layout.setSpacing(8)
+
+        # Add red items with icons only (no individual inputs)
+        red_items = [item for item in self.mp3_items if item[3]]  # Get only red items
+        
+        for item_name, icon_path, item_key, is_red in red_items:
+            # Create vertical layout for each red item
+            item_layout = QVBoxLayout()
+            item_layout.setSpacing(4)
+            
+            # Add icon
+            icon = self.create_image_label(icon_path, 32, 32)
+            item_layout.addWidget(icon)
+            
+            # Add item name
+            name_label = BodyLabel(item_name)
+            name_label.setStyleSheet("font-size: 11px; font-weight: 600; color: red; text-align: center;")
+            name_label.setAlignment(Qt.AlignCenter)
+            item_layout.addWidget(name_label)
+            
+            icons_layout.addLayout(item_layout)
+
+        red_layout.addLayout(icons_layout)
+        
+        # Add single price input for all red items
+        price_layout = QHBoxLayout()
+        price_layout.setSpacing(8)
+        
+        price_label = BodyLabel("Price for all items above:")
+        price_label.setStyleSheet("font-size: 12px; font-weight: 600; color: red;")
+        price_layout.addWidget(price_label)
+        
+        # Single price entry for all red items
+        self.red_items_price_entry = LineEdit()
+        self.red_items_price_entry.setPlaceholderText("Coins")
+        self.red_items_price_entry.setFixedWidth(80)
+        self.red_items_price_entry.setFixedHeight(30)
+        price_layout.addWidget(self.red_items_price_entry)
+        
+        price_layout.addStretch()
+        red_layout.addLayout(price_layout)
+        return red_card
     
     def create_mp3_item_group(self, item_name, icon_path, item_key, is_red):
         """Create a group for a single MP3 item (MP7-style card format)"""
@@ -329,41 +386,37 @@ class ItemsTab(QWidget):
                 mushroom_price = MockEntry(self.mushroom_entry.text())
                 key_price = MockEntry(self.key_entry.text())
                 chest_price = MockEntry(self.chest_entry.text())
-                phone_price = MockEntry(self.phone_entry.text())
                 glove_price = MockEntry(self.glove_entry.text())
                 warp_price = MockEntry(self.warp_entry.text())
                 golden_price = MockEntry(self.golden_entry.text())
                 lamp_price = MockEntry(self.lamp_entry.text())
-                poison_price = MockEntry(self.poison_entry.text())
-                reverse_price = MockEntry(self.reverse_entry.text())
-                lucky_price = MockEntry(self.lucky_entry.text())
-                warp2_price = MockEntry(self.warp2_entry.text())
-                shopper_price = MockEntry(self.shopper_entry.text())
-                bell_price = MockEntry(self.bell_entry.text())
-                repellant_price = MockEntry(self.repellant_entry.text())
-                suit_price = MockEntry(self.suit_entry.text())
-                bag_price = MockEntry(self.bag_entry.text())
-                
-                # Call the MP2 items event function
+
+                # Call the MP2 items event function (only 7 items)
                 if itemsEvent_mp2:
-                    itemsEvent_mp2(mushroom_price, key_price, chest_price, phone_price, glove_price, warp_price, golden_price, lamp_price, poison_price, reverse_price, lucky_price, warp2_price, shopper_price, bell_price, repellant_price, suit_price, bag_price)
+                    itemsEvent_mp2(mushroom_price, key_price, chest_price, glove_price, warp_price, golden_price, lamp_price)
                 else:
                     self.show_error("Mario Party 2 item modifications not available")
                     
             elif self.game_id == "marioParty3":
-                mushroom_price = MockEntry(self.mushroom_entry.text())
-                key_price = MockEntry(self.key_entry.text())
+                # Get the single price for all red items
+                red_items_price = self.red_items_price_entry.text()
+                
+                # Use the same price for all red items (items requiring equal prices)
+                mushroom_price = MockEntry(red_items_price)
+                key_price = MockEntry(red_items_price)
+                warp_price = MockEntry(red_items_price)
+                poison_price = MockEntry(red_items_price)
+                reverse_price = MockEntry(red_items_price)
+                warp2_price = MockEntry(red_items_price)
+                shopper_price = MockEntry(red_items_price)
+                
+                # Individual prices for normal items
                 chest_price = MockEntry(self.chest_entry.text())
                 phone_price = MockEntry(self.phone_entry.text())
                 glove_price = MockEntry(self.glove_entry.text())
-                warp_price = MockEntry(self.warp_entry.text())
                 golden_price = MockEntry(self.golden_entry.text())
                 lamp_price = MockEntry(self.lamp_entry.text())
-                poison_price = MockEntry(self.poison_entry.text())
-                reverse_price = MockEntry(self.reverse_entry.text())
                 lucky_price = MockEntry(self.lucky_entry.text())
-                warp2_price = MockEntry(self.warp2_entry.text())
-                shopper_price = MockEntry(self.shopper_entry.text())
                 bell_price = MockEntry(self.bell_entry.text())
                 repellant_price = MockEntry(self.repellant_entry.text())
                 suit_price = MockEntry(self.suit_entry.text())
