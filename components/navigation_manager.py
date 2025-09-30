@@ -96,7 +96,7 @@ class NavigationManager:
             interface=InjectorPage(),
             icon=ResourceManager.get_injector_icon(),
             text='Code Injector',
-            position=NavigationItemPosition.TOP
+            position=NavigationItemPosition.BOTTOM
         )
 
     def add_settings_page(self):

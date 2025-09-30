@@ -7,9 +7,10 @@
 
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, 
                              QScrollArea, QTextEdit, QFrame, QSizePolicy, QSpacerItem)
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtGui import QDesktopServices
 from qfluentwidgets import (SubtitleLabel, BodyLabel, TitleLabel, StrongBodyLabel,
-                           CardWidget, ScrollArea, TextEdit)
+                           CardWidget, ScrollArea, TextEdit, PushButton, FluentIcon)
 
 from version import versionString
 
@@ -84,6 +85,7 @@ class AboutPage(QWidget):
         # Main title
         title = TitleLabel("Mario Party Toolkit", self)
         title.setAlignment(Qt.AlignCenter)
+        title.setStyleSheet("TitleLabel { color: white; }")
         header_layout.addWidget(title)
         
         # Version and description
@@ -93,16 +95,19 @@ class AboutPage(QWidget):
         
         version_label = StrongBodyLabel(f"Version {versionString}", self)
         version_label.setAlignment(Qt.AlignCenter)
+        version_label.setStyleSheet("StrongBodyLabel { color: white; }")
         version_desc_layout.addWidget(version_label)
         
         description = BodyLabel("A comprehensive desktop application for modifying Mario Party games", self)
         description.setAlignment(Qt.AlignCenter)
         description.setWordWrap(True)
+        description.setStyleSheet("BodyLabel { color: white; }")
         version_desc_layout.addWidget(description)
         
         subtitle = BodyLabel("Is it a mario party modding tool? Yes.", self)
         subtitle.setAlignment(Qt.AlignCenter)
         subtitle.setWordWrap(True)
+        subtitle.setStyleSheet("BodyLabel { color: white; }")
         version_desc_layout.addWidget(subtitle)
         
         header_layout.addLayout(version_desc_layout)
@@ -180,7 +185,18 @@ SOFTWARE."""
         license_scroll.setReadOnly(True)
         license_scroll.setMaximumHeight(300)
         license_scroll.setMinimumHeight(200)
-        license_scroll.setStyleSheet("TextEdit { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }")
+        license_scroll.setStyleSheet("""
+            TextEdit { 
+                background: rgba(255, 255, 255, 0.05); 
+                border: 1px solid rgba(255, 255, 255, 0.1); 
+                color: white;
+            }
+            TextEdit[theme="light"] {
+                background: rgba(0, 0, 0, 0.05);
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                color: black;
+            }
+        """)
         card_layout.addWidget(license_scroll)
         
         return card
@@ -249,18 +265,34 @@ SOFTWARE."""
     def create_footer_section(self, layout):
         """Create the footer section"""
         footer_layout = QVBoxLayout()
-        footer_layout.setSpacing(10)
+        footer_layout.setSpacing(15)
         footer_layout.setAlignment(Qt.AlignCenter)
         
         # Repository info
         repo_info = BodyLabel("🔗 Open Source Project", self)
         repo_info.setAlignment(Qt.AlignCenter)
+        repo_info.setStyleSheet("BodyLabel { color: white; }")
         footer_layout.addWidget(repo_info)
+        
+        # GitHub button
+        github_button = PushButton("View on GitHub", self)
+        github_button.setIcon(FluentIcon.GITHUB)
+        github_button.clicked.connect(self.open_github_repo)
+        github_button.setFixedWidth(200)
+        github_button.setFixedHeight(40)
+        footer_layout.addWidget(github_button, alignment=Qt.AlignCenter)
         
         # Support info
         support_info = BodyLabel("For support and issues, please visit the GitHub repository", self)
         support_info.setAlignment(Qt.AlignCenter)
         support_info.setWordWrap(True)
+        support_info.setMaximumWidth(400)
+        support_info.setStyleSheet("BodyLabel { color: white; }")
         footer_layout.addWidget(support_info)
         
         layout.addLayout(footer_layout)
+    
+    def open_github_repo(self):
+        """Open the GitHub repository in the default browser"""
+        github_url = QUrl("https://github.com/RainbowTabitha/Mario-Party-Toolkit")
+        QDesktopServices.openUrl(github_url)

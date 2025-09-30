@@ -12,7 +12,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QGroupBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, CheckBox, PushButton
+from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, CheckBox, PushButton, SwitchButton
 
 # Import resource manager for images
 from utils.resource_manager import ResourceManager
@@ -95,9 +95,11 @@ class CoinsTab(QWidget):
         self.blue_entry.setFixedWidth(60)
         blue_row.addWidget(self.blue_entry)
                 
-        # Only show "Double on Last 5" checkbox for MP1, MP2, MP3
+        # Only show "Double on Last 5" switch for MP1, MP2, MP3
         if self.game_id in ["marioParty1", "marioParty2", "marioParty3"]:
-            self.blue_checkbox = CheckBox("Double on Last 5")
+            self.blue_checkbox = SwitchButton("Not doubled on Last 5")
+            self.blue_checkbox.setChecked(False)  # Start unchecked
+            self.blue_checkbox.checkedChanged.connect(lambda checked: self.update_blue_switch_text(checked))
             blue_row.addWidget(self.blue_checkbox)
         
         blue_row.addStretch()
@@ -120,9 +122,11 @@ class CoinsTab(QWidget):
         self.red_entry.setFixedWidth(60)
         red_row.addWidget(self.red_entry)
         
-        # Only show "Double on Last 5" checkbox for MP1, MP2, MP3
+        # Only show "Double on Last 5" switch for MP1, MP2, MP3
         if self.game_id in ["marioParty1", "marioParty2", "marioParty3"]:
-            self.red_checkbox = CheckBox("Double on Last 5")
+            self.red_checkbox = SwitchButton("Not doubled on Last 5")
+            self.red_checkbox.setChecked(False)  # Start unchecked
+            self.red_checkbox.checkedChanged.connect(lambda checked: self.update_red_switch_text(checked))
             red_row.addWidget(self.red_checkbox)
         
         red_row.addStretch()
@@ -761,7 +765,7 @@ class CoinsTab(QWidget):
                         def text(self):
                             return self._text
                     
-                    class MockCheckBox:
+                    class MockSwitchButton:
                         def __init__(self, checked):
                             self._checked = checked
                         def get(self):
@@ -771,9 +775,9 @@ class CoinsTab(QWidget):
                     
                     # Create mock objects with current values
                     blue_amount = MockEntry(self.blue_entry.text())
-                    blue_tick = MockCheckBox(self.blue_checkbox.isChecked())
+                    blue_tick = MockSwitchButton(self.blue_checkbox.isChecked())
                     red_amount = MockEntry(self.red_entry.text())
-                    red_tick = MockCheckBox(self.red_checkbox.isChecked())
+                    red_tick = MockSwitchButton(self.red_checkbox.isChecked())
                     star_amount = MockEntry(self.star_entry.text())
                     
                     coinsEvent_mp1(blue_amount, blue_tick, red_amount, red_tick, star_amount)
@@ -793,7 +797,7 @@ class CoinsTab(QWidget):
                         def text(self):
                             return self._text
                     
-                    class MockCheckBox:
+                    class MockSwitchButton:
                         def __init__(self, checked):
                             self._checked = checked
                         def get(self):
@@ -803,9 +807,9 @@ class CoinsTab(QWidget):
                     
                     # Create mock objects with current values
                     blue_amount = MockEntry(self.blue_entry.text())
-                    blue_tick = MockCheckBox(self.blue_checkbox.isChecked())
+                    blue_tick = MockSwitchButton(self.blue_checkbox.isChecked())
                     red_amount = MockEntry(self.red_entry.text())
-                    red_tick = MockCheckBox(self.red_checkbox.isChecked())
+                    red_tick = MockSwitchButton(self.red_checkbox.isChecked())
                     star_amount = MockEntry(self.star_entry.text())
                     
                     # Only include koopa_amount if koopa_entry exists
@@ -832,7 +836,7 @@ class CoinsTab(QWidget):
                         def text(self):
                             return self._text
                     
-                    class MockCheckBox:
+                    class MockSwitchButton:
                         def __init__(self, checked):
                             self._checked = checked
                         def get(self):
@@ -842,9 +846,9 @@ class CoinsTab(QWidget):
                     
                     # Create mock objects with current values
                     blue_amount = MockEntry(self.blue_entry.text())
-                    blue_tick = MockCheckBox(self.blue_checkbox.isChecked())
+                    blue_tick = MockSwitchButton(self.blue_checkbox.isChecked())
                     red_amount = MockEntry(self.red_entry.text())
-                    red_tick = MockCheckBox(self.red_checkbox.isChecked())
+                    red_tick = MockSwitchButton(self.red_checkbox.isChecked())
                     star_amount = MockEntry(self.star_entry.text())
                     koopa_amount = MockEntry(self.koopa_entry.text()) if hasattr(self, 'koopa_entry') else MockEntry("5")
                     boo_coins = MockEntry(self.boo_coins_entry.text()) if hasattr(self, 'boo_coins_entry') else MockEntry("10")
@@ -871,7 +875,7 @@ class CoinsTab(QWidget):
                         def text(self):
                             return self._text
                     
-                    class MockCheckBox:
+                    class MockSwitchButton:
                         def __init__(self, checked):
                             self._checked = checked
                         def get(self):
@@ -1110,3 +1114,17 @@ class CoinsTab(QWidget):
     def themeChanged(self):
         """Called when theme changes - update all styling"""
         self.update_coins_group_theme()
+    
+    def update_blue_switch_text(self, checked):
+        """Update blue switch text based on state"""
+        if checked:
+            self.blue_checkbox.setText("Doubled on Last 5")
+        else:
+            self.blue_checkbox.setText("Not doubled on Last 5")
+    
+    def update_red_switch_text(self, checked):
+        """Update red switch text based on state"""
+        if checked:
+            self.red_checkbox.setText("Doubled on Last 5")
+        else:
+            self.red_checkbox.setText("Not doubled on Last 5")
