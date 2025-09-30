@@ -135,7 +135,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Credits
 
-- **Author**: Nayla Hanegan (naylahanegan@gmail.com)
+- **Author**: Nayla Hanegan (tabitha@tabs.gay)
 - **Original Framework**: CustomTkinter
 - **New Framework**: PyQt6 with qt-material
 - **License**: MIT

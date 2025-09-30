@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # ============================================
 # Mario Party Toolkit - UI Utilities
-# Author: Nayla Hanegan (naylahanegan@gmail.com)
+# Author: Nayla Hanegan (tabitha@tabs.gay)
 # Date: 8/16/2025
 # License: MIT
 # ============================================
