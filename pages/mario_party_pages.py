@@ -368,53 +368,65 @@ class MarioPartyPages:
         # Coins Mods tab - MP7 has advanced coin fields + Last 5 star cost option
         coins_global_tab = CoinsTab("marioParty7", "advanced")
         tab_widget.addTab(coins_global_tab, "Coins Mods")
+        self.all_tabs.append(coins_global_tab)
         
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty7")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
+        self.all_tabs.append(mg_tab)
         
         # Item Mods tab (Orb Mods)
         item_tab = ItemsMP7Tab("marioParty7")
         tab_widget.addTab(item_tab, "Orb Mods")
+        self.all_tabs.append(item_tab)
         
         # Space Replacement tab
         space_tab = SpaceReplacementTab("marioParty7")
         tab_widget.addTab(space_tab, "Space Replacement")
+        self.all_tabs.append(space_tab)
         
         # Initial Items tab
         initial_items_tab = InitialItemsTab("marioParty7")
         tab_widget.addTab(initial_items_tab, "Initial Orbs")
+        self.all_tabs.append(initial_items_tab)
         
         # Battle Minigame tab
         battle_tab = BattleMinigameTab("marioParty7")
         tab_widget.addTab(battle_tab, "Battle Minigame")
+        self.all_tabs.append(battle_tab)
         
         # Star Handicaps tab
         handicap_global_tab = HandicapTab("marioParty7")
         tab_widget.addTab(handicap_global_tab, "Star Handicaps")
+        self.all_tabs.append(handicap_global_tab)
         
         # Bonus Star Replacement tab
         bonus_star_tab = BonusStarTab("marioParty7")
         tab_widget.addTab(bonus_star_tab, "Bonus Star Replacement")
+        self.all_tabs.append(bonus_star_tab)
         
         # Board Specific tab
         board_specific_tab = BoardSpecificMp7Tab("marioParty7")
         tab_widget.addTab(board_specific_tab, "Board Specific")
+        self.all_tabs.append(board_specific_tab)
 
     def create_mp8_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
-        """Create tabs for Mario Party 8"""
-        # Coins Mods tab - MP8 has basic coin fields
+        """Create tabs for Mario Party 8 - Basic coin structure with special features"""
+        # Coins Mods tab - MP8 has basic coin fields + special features (Bitsize, Bowlo, Vampire, Hotel)
         coins_global_tab = CoinsTab("marioParty8", "basic")
         tab_widget.addTab(coins_global_tab, "Coins Mods")
-    
+        self.all_tabs.append(coins_global_tab)
+        
         # Minigame Replacement tab
         mg_tab = MinigameTab("marioParty8")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
+        self.all_tabs.append(mg_tab)
         
         # Star Handicaps tab
         handicap_global_tab = HandicapTab("marioParty8")
         tab_widget.addTab(handicap_global_tab, "Star Handicaps")
+        self.all_tabs.append(handicap_global_tab)
 
     def create_mp9_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
