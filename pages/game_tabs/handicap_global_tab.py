@@ -82,6 +82,10 @@ class HandicapTab(QWidget):
         p1_row = QHBoxLayout()
         p1_row.setSpacing(8)  # Reduced from 12
         
+        # Add star icon
+        p1_star_image = self.create_image_label("assets/eventTags/starSpace.png", 24, 24)
+        p1_row.addWidget(p1_star_image)
+        
         p1_label = BodyLabel("Player 1:")
         p1_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 60px;")  # Reduced min-width
         p1_row.addWidget(p1_label)
@@ -96,6 +100,10 @@ class HandicapTab(QWidget):
         # Player 2 Row
         p2_row = QHBoxLayout()
         p2_row.setSpacing(8)  # Reduced from 12
+        
+        # Add star icon
+        p2_star_image = self.create_image_label("assets/eventTags/starSpace.png", 24, 24)
+        p2_row.addWidget(p2_star_image)
         
         p2_label = BodyLabel("Player 2:")
         p2_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 60px;")  # Reduced min-width
@@ -112,6 +120,10 @@ class HandicapTab(QWidget):
         p3_row = QHBoxLayout()
         p3_row.setSpacing(8)  # Reduced from 12
         
+        # Add star icon
+        p3_star_image = self.create_image_label("assets/eventTags/starSpace.png", 24, 24)
+        p3_row.addWidget(p3_star_image)
+        
         p3_label = BodyLabel("Player 3:")
         p3_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 60px;")  # Reduced min-width
         p3_row.addWidget(p3_label)
@@ -126,6 +138,10 @@ class HandicapTab(QWidget):
         # Player 4 Row
         p4_row = QHBoxLayout()
         p4_row.setSpacing(8)  # Reduced from 12
+        
+        # Add star icon
+        p4_star_image = self.create_image_label("assets/eventTags/starSpace.png", 24, 24)
+        p4_row.addWidget(p4_star_image)
         
         p4_label = BodyLabel("Player 4:")
         p4_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 60px;")  # Reduced min-width
@@ -153,7 +169,41 @@ class HandicapTab(QWidget):
         layout.addStretch()
         
         self.setLayout(layout)
-    
+
+    def create_image_label(self, image_path, width=24, height=24):
+        """Create a QLabel with an image from the assets folder"""
+        try:
+            # Get the image path from resource manager
+            from utils.resource_manager import ResourceManager
+            image_path = ResourceManager.get_resource_path(image_path)
+            
+            # Create QLabel and set image
+            image_label = QLabel()
+            pixmap = QPixmap(str(image_path))
+            
+            if not pixmap.isNull():
+                # Scale the image to the specified dimensions
+                scaled_pixmap = pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                image_label.setPixmap(scaled_pixmap)
+                image_label.setFixedSize(width, height)
+                image_label.setAlignment(Qt.AlignCenter)
+            else:
+                # Fallback text if image fails to load
+                image_label.setText("?")
+                image_label.setFixedSize(width, height)
+                image_label.setAlignment(Qt.AlignCenter)
+                image_label.setStyleSheet("border: 1px solid gray; background: lightgray;")
+            
+            return image_label
+            
+        except Exception as e:
+            # Fallback if image creation fails
+            fallback_label = QLabel("?")
+            fallback_label.setFixedSize(width, height)
+            fallback_label.setAlignment(Qt.AlignCenter)
+            fallback_label.setStyleSheet("border: 1px solid gray; background: lightgray;")
+            return fallback_label
+
     def generate_codes(self):
         """Generate codes for the current game"""
         try:

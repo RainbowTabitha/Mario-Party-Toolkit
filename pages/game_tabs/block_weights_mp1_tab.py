@@ -81,8 +81,6 @@ class BlockWeightsTab(QWidget):
         
         # Plus input
         self.plus_entry = LineEdit()
-        self.plus_entry.setPlaceholderText("1")
-        self.plus_entry.setText("1")
         self.plus_entry.setFixedWidth(50)  # Reduced from 60
         plus_row.addWidget(self.plus_entry)
         
@@ -106,8 +104,6 @@ class BlockWeightsTab(QWidget):
         
         # Minus input
         self.minus_entry = LineEdit()
-        self.minus_entry.setPlaceholderText("1")
-        self.minus_entry.setText("1")
         self.minus_entry.setFixedWidth(50)  # Reduced from 60
         minus_row.addWidget(self.minus_entry)
         
@@ -131,8 +127,6 @@ class BlockWeightsTab(QWidget):
         
         # Speed input
         self.speed_entry = LineEdit()
-        self.speed_entry.setPlaceholderText("1")
-        self.speed_entry.setText("1")
         self.speed_entry.setFixedWidth(50)  # Reduced from 60
         speed_row.addWidget(self.speed_entry)
         
@@ -156,8 +150,6 @@ class BlockWeightsTab(QWidget):
         
         # Slow input
         self.slow_entry = LineEdit()
-        self.slow_entry.setPlaceholderText("1")
-        self.slow_entry.setText("1")
         self.slow_entry.setFixedWidth(50)  # Reduced from 60
         slow_row.addWidget(self.slow_entry)
         
@@ -181,8 +173,6 @@ class BlockWeightsTab(QWidget):
 
         # Warp input
         self.warp_entry = LineEdit()
-        self.warp_entry.setPlaceholderText("1")
-        self.warp_entry.setText("1")
         self.warp_entry.setFixedWidth(50)  # Reduced from 60
         warp_row.addWidget(self.warp_entry)
 
@@ -206,8 +196,6 @@ class BlockWeightsTab(QWidget):
 
         # Stock input
         self.stock_entry = LineEdit()
-        self.stock_entry.setPlaceholderText("1")
-        self.stock_entry.setText("1")
         self.stock_entry.setFixedWidth(50)  # Reduced from 60
         stock_row.addWidget(self.stock_entry)
 

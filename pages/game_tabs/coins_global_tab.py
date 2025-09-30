@@ -517,7 +517,7 @@ class CoinsTab(QWidget):
             character_row = QHBoxLayout()
             character_row.setSpacing(12)
             
-            character_image = self.create_image_label("assets/eventTags/characterSpace.png", 32, 32)
+            character_image = self.create_image_label("assets/eventTags/characterSpace7.png", 32, 32)
             character_row.addWidget(character_image)
             
             character_label = BodyLabel("Character Space:")
@@ -695,23 +695,6 @@ class CoinsTab(QWidget):
             vampire_row.addStretch()
             group_layout.addLayout(vampire_row)
             
-            # Hotel Row
-            hotel_row = QHBoxLayout()
-            hotel_row.setSpacing(12)
-            
-            hotel_image = self.create_image_label("assets/eventTags/hotel.png", 32, 32)
-            hotel_row.addWidget(hotel_image)
-            
-            hotel_label = BodyLabel("Hotel Max:")
-            hotel_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
-            hotel_row.addWidget(hotel_label)
-            
-            self.hotel_entry = LineEdit()
-            self.hotel_entry.setFixedWidth(60)
-            hotel_row.addWidget(self.hotel_entry)
-            
-            hotel_row.addStretch()
-            group_layout.addLayout(hotel_row)
         
         layout.addWidget(card)
         
@@ -1047,7 +1030,6 @@ class CoinsTab(QWidget):
                     mg_amount = MockEntry(self.mg_entry.text() if hasattr(self, 'mg_entry') else "")
                     star_amount = MockEntry(self.star_entry.text())
                     bitsize_amount = MockEntry(self.bitsize_entry.text() if hasattr(self, 'bitsize_entry') else "")
-                    hotel_amount = MockEntry(self.hotel_entry.text() if hasattr(self, 'hotel_entry') else "")
                     bowlo_amount = MockEntry(self.bowlo_entry.text() if hasattr(self, 'bowlo_entry') else "")
                     vampire_amount = MockEntry(self.vampire_entry.text() if hasattr(self, 'vampire_entry') else "")
 
@@ -1057,7 +1039,6 @@ class CoinsTab(QWidget):
                         mg_amount,
                         star_amount,
                         bitsize_amount,
-                        hotel_amount,
                         bowlo_amount,
                         vampire_amount
                     )

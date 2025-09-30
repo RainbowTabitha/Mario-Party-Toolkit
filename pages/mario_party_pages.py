@@ -24,6 +24,7 @@ from pages.game_tabs.lottery_rewards_mp4_tab import LotteryRewardsTab
 from pages.game_tabs.capsule_mods_mp5_tab import CapsuleModsMp5Tab
 from pages.game_tabs.board_specific_mp5_tab import BoardSpecificMp5Tab
 from pages.game_tabs.board_specific_mp7_tab import BoardSpecificMp7Tab
+from pages.game_tabs.board_specific_mp8_tab import BoardSpecificMp8Tab
 from pages.game_tabs.items_mp7_tab import ItemsMP7Tab
 from pages.game_tabs.battle_minigame_global_tab import BattleMinigameTab
 
@@ -268,11 +269,6 @@ class MarioPartyPages:
         tab_widget.addTab(inital_items_global_tab, "Initial Items")
         self.all_tabs.append(inital_items_global_tab)
 
-        # Item Bag tab - Item bag modifications
-        item_bag_mp4_tab = ItemBagTab("marioParty4")
-        tab_widget.addTab(item_bag_mp4_tab, "Item Bag")
-        self.all_tabs.append(item_bag_mp4_tab)
-
         # Space Replacement tab - Board space modifications
         space_replace_tab = SpaceReplacementTab("marioParty4")
         tab_widget.addTab(space_replace_tab, "Space Replacement")
@@ -413,7 +409,7 @@ class MarioPartyPages:
     def create_mp8_tabs(self, tab_widget):
         self.apply_tab_style(tab_widget)
         """Create tabs for Mario Party 8 - Basic coin structure with special features"""
-        # Coins Mods tab - MP8 has basic coin fields + special features (Bitsize, Bowlo, Vampire, Hotel)
+        # Coins Mods tab - MP8 has basic coin fields + special features (Bitsize, Bowlo, Vampire)
         coins_global_tab = CoinsTab("marioParty8", "basic")
         tab_widget.addTab(coins_global_tab, "Coins Mods")
         self.all_tabs.append(coins_global_tab)
@@ -422,6 +418,11 @@ class MarioPartyPages:
         mg_tab = MinigameTab("marioParty8")
         tab_widget.addTab(mg_tab, "Minigame Replacement")
         self.all_tabs.append(mg_tab)
+        
+        # Board Specific tab
+        board_specific_tab = BoardSpecificMp8Tab("marioParty8")
+        tab_widget.addTab(board_specific_tab, "Board Specific")
+        self.all_tabs.append(board_specific_tab)
         
         # Star Handicaps tab
         handicap_global_tab = HandicapTab("marioParty8")

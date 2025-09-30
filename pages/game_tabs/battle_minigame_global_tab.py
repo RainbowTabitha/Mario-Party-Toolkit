@@ -42,7 +42,7 @@ class BattleMinigameTab(QWidget):
         layout.addWidget(title)
 
         # Description
-        desc = BodyLabel("Modify coin bounties awarded for winning battle minigames:")
+        desc = BodyLabel("Replace default battle minigame coin bounties with custom amounts:")
         desc.setAlignment(Qt.AlignCenter)
         layout.addWidget(desc)
 
@@ -73,11 +73,11 @@ class BattleMinigameTab(QWidget):
 
         # Create bounty input fields
         bounty_levels = [
-            ("1st Place:", "5"),
-            ("2nd Place:", "10"),
-            ("3rd Place:", "20"),
-            ("4th Place:", "30"),
-            ("5th Place:", "50")
+            ("5 Coins:", "5"),
+            ("10 Coins:", "10"),
+            ("20 Coins:", "20"),
+            ("30 Coins:", "30"),
+            ("50 Coins:", "50")
         ]
 
         for i, (label_text, default_value) in enumerate(bounty_levels, 1):
@@ -88,21 +88,16 @@ class BattleMinigameTab(QWidget):
             battle_icon = self.create_image_label("assets/eventTags/battle.png", 32, 32)
             bounty_layout.addWidget(battle_icon)
 
-            # Place label
-            place_label = BodyLabel(label_text)
-            place_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
-            bounty_layout.addWidget(place_label)
+            # Coin amount label
+            coin_label = BodyLabel(label_text)
+            coin_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 80px;")
+            bounty_layout.addWidget(coin_label)
 
-            # Coin input
+            # Replacement input
             entry = LineEdit()
             # Leave fields blank - users can fill in custom values
             entry.setFixedWidth(80)
             bounty_layout.addWidget(entry)
-
-            # Coins label
-            coins_label = BodyLabel("Coins")
-            coins_label.setStyleSheet("font-size: 14px;")
-            bounty_layout.addWidget(coins_label)
 
             # Store reference
             setattr(self, f"bounty_{i}_entry", entry)
