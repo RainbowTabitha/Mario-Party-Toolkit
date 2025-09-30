@@ -5,7 +5,8 @@
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QApplication, QGroupBox
 from PyQt5.QtCore import Qt
-from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, CheckBox, PushButton, InfoBar, InfoBarPosition
+from PyQt5.QtGui import QPixmap
+from qfluentwidgets import SubtitleLabel, BodyLabel, LineEdit, CheckBox, PushButton, InfoBar, InfoBarPosition, CardWidget, ScrollArea
 
 # Import items event functions for supported games
 try:
@@ -55,31 +56,31 @@ class ItemsTab(QWidget):
             self.setLayout(layout)
             return
         
-        # Item Prices Card with acrylic effect
-        from qfluentwidgets import CardWidget
-        card = CardWidget()
+        # Create scroll area for the items
+        scroll_area = ScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setStyleSheet("ScrollArea { background: transparent; border: none; }")
         
-        # Store reference to card
-        self.items_group = card
+        # Container widget for scroll area content
+        container = QWidget()
+        container.setStyleSheet("QWidget { background: transparent; }")
+        container_layout = QVBoxLayout(container)
+        container_layout.setContentsMargins(20, 16, 20, 16)
+        container_layout.setSpacing(16)
         
-        card_layout = QVBoxLayout()
-        card_layout.setContentsMargins(20, 16, 20, 16)
-        card_layout.setSpacing(16)
-        
-        # Add title to the card
+        # Add title
         card_title = SubtitleLabel("Item Prices")
         card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
-        card_layout.addWidget(card_title)
-        
-        card.setLayout(card_layout)
-        
-        # Use card_layout instead of group_layout for adding content
-        group_layout = card_layout
+        container_layout.addWidget(card_title)
         
         # Create item entries based on game
-        self.create_item_entries(group_layout)
+        self.create_item_entries(container_layout)
         
-        layout.addWidget(card)
+        # Set the container as the scroll area's widget
+        scroll_area.setWidget(container)
+        layout.addWidget(scroll_area)
         
         # Generate button
         generate_btn = PushButton("Generate Codes")
@@ -100,490 +101,216 @@ class ItemsTab(QWidget):
 
     def create_mp2_items(self, group_layout):
         """Create Mario Party 2 item entries"""
-        # Mushroom
-        mushroom_row = QHBoxLayout()
-        mushroom_row.setSpacing(12)
+        
+        # Create grid layout for items (similar to MP7)
+        items_grid = QVBoxLayout()
+        items_grid.setSpacing(12)
+        
+        # Define MP2 items with their properties
+        self.mp2_items = [
+            ("Mushroom", "assets/items/mushroom.png", "mushroom", False),
+            ("Skeleton Key", "assets/items/skeletonKey.png", "key", False),
+            ("Plunder Chest", "assets/items/plunderChest.png", "chest", False),
+            ("Bowser Phone", "assets/items/bowserPhone.png", "phone", False),
+            ("Dueling Glove", "assets/items/duelingGlove.png", "glove", False),
+            ("Warp Block", "assets/items/warpBlock.png", "warp", False),
+            ("Golden Mushroom", "assets/items/goldenMushroom.png", "golden", False),
+            ("Magic Lamp", "assets/items/magicLamp.png", "lamp", False),
+            ("Poison Mushroom", "assets/items/poisonMushroom.png", "poison", False),
+            ("Reverse Mushroom", "assets/items/reverseMushroom.png", "reverse", False),
+            ("Lucky Lamp", "assets/items/luckyLamp.png", "lucky", False),
+            ("Warp Block", "assets/items/warpBlock.png", "warp2", False),
+            ("Cellular Shopper", "assets/items/celluarShopper.png", "shopper", False),
+            ("Boo Bell", "assets/items/booBell.png", "bell", False),
+            ("Boo Repellant", "assets/items/booRepellent.png", "repellant", False),
+            ("Bowser Suit", "assets/items/bowserSuit.png", "suit", False),
+            ("Item Bag", "assets/items/itemBag3.png", "bag", False)
+        ]
+        
+        # Create entries for each item
+        for item_name, icon_path, item_key, is_red in self.mp2_items:
+            item_group = self.create_mp2_item_group(item_name, icon_path, item_key, is_red)
+            items_grid.addWidget(item_group)
+        
+        group_layout.addLayout(items_grid)
+    
+    def create_mp2_item_group(self, item_name, icon_path, item_key, is_red):
+        """Create a group for a single MP2 item (MP7-style card format)"""
+        
+        # Create card widget (like MP7)
+        group_card = CardWidget()
+        group_card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }")
+        group_layout = QVBoxLayout(group_card)
+        group_layout.setContentsMargins(16, 12, 16, 12)
+        group_layout.setSpacing(8)
 
-        # Mushroom icon
-        mushroom_icon = QLabel()
-        mushroom_icon.setPixmap(QIcon(str(fetchResource("assets/items/mushroom.png"))).pixmap(24, 24))
-        mushroom_icon.setStyleSheet("padding: 2px;")
-        mushroom_row.addWidget(mushroom_icon)
+        # Item title (like MP7)
+        title = BodyLabel(item_name)
+        if is_red:
+            title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px; color: red;")
+        else:
+            title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px;")
+        group_layout.addWidget(title)
 
-        mushroom_label = BodyLabel("Mushroom:")
-        mushroom_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        mushroom_row.addWidget(mushroom_label)
+        # Create grid for parameters (like MP7)
+        params_layout = QHBoxLayout()
+        params_layout.setSpacing(8)
 
-        self.mushroom_entry = LineEdit()
-        self.mushroom_entry.setFixedWidth(60)
-        mushroom_row.addWidget(self.mushroom_entry)
+        # Add item icon (like MP7)
+        icon = self.create_image_label(icon_path, 32, 32)
+        params_layout.addWidget(icon)
 
-        mushroom_row.addStretch()
-        group_layout.addLayout(mushroom_row)
+        # Price parameters (like MP7 structure)
+        price_layout = QVBoxLayout()
+        price_layout.setSpacing(4)
 
-        # Skeleton Key
-        key_row = QHBoxLayout()
-        key_row.setSpacing(12)
+        price_label = BodyLabel("Price:")
+        price_label.setStyleSheet("font-size: 12px; font-weight: 600;")
+        price_layout.addWidget(price_label)
 
-        # Skeleton Key icon
-        key_icon = QLabel()
-        key_icon.setPixmap(QIcon(str(fetchResource("assets/items/skeletonKey.png"))).pixmap(24, 24))
-        key_icon.setStyleSheet("padding: 2px;")
-        key_row.addWidget(key_icon)
+        price_row = QHBoxLayout()
+        price_row.setSpacing(4)
 
-        key_label = BodyLabel("Skeleton Key:")
-        key_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        key_row.addWidget(key_label)
+        # Single price entry (MP2/MP3 only need one price)
+        price_entry = LineEdit()
+        price_entry.setPlaceholderText("Coins")
+        price_entry.setFixedWidth(70)
+        price_entry.setFixedHeight(30)
+        price_row.addWidget(price_entry)
+        setattr(self, f"{item_key}_entry", price_entry)
 
-        self.key_entry = LineEdit()
-        self.key_entry.setFixedWidth(80)  # Make skeleton key wider
-        key_row.addWidget(self.key_entry)
+        price_layout.addLayout(price_row)
+        params_layout.addLayout(price_layout)
 
-        key_row.addStretch()
-        group_layout.addLayout(key_row)
+        group_layout.addLayout(params_layout)
 
-        # Plunder Chest
-        chest_row = QHBoxLayout()
-        chest_row.setSpacing(12)
-
-        # Plunder Chest icon
-        chest_icon = QLabel()
-        chest_icon.setPixmap(QIcon(str(fetchResource("assets/items/plunderChest.png"))).pixmap(24, 24))
-        chest_icon.setStyleSheet("padding: 2px;")
-        chest_row.addWidget(chest_icon)
-
-        chest_label = BodyLabel("Plunder Chest:")
-        chest_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        chest_row.addWidget(chest_label)
-
-        self.chest_entry = LineEdit()
-        self.chest_entry.setFixedWidth(60)
-        chest_row.addWidget(self.chest_entry)
-
-        chest_row.addStretch()
-        group_layout.addLayout(chest_row)
-
-        # Dueling Glove
-        glove_row = QHBoxLayout()
-        glove_row.setSpacing(12)
-
-        # Dueling Glove icon
-        glove_icon = QLabel()
-        glove_icon.setPixmap(QIcon(str(fetchResource("assets/items/duelingGlove.png"))).pixmap(24, 24))
-        glove_icon.setStyleSheet("padding: 2px;")
-        glove_row.addWidget(glove_icon)
-
-        glove_label = BodyLabel("Dueling Glove:")
-        glove_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        glove_row.addWidget(glove_label)
-
-        self.glove_entry = LineEdit()
-        self.glove_entry.setFixedWidth(60)
-        glove_row.addWidget(self.glove_entry)
-
-        glove_row.addStretch()
-        group_layout.addLayout(glove_row)
-
-        # Warp Block
-        warp_row = QHBoxLayout()
-        warp_row.setSpacing(12)
-
-        # Warp Block icon
-        warp_icon = QLabel()
-        warp_icon.setPixmap(QIcon(str(fetchResource("assets/items/warpBlock.png"))).pixmap(24, 24))
-        warp_icon.setStyleSheet("padding: 2px;")
-        warp_row.addWidget(warp_icon)
-
-        warp_label = BodyLabel("Warp Block:")
-        warp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        warp_row.addWidget(warp_label)
-
-        self.warp_entry = LineEdit()
-        self.warp_entry.setFixedWidth(60)
-        warp_row.addWidget(self.warp_entry)
-
-        warp_row.addStretch()
-        group_layout.addLayout(warp_row)
-
-        # Golden Mushroom
-        golden_row = QHBoxLayout()
-        golden_row.setSpacing(12)
-
-        # Golden Mushroom icon
-        golden_icon = QLabel()
-        golden_icon.setPixmap(QIcon(str(fetchResource("assets/items/goldenMushroom.png"))).pixmap(24, 24))
-        golden_icon.setStyleSheet("padding: 2px;")
-        golden_row.addWidget(golden_icon)
-
-        golden_label = BodyLabel("Golden Mushroom:")
-        golden_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        golden_row.addWidget(golden_label)
-
-        self.golden_entry = LineEdit()
-        self.golden_entry.setFixedWidth(60)
-        golden_row.addWidget(self.golden_entry)
-
-        golden_row.addStretch()
-        group_layout.addLayout(golden_row)
-
-        # Magic Lamp
-        lamp_row = QHBoxLayout()
-        lamp_row.setSpacing(12)
-
-        # Magic Lamp icon
-        lamp_icon = QLabel()
-        lamp_icon.setPixmap(QIcon(str(fetchResource("assets/items/magicLamp.png"))).pixmap(24, 24))
-        lamp_icon.setStyleSheet("padding: 2px;")
-        lamp_row.addWidget(lamp_icon)
-
-        lamp_label = BodyLabel("Magic Lamp:")
-        lamp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        lamp_row.addWidget(lamp_label)
-
-        self.lamp_entry = LineEdit()
-        self.lamp_entry.setFixedWidth(60)
-        lamp_row.addWidget(self.lamp_entry)
-
-        lamp_row.addStretch()
-        group_layout.addLayout(lamp_row)
+        return group_card
 
     def create_mp3_items(self, group_layout):
         """Create Mario Party 3 item entries"""
-        # Mushroom
-        mushroom_row = QHBoxLayout()
-        mushroom_row.setSpacing(12)
-
-        # Mushroom icon
-        mushroom_icon = QLabel()
-        mushroom_icon.setPixmap(QIcon(str(fetchResource("assets/items/mushroom.png"))).pixmap(24, 24))
-        mushroom_icon.setStyleSheet("padding: 2px;")
-        mushroom_row.addWidget(mushroom_icon)
-
-        mushroom_label = BodyLabel("Mushroom:")
-        mushroom_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: red;")
-        mushroom_row.addWidget(mushroom_label)
         
-        self.mushroom_entry = LineEdit()
-        self.mushroom_entry.setFixedWidth(60)
-        mushroom_row.addWidget(self.mushroom_entry)
+        # Add pricing note for red items
+        pricing_note = BodyLabel("Note: Items shown in red must have equal prices to work properly.")
+        pricing_note.setStyleSheet("font-size: 14px; color: red; font-weight: 600; margin-bottom: 16px; padding: 8px; background: rgba(255, 0, 0, 0.1); border-radius: 4px;")
+        group_layout.addWidget(pricing_note)
         
-        mushroom_row.addStretch()
-        group_layout.addLayout(mushroom_row)
+        # Create grid layout for items (similar to MP7)
+        items_grid = QVBoxLayout()
+        items_grid.setSpacing(12)
         
-        # Skeleton Key
-        key_row = QHBoxLayout()
-        key_row.setSpacing(12)
-
-        # Skeleton Key icon
-        key_icon = QLabel()
-        key_icon.setPixmap(QIcon(str(fetchResource("assets/items/skeletonKey.png"))).pixmap(24, 24))
-        key_icon.setStyleSheet("padding: 2px;")
-        key_row.addWidget(key_icon)
-
-        key_label = BodyLabel("Skeleton Key:")
-        key_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: red;")
-        key_row.addWidget(key_label)
-
-        self.key_entry = LineEdit()
-        self.key_entry.setFixedWidth(80)  # Make skeleton key wider
-        key_row.addWidget(self.key_entry)
+        # Define MP3 items with their properties
+        self.mp3_items = [
+            ("Mushroom", "assets/items/mushroom.png", "mushroom", True),  # Red text
+            ("Skeleton Key", "assets/items/skeletonKey.png", "key", True),  # Red text
+            ("Plunder Chest", "assets/items/plunderChest.png", "chest", False),
+            ("Bowser Phone", "assets/items/bowserPhone.png", "phone", False),
+            ("Dueling Glove", "assets/items/duelingGlove.png", "glove", False),
+            ("Warp Block", "assets/items/warpBlock.png", "warp", True),  # Red text
+            ("Golden Mushroom", "assets/items/goldenMushroom.png", "golden", False),
+            ("Magic Lamp", "assets/items/magicLamp.png", "lamp", False),
+            ("Poison Mushroom", "assets/items/poisonMushroom.png", "poison", True),  # Red text
+            ("Reverse Mushroom", "assets/items/reverseMushroom.png", "reverse", True),  # Red text
+            ("Lucky Lamp", "assets/items/luckyLamp.png", "lucky", False),
+            ("Warp Block", "assets/items/warpBlock.png", "warp2", True),  # Red text (duplicate)
+            ("Cellular Shopper", "assets/items/celluarShopper.png", "shopper", True),  # Red text
+            ("Boo Bell", "assets/items/booBell.png", "bell", False),
+            ("Boo Repellant", "assets/items/booRepellant.png", "repellant", False),
+            ("Bowser Suit", "assets/items/bowserSuit.png", "suit", False),
+            ("Item Bag", "assets/items/itemBag.png", "bag", False)
+        ]
         
-        key_row.addStretch()
-        group_layout.addLayout(key_row)
-
-        # Plunder Chest
-        chest_row = QHBoxLayout()
-        chest_row.setSpacing(12)
-
-        # Plunder Chest icon
-        chest_icon = QLabel()
-        chest_icon.setPixmap(QIcon(str(fetchResource("assets/items/plunderChest.png"))).pixmap(24, 24))
-        chest_icon.setStyleSheet("padding: 2px;")
-        chest_row.addWidget(chest_icon)
-
-        chest_label = BodyLabel("Plunder Chest:")
-        chest_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        chest_row.addWidget(chest_label)
-
-        self.chest_entry = LineEdit()
-        self.chest_entry.setFixedWidth(60)
-        chest_row.addWidget(self.chest_entry)
-
-        chest_row.addStretch()
-        group_layout.addLayout(chest_row)
-
-        # Poison Mushroom (red text)
-        poison_row = QHBoxLayout()
-        poison_row.setSpacing(12)
-
-        # Poison Mushroom icon
-        poison_icon = QLabel()
-        poison_icon.setPixmap(QIcon(str(fetchResource("assets/items/poisonMushroom.png"))).pixmap(24, 24))
-        poison_icon.setStyleSheet("padding: 2px;")
-        poison_row.addWidget(poison_icon)
-
-        poison_label = BodyLabel("Poison Mushroom:")
-        poison_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: red;")
-        poison_row.addWidget(poison_label)
-
-        self.poison_entry = LineEdit()
-        self.poison_entry.setFixedWidth(60)
-        poison_row.addWidget(self.poison_entry)
-
-        poison_row.addStretch()
-        group_layout.addLayout(poison_row)
-
-        # Reverse Mushroom (red text)
-        reverse_row = QHBoxLayout()
-        reverse_row.setSpacing(12)
-
-        # Reverse Mushroom icon
-        reverse_icon = QLabel()
-        reverse_icon.setPixmap(QIcon(str(fetchResource("assets/items/reverseMushroom.png"))).pixmap(24, 24))
-        reverse_icon.setStyleSheet("padding: 2px;")
-        reverse_row.addWidget(reverse_icon)
-
-        reverse_label = BodyLabel("Reverse Mushroom:")
-        reverse_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: red;")
-        reverse_row.addWidget(reverse_label)
-
-        self.reverse_entry = LineEdit()
-        self.reverse_entry.setFixedWidth(60)
-        reverse_row.addWidget(self.reverse_entry)
-
-        reverse_row.addStretch()
-        group_layout.addLayout(reverse_row)
-
-        # Golden Mushroom
-        golden_row = QHBoxLayout()
-        golden_row.setSpacing(12)
-
-        # Golden Mushroom icon
-        golden_icon = QLabel()
-        golden_icon.setPixmap(QIcon(str(fetchResource("assets/items/goldenMushroom.png"))).pixmap(24, 24))
-        golden_icon.setStyleSheet("padding: 2px;")
-        golden_row.addWidget(golden_icon)
-
-        golden_label = BodyLabel("Golden Mushroom:")
-        golden_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        golden_row.addWidget(golden_label)
-
-        self.golden_entry = LineEdit()
-        self.golden_entry.setFixedWidth(60)
-        golden_row.addWidget(self.golden_entry)
-
-        golden_row.addStretch()
-        group_layout.addLayout(golden_row)
-
-        # Magic Lamp
-        lamp_row = QHBoxLayout()
-        lamp_row.setSpacing(12)
-
-        # Magic Lamp icon
-        lamp_icon = QLabel()
-        lamp_icon.setPixmap(QIcon(str(fetchResource("assets/items/magicLamp.png"))).pixmap(24, 24))
-        lamp_icon.setStyleSheet("padding: 2px;")
-        lamp_row.addWidget(lamp_icon)
-
-        lamp_label = BodyLabel("Magic Lamp:")
-        lamp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        lamp_row.addWidget(lamp_label)
-
-        self.lamp_entry = LineEdit()
-        self.lamp_entry.setFixedWidth(60)
-        lamp_row.addWidget(self.lamp_entry)
-
-        lamp_row.addStretch()
-        group_layout.addLayout(lamp_row)
-
-        # Warp Block (red text)
-        warp_row = QHBoxLayout()
-        warp_row.setSpacing(12)
-
-        # Warp Block icon
-        warp_icon = QLabel()
-        warp_icon.setPixmap(QIcon(str(fetchResource("assets/items/warpBlock.png"))).pixmap(24, 24))
-        warp_icon.setStyleSheet("padding: 2px;")
-        warp_row.addWidget(warp_icon)
-
-        warp_label = BodyLabel("Warp Block:")
-        warp_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: red;")
-        warp_row.addWidget(warp_label)
-
-        self.warp_entry = LineEdit()
-        self.warp_entry.setFixedWidth(60)
-        warp_row.addWidget(self.warp_entry)
-
-        warp_row.addStretch()
-        group_layout.addLayout(warp_row)
-
-        # Cellular Shopper (red text)
-        shopper_row = QHBoxLayout()
-        shopper_row.setSpacing(12)
-
-        # Cellular Shopper icon
-        shopper_icon = QLabel()
-        shopper_icon.setPixmap(QIcon(str(fetchResource("assets/items/celluarShopper.png"))).pixmap(24, 24))
-        shopper_icon.setStyleSheet("padding: 2px;")
-        shopper_row.addWidget(shopper_icon)
-
-        shopper_label = BodyLabel("Cellular Shopper:")
-        shopper_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px; color: red;")
-        shopper_row.addWidget(shopper_label)
-
-        self.shopper_entry = LineEdit()
-        self.shopper_entry.setFixedWidth(60)
-        shopper_row.addWidget(self.shopper_entry)
-
-        shopper_row.addStretch()
-        group_layout.addLayout(shopper_row)
-
-        # Bowser Phone
-        phone_row = QHBoxLayout()
-        phone_row.setSpacing(12)
-
-        # Bowser Phone icon
-        phone_icon = QLabel()
-        phone_icon.setPixmap(QIcon(str(fetchResource("assets/items/bowserPhone.png"))).pixmap(24, 24))
-        phone_icon.setStyleSheet("padding: 2px;")
-        phone_row.addWidget(phone_icon)
-
-        phone_label = BodyLabel("Bowser Phone:")
-        phone_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        phone_row.addWidget(phone_label)
-
-        self.phone_entry = LineEdit()
-        self.phone_entry.setFixedWidth(60)
-        phone_row.addWidget(self.phone_entry)
-
-        phone_row.addStretch()
-        group_layout.addLayout(phone_row)
-
-        # Dueling Glove
-        glove_row = QHBoxLayout()
-        glove_row.setSpacing(12)
-
-        # Dueling Glove icon
-        glove_icon = QLabel()
-        glove_icon.setPixmap(QIcon(str(fetchResource("assets/items/duelingGlove.png"))).pixmap(24, 24))
-        glove_icon.setStyleSheet("padding: 2px;")
-        glove_row.addWidget(glove_icon)
-
-        glove_label = BodyLabel("Dueling Glove:")
-        glove_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        glove_row.addWidget(glove_label)
-
-        self.glove_entry = LineEdit()
-        self.glove_entry.setFixedWidth(60)
-        glove_row.addWidget(self.glove_entry)
-
-        glove_row.addStretch()
-        group_layout.addLayout(glove_row)
-
-        # Lucky Lamp
-        lucky_row = QHBoxLayout()
-        lucky_row.setSpacing(12)
-
-        # Lucky Lamp icon
-        lucky_icon = QLabel()
-        lucky_icon.setPixmap(QIcon(str(fetchResource("assets/items/luckyLamp.png"))).pixmap(24, 24))
-        lucky_icon.setStyleSheet("padding: 2px;")
-        lucky_row.addWidget(lucky_icon)
-
-        lucky_label = BodyLabel("Lucky Lamp:")
-        lucky_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        lucky_row.addWidget(lucky_label)
-
-        self.lucky_entry = LineEdit()
-        self.lucky_entry.setFixedWidth(60)
-        lucky_row.addWidget(self.lucky_entry)
-
-        lucky_row.addStretch()
-        group_layout.addLayout(lucky_row)
-
-        # Bowser Suit
-        suit_row = QHBoxLayout()
-        suit_row.setSpacing(12)
-
-        # Bowser Suit icon
-        suit_icon = QLabel()
-        suit_icon.setPixmap(QIcon(str(fetchResource("assets/items/bowserSuit.png"))).pixmap(24, 24))
-        suit_icon.setStyleSheet("padding: 2px;")
-        suit_row.addWidget(suit_icon)
-
-        suit_label = BodyLabel("Bowser Suit:")
-        suit_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        suit_row.addWidget(suit_label)
-
-        self.suit_entry = LineEdit()
-        self.suit_entry.setFixedWidth(60)
-        suit_row.addWidget(self.suit_entry)
-
-        suit_row.addStretch()
-        group_layout.addLayout(suit_row)
-
-        # Boo Bell
-        bell_row = QHBoxLayout()
-        bell_row.setSpacing(12)
-
-        # Boo Bell icon
-        bell_icon = QLabel()
-        bell_icon.setPixmap(QIcon(str(fetchResource("assets/items/booBell.png"))).pixmap(24, 24))
-        bell_icon.setStyleSheet("padding: 2px;")
-        bell_row.addWidget(bell_icon)
-
-        bell_label = BodyLabel("Boo Bell:")
-        bell_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        bell_row.addWidget(bell_label)
-
-        self.bell_entry = LineEdit()
-        self.bell_entry.setFixedWidth(60)
-        bell_row.addWidget(self.bell_entry)
-
-        bell_row.addStretch()
-        group_layout.addLayout(bell_row)
-
-        # Boo Repellent
-        repellent_row = QHBoxLayout()
-        repellent_row.setSpacing(12)
-
-        # Boo Repellent icon
-        repellent_icon = QLabel()
-        repellent_icon.setPixmap(QIcon(str(fetchResource("assets/items/booRepellent.png"))).pixmap(24, 24))
-        repellent_icon.setStyleSheet("padding: 2px;")
-        repellent_row.addWidget(repellent_icon)
-
-        repellent_label = BodyLabel("Boo Repellent:")
-        repellent_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        repellent_row.addWidget(repellent_label)
-
-        self.repellent_entry = LineEdit()
-        self.repellent_entry.setFixedWidth(60)
-        repellent_row.addWidget(self.repellent_entry)
-
-        repellent_row.addStretch()
-        group_layout.addLayout(repellent_row)
-
-        # Item Bag
-        bag_row = QHBoxLayout()
-        bag_row.setSpacing(12)
-
-        # Item Bag icon
-        bag_icon = QLabel()
-        bag_icon.setPixmap(QIcon(str(fetchResource("assets/items/itemBag3.png"))).pixmap(24, 24))
-        bag_icon.setStyleSheet("padding: 2px;")
-        bag_row.addWidget(bag_icon)
-
-        bag_label = BodyLabel("Item Bag:")
-        bag_label.setStyleSheet("font-size: 15px; font-weight: 600; min-width: 100px;")
-        bag_row.addWidget(bag_label)
-
-        self.bag_entry = LineEdit()
-        self.bag_entry.setFixedWidth(60)
-        bag_row.addWidget(self.bag_entry)
-
-        bag_row.addStretch()
-        group_layout.addLayout(bag_row)
+        # Create entries for each item
+        for item_name, icon_path, item_key, is_red in self.mp3_items:
+            item_group = self.create_mp3_item_group(item_name, icon_path, item_key, is_red)
+            items_grid.addWidget(item_group)
+        
+        group_layout.addLayout(items_grid)
+    
+    def create_mp3_item_group(self, item_name, icon_path, item_key, is_red):
+        """Create a group for a single MP3 item (MP7-style card format)"""
+        
+        # Create card widget (like MP7)
+        group_card = CardWidget()
+        group_card.setStyleSheet("CardWidget { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }")
+        group_layout = QVBoxLayout(group_card)
+        group_layout.setContentsMargins(16, 12, 16, 12)
+        group_layout.setSpacing(8)
+
+        # Item title (like MP7)
+        title = BodyLabel(item_name)
+        if is_red:
+            title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px; color: red;")
+        else:
+            title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px;")
+        group_layout.addWidget(title)
+
+        # Create grid for parameters (like MP7)
+        params_layout = QHBoxLayout()
+        params_layout.setSpacing(8)
+
+        # Add item icon (like MP7)
+        icon = self.create_image_label(icon_path, 32, 32)
+        params_layout.addWidget(icon)
+
+        # Price parameters (like MP7 structure)
+        price_layout = QVBoxLayout()
+        price_layout.setSpacing(4)
+
+        price_label = BodyLabel("Price:")
+        price_label.setStyleSheet("font-size: 12px; font-weight: 600;")
+        price_layout.addWidget(price_label)
+
+        price_row = QHBoxLayout()
+        price_row.setSpacing(4)
+
+        # Single price entry (MP2/MP3 only need one price)
+        price_entry = LineEdit()
+        price_entry.setPlaceholderText("Coins")
+        price_entry.setFixedWidth(70)
+        price_entry.setFixedHeight(30)
+        price_row.addWidget(price_entry)
+        setattr(self, f"{item_key}_entry", price_entry)
+
+        price_layout.addLayout(price_row)
+        params_layout.addLayout(price_layout)
+
+        group_layout.addLayout(params_layout)
+
+        return group_card
+    
+    def create_image_label(self, image_path, width=32, height=32):
+        """Create a QLabel with an image from the assets folder (MP7-style)"""
+        try:
+            # Get the image path from resource manager (like MP7)
+            from utils.resource_manager import ResourceManager
+            image_path = ResourceManager.get_resource_path(image_path)
+            
+            # Create QLabel and set image
+            image_label = QLabel()
+            pixmap = QPixmap(str(image_path))
+            
+            if not pixmap.isNull():
+                # Scale the image to the specified dimensions
+                scaled_pixmap = pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                image_label.setPixmap(scaled_pixmap)
+                image_label.setFixedSize(width, height)
+                image_label.setAlignment(Qt.AlignCenter)
+            else:
+                # Fallback text if image fails to load
+                image_label.setText("?")
+                image_label.setFixedSize(width, height)
+                image_label.setAlignment(Qt.AlignCenter)
+                image_label.setStyleSheet("border: 1px solid gray; background: lightgray;")
+            
+            return image_label
+            
+        except Exception as e:
+            # Fallback if image creation fails
+            fallback_label = QLabel("?")
+            fallback_label.setFixedSize(width, height)
+            fallback_label.setAlignment(Qt.AlignCenter)
+            fallback_label.setStyleSheet("border: 1px solid gray; background: lightgray;")
+            return fallback_label
 
     def generate_codes(self):
         """Generate codes for the current game"""
@@ -602,102 +329,55 @@ class ItemsTab(QWidget):
                 mushroom_price = MockEntry(self.mushroom_entry.text())
                 key_price = MockEntry(self.key_entry.text())
                 chest_price = MockEntry(self.chest_entry.text())
+                phone_price = MockEntry(self.phone_entry.text())
                 glove_price = MockEntry(self.glove_entry.text())
                 warp_price = MockEntry(self.warp_entry.text())
                 golden_price = MockEntry(self.golden_entry.text())
                 lamp_price = MockEntry(self.lamp_entry.text())
-
-                # Call appropriate items event function based on game
-                if 'itemsEvent_mp2' in globals():
-                    itemsEvent_mp2(mushroom_price, key_price, chest_price, glove_price, warp_price, golden_price, lamp_price)
+                poison_price = MockEntry(self.poison_entry.text())
+                reverse_price = MockEntry(self.reverse_entry.text())
+                lucky_price = MockEntry(self.lucky_entry.text())
+                warp2_price = MockEntry(self.warp2_entry.text())
+                shopper_price = MockEntry(self.shopper_entry.text())
+                bell_price = MockEntry(self.bell_entry.text())
+                repellant_price = MockEntry(self.repellant_entry.text())
+                suit_price = MockEntry(self.suit_entry.text())
+                bag_price = MockEntry(self.bag_entry.text())
+                
+                # Call the MP2 items event function
+                if itemsEvent_mp2:
+                    itemsEvent_mp2(mushroom_price, key_price, chest_price, phone_price, glove_price, warp_price, golden_price, lamp_price, poison_price, reverse_price, lucky_price, warp2_price, shopper_price, bell_price, repellant_price, suit_price, bag_price)
                 else:
-                    self.show_error("Items modification not available for Mario Party 2")
+                    self.show_error("Mario Party 2 item modifications not available")
+                    
             elif self.game_id == "marioParty3":
                 mushroom_price = MockEntry(self.mushroom_entry.text())
                 key_price = MockEntry(self.key_entry.text())
-                poison_price = MockEntry(self.poison_entry.text())
-                reverse_price = MockEntry(self.reverse_entry.text())
-                golden_price = MockEntry(self.golden_entry.text())
-                lamp_price = MockEntry(self.lamp_entry.text())
-                warp_price = MockEntry(self.warp_entry.text())
-                shopper_price = MockEntry(self.shopper_entry.text())
+                chest_price = MockEntry(self.chest_entry.text())
                 phone_price = MockEntry(self.phone_entry.text())
                 glove_price = MockEntry(self.glove_entry.text())
+                warp_price = MockEntry(self.warp_entry.text())
+                golden_price = MockEntry(self.golden_entry.text())
+                lamp_price = MockEntry(self.lamp_entry.text())
+                poison_price = MockEntry(self.poison_entry.text())
+                reverse_price = MockEntry(self.reverse_entry.text())
                 lucky_price = MockEntry(self.lucky_entry.text())
-                suit_price = MockEntry(self.suit_entry.text())
-                chest_price = MockEntry(self.chest_entry.text())
+                warp2_price = MockEntry(self.warp2_entry.text())
+                shopper_price = MockEntry(self.shopper_entry.text())
                 bell_price = MockEntry(self.bell_entry.text())
-                repellent_price = MockEntry(self.repellent_entry.text())
+                repellant_price = MockEntry(self.repellant_entry.text())
+                suit_price = MockEntry(self.suit_entry.text())
                 bag_price = MockEntry(self.bag_entry.text())
 
-                # Call appropriate items event function based on game
-                if 'itemsEvent_mp3' in globals():
-                    itemsEvent_mp3(mushroom_price, key_price, poison_price, reverse_price, golden_price, lamp_price, warp_price, shopper_price, phone_price, glove_price, lucky_price, suit_price, chest_price, bell_price, repellent_price, bag_price)
+                # Call the MP3 items event function
+                if itemsEvent_mp3:
+                    itemsEvent_mp3(mushroom_price, key_price, chest_price, phone_price, glove_price, warp_price, golden_price, lamp_price, poison_price, reverse_price, lucky_price, warp2_price, shopper_price, bell_price, repellant_price, suit_price, bag_price)
                 else:
-                    self.show_error("Items modification not available for Mario Party 3")
+                    self.show_error("Mario Party 3 item modifications not available")
+                    
         except Exception as e:
             self.show_error(f"Error generating codes: {str(e)}")
 
     def show_error(self, message):
         """Show error message to user"""
-        InfoBar.error(
-            title="Error",
-            content=message,
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=3000,
-            parent=self
-        )
-    
-    def update_items_group_theme(self):
-        """Update the items group styling based on current theme"""
-        from qfluentwidgets import isDarkTheme
-        if isDarkTheme():
-            self.items_group.setStyleSheet("""
-                QGroupBox {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: palette(text);
-                    border: 2px solid palette(mid);
-                    border-radius: 8px;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    background: #3c3c3c;
-                }
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 16px;
-                    padding: 0 8px 0 8px;
-                    background: palette(highlight);
-                    color: palette(highlighted-text);
-                    border-radius: 6px;
-                    font-weight: 700;
-                }
-            """)
-        else:
-            self.items_group.setStyleSheet("""
-                QGroupBox {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: palette(text);
-                    border: 2px solid palette(mid);
-                    border-radius: 8px;
-                    margin-top: 12px;
-                    padding-top: 12px;
-                    background: #ffffff;
-                }
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 16px;
-                    padding: 0 8px 0 8px;
-                    background: palette(highlight);
-                    color: palette(highlighted-text);
-                    border-radius: 6px;
-                    font-weight: 700;
-                }
-            """)
-    
-    def themeChanged(self):
-        """Called when theme changes - update all styling"""
-        self.update_items_group_theme()
+        QMessageBox.critical(self, "Error", message)
