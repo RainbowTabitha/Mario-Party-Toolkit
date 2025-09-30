@@ -1,7 +1,7 @@
 # ============================================
 # Mario Party Toolkit
-# Author: Nayla Hanegan (naylahanegan@gmail.com)
-# Date: 5/12/2024
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
 # License: MIT
 # ============================================
 
@@ -14,7 +14,7 @@ def initialItemsEvent_mp6(initalItem41, initalItem42, initalItem43, items6):
     itemSlot1 = initalItem41.get()
     itemSlot2 = initalItem42.get()
     itemSlot3 = initalItem43.get()
-    itemHex = ["FF", "00", "01", "02", "03", "04", "05", "06", "07", "0A", "0B", "0C", "0D", "0F", "10", "11", "14", "15", "16", "17", "18", "19", "1E", "1F", "29", "2A", "2B", "2C", "2E"]
+    itemHex = ["FF", "00", "01", "02", "03", "04", "06", "07", "0A", "0B", "0C", "0D", "0F", "10", "11", "14", "15", "16", "17", "18", "19", "1E", "1F"]
     itemSlot1Num = items6.index(itemSlot1)
     itemSlot1Hex = itemHex[itemSlot1Num]
 

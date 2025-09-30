@@ -58,8 +58,8 @@ All community participants, including contributors, sponsors, and other guests, 
 
 ## 9. Contact Info
 
-- Discord: endangerednayla
-- Email: naylahanegan@gmail.com
+- Discord: furtabs
+- Email: tabitha@tabs.gay
 
 ## 10. License and Attribution
 

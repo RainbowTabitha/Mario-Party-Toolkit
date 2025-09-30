@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-win32:
+    name: "Windows Build"
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install PIP Modules
+      run: python -m pip install -r requirements.txt
+
+    - name: Build Project (Dynamic build)
+      run: pyinstaller -w --onefile .\main.py --add-data "assets/eventTags/*;assets/eventTags/" --add-data "assets/icons/*;assets/icons/" --add-data "assets/items/*;assets/items/" --add-data "assets/logos/*;assets/logos/" --add-data "assets/operation/*;assets/operation/" --add-data "dependencies/win32/*;dependencies/win32/" --add-data "dependencies/bin/*;dependencies/win32/bin/"  --name="Mario Party Toolkit" --icon="assets/icons/diceBlock.ico"
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MarioPartyToolkit-win32
+        path: D:\a\Mario-Party-Toolkit\Mario-Party-Toolkit\dist
+
+

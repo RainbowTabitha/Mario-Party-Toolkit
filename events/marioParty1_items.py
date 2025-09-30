@@ -1,7 +1,7 @@
 # ============================================
 # Mario Party Toolkit
-# Author: Nayla Hanegan (naylahanegan@gmail.com)
-# Date: 7/24/2024
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
 # License: MIT
 # ============================================
 
@@ -12,17 +12,17 @@ import pyperclip
 
 
 def itemsEvent_mp1(plus, minus, speed, slow, warp, stock):
-    if not all([plus.get(), minus.get(), speed.get(), slow.get(), warp.get(), stock.get()]):
+    if not all([plus.text(), minus.text(), speed.text(), slow.text(), warp.text(), stock.text()]):
         createDialog("Error", "error", "Please fill out all the boxes.", None)
         return
 
     try:
-        plusWeight = float(plus.get())
-        minusWeight = float(minus.get())
-        speedWeight = float(speed.get())
-        slowWeight = float(slow.get())
-        warpWeight = float(warp.get())
-        stockWeight = float(stock.get())
+        plusWeight = float(plus.text())
+        minusWeight = float(minus.text())
+        speedWeight = float(speed.text())
+        slowWeight = float(slow.text())
+        warpWeight = float(warp.text())
+        stockWeight = float(stock.text())
     except ValueError:
         createDialog("Error", "error", "Please enter valid integers.", None)
         return

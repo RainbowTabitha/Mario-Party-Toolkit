@@ -1,7 +1,7 @@
 # ============================================
 # Mario Party Toolkit
-# Author: Nayla Hanegan (naylahanegan@gmail.com)
-# Date: 5/12/2024
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
 # License: MIT
 # ============================================
 
@@ -9,8 +9,8 @@ from functions import *
 from codes.marioParty8 import *
 import pyperclip
 
-def coinsEvent_mp8(blueEntry, redEntry, mgEntry, starEntry, bitsizeEntry, hotelEntry, bowloEntry, vampireEntry):
-    if not any((blueEntry.get(), redEntry.get(), mgEntry.get(), starEntry.get(), bitsizeEntry.get(), hotelEntry.get(), bowloEntry.get(), vampireEntry.get())):
+def coinsEvent_mp8(blueEntry, redEntry, mgEntry, starEntry, bitsizeEntry, bowloEntry, vampireEntry):
+    if not any((blueEntry.get(), redEntry.get(), mgEntry.get(), starEntry.get(), bitsizeEntry.get(), bowloEntry.get(), vampireEntry.get())):
         createDialog("Error", "error", "Please fill out at least one box.", None)
         return
     
@@ -21,7 +21,6 @@ def coinsEvent_mp8(blueEntry, redEntry, mgEntry, starEntry, bitsizeEntry, hotelE
     starSpaceAmountEightNeg = format(-int(starEntry.get()) & 0xFFFFFFFFFFFFFFFF, 'X')[12:] if starEntry.get() else "DUMMY"
     bitsizeAmountEight = hex(int(bitsizeEntry.get()))[2:].zfill(4).upper() if bitsizeEntry.get() else "DUMMY"
     bowloAmountEight = hex(int(bowloEntry.get()))[2:].zfill(4).upper() if bowloEntry.get() else "DUMMY"
-    hotelEight = hex(int(hotelEntry.get()))[2:].zfill(4).upper() if hotelEntry.get() else "DUMMY"
     vampireEight = hex(int(vampireEntry.get()))[2:].zfill(4).upper() if vampireEntry.get() else "DUMMY"
 
     marioPartyEightBlueSpace = getBlueSpaceCodeEight(blueSpaceAmountEight, blueEntry.get()) if blueSpaceAmountEight != "DUMMY" else ""
@@ -30,10 +29,9 @@ def coinsEvent_mp8(blueEntry, redEntry, mgEntry, starEntry, bitsizeEntry, hotelE
     marioPartyEightStarSpace = getStarSpaceCodeEight(starSpaceAmountEight, starSpaceAmountEightNeg, starEntry.get()) if starSpaceAmountEight != "DUMMY" else ""
     marioPartyEightBitsize = getBitsizeCode8(bitsizeAmountEight, bitsizeEntry.get()) if bitsizeAmountEight != "DUMMY" else ""
     marioPartyEightBowlo = getBowloCode8(bowloAmountEight, bowloEntry.get()) if bowloAmountEight != "DUMMY" else ""
-    marioPartyEightHotel = hotelMaxInvest(hotelEight, hotelEntry.get()) if hotelEight != "DUMMY" else ""
     marioPartyEightVampire = getVampireCode8(vampireEight, vampireEntry.get()) if vampireEight != "DUMMY" else ""
 
-    generatedCode = marioPartyEightBlueSpace + marioPartyEightRedSpace + marioPartyEightMiniGame + marioPartyEightStarSpace + marioPartyEightBitsize + marioPartyEightVampire + marioPartyEightBowlo + marioPartyEightHotel
+    generatedCode = marioPartyEightBlueSpace + marioPartyEightRedSpace + marioPartyEightMiniGame + marioPartyEightStarSpace + marioPartyEightBitsize + marioPartyEightVampire + marioPartyEightBowlo
     generatedCode = generatedCode.strip()
 
     pyperclip.copy(generatedCode)

@@ -1,7 +1,7 @@
 # ============================================
 # Mario Party Toolkit
-# Author: Nayla Hanegan (naylahanegan@gmail.com)
-# Date: 2/21/2024
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
 # License: MIT
 # ============================================
 
@@ -9,18 +9,14 @@ def getBlueSpaceCodeSeven(amount, amountDec):
     return f'''
 MP7 - Blue Spaces Give {amountDec} Coins
 C2168578 00000001
-60000000 00000000
-C216857C 3880{amount}
-60000000 00000000
+3880{amount} 00000000
 '''
 
 def getRedSpaceCodeSeven(amount, amountDec):
     return f'''
 MP7 - Red Spaces Take Away {amountDec} Coins
 C2168600 00000001
-60000000 00000000
-C2168604 3880{amount}
-60000000 00000000
+3880{amount} 00000000
 '''
 
 def getCharacterSpaceCodeSeven(amount, amountDec):
