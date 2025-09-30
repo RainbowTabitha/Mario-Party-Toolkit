@@ -1,7 +1,8 @@
-#!/usr/bin/env python3
 # ============================================
-# About Page Component
-# Displays version information, features, license, and credits
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
+# License: MIT
 # ============================================
 
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, 

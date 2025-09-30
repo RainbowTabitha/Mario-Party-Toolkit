@@ -1,4 +1,10 @@
-#!/usr/bin/env python3
+# ============================================
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
+# License: MIT
+# ============================================
+
 # ============================================
 # Items MP7 Tab Component for Mario Party 7
 # Full orb modifications with all standard items

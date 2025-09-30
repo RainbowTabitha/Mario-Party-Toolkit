@@ -1,4 +1,10 @@
-#!/usr/bin/env python3
+# ============================================
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
+# License: MIT
+# ============================================
+
 # ============================================
 # Resource Manager Utility
 # Handles resource loading and icon creation

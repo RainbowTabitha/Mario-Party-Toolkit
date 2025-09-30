@@ -1,7 +1,8 @@
-#!/usr/bin/env python3
 # ============================================
-# Block Weights Tab Component
-# Converted from CTk to PyQt5 for Mario Party 1
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
+# License: MIT
 # ============================================
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QLineEdit, QGroupBox

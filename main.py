@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 # ============================================
-# Mario Party Toolkit - Modular PyQt5 Version
-# Author: Nayla Hanegan (tabitha@tabs.gay)
-# Date: 7/12/2024
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
 # License: MIT
 # ============================================
 

@@ -1,3 +1,10 @@
+# ============================================
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
+# License: MIT
+# ============================================
+
 from functions import *
 from codes.marioParty4 import *
 import pyperclip

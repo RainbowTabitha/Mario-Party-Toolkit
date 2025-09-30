@@ -1,7 +1,8 @@
-#!/usr/bin/env python3
 # ============================================
-# Settings Page Component
-# Handles theme toggling and other settings
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
+# License: MIT
 # ============================================
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSizePolicy

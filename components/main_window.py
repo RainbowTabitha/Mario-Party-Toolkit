@@ -1,7 +1,8 @@
-#!/usr/bin/env python3
 # ============================================
-# Main Window Component
-# Handles core window functionality, theme, and navigation
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
+# License: MIT
 # ============================================
 
 import os

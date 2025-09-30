@@ -1,7 +1,7 @@
 # ============================================
 # Mario Party Toolkit
-# Author: Nayla Hanegan (tabitha@tabs.gay)
-# Date: 5/31/2024
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
 # License: MIT
 # ============================================
 

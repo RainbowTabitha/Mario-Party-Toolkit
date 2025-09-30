@@ -1,4 +1,10 @@
-#!/usr/bin/env python3
+# ============================================
+# Mario Party Toolkit
+# Author: Tabitha Hanegan (tabitha@tabs.gay)
+# Date: 09/30/2025
+# License: MIT
+# ============================================
+
 # ============================================
 # Mario Party Toolkit Application
 # Main application class that integrates all components
