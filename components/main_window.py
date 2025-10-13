@@ -7,7 +7,7 @@
 
 import os
 import platform
-from PyQt5.QtWidgets import QMainWindow, QSizePolicy
+from PyQt5.QtWidgets import QMainWindow, QSizePolicy, QApplication
 from PyQt5.QtCore import Qt, QTimer, QSettings
 from PyQt5.QtGui import QIcon
 
@@ -22,11 +22,14 @@ except ImportError:
     print("⚠️  darkdetect not available, using default light theme")
 
 from utils.resource_manager import ResourceManager
+from utils.scale_manager import ScaleManager
 
 
 class MainWindow(FluentWindow):
     def __init__(self):
         super().__init__()
+        # Store scale factor for reference
+        self.scale_factor = ScaleManager.get_scale_factor()
         self.setup_window()
         self.setup_theme()
         self.setup_theme_monitoring()
@@ -36,8 +39,32 @@ class MainWindow(FluentWindow):
         """Set up the main window properties"""
         self.setWindowTitle("Mario Party Toolkit")
         self.setWindowIcon(ResourceManager.get_icon("assets/icons/diceBlock.png"))
+        
+        # Get the available screen geometry
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()
+        
+        # Set minimum size
         self.setMinimumSize(1200, 800)
-        self.resize(1400, 900)
+        
+        # Fit to display - use available screen size with small margins
+        margin = 50  # Leave some margin from screen edges
+        window_width = screen_geometry.width() - (margin * 2)
+        window_height = screen_geometry.height() - (margin * 2)
+        
+        # Set the window size to fit the display
+        self.resize(window_width, window_height)
+        
+        # Center the window on screen
+        self.move(
+            screen_geometry.x() + margin,
+            screen_geometry.y() + margin
+        )
+        
+        print(f"✓ Window fitted to display: {window_width}x{window_height}")
+        
+        if self.scale_factor != 1.0:
+            print(f"✓ Content scaled to {int(self.scale_factor * 100)}% for optimal fit")
         
         # Enable proper window dragging and resizing
         if platform.system() in ['Linux', 'Darwin']:  # Linux or macOS

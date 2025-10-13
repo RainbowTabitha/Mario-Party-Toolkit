@@ -7,7 +7,7 @@
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSizePolicy
 from PyQt5.QtCore import Qt, pyqtSignal, QSettings
-from qfluentwidgets import SubtitleLabel, PushButton, setTheme, Theme
+from qfluentwidgets import SubtitleLabel, PushButton, setTheme, Theme, BodyLabel
 
 # Import dark mode detection
 try:
@@ -15,6 +15,9 @@ try:
     DARKDETECT_AVAILABLE = True
 except ImportError:
     DARKDETECT_AVAILABLE = False
+
+# Import scale manager
+from utils.scale_manager import ScaleManager
 
 
 class SettingsPage(QWidget):
@@ -78,6 +81,13 @@ class SettingsPage(QWidget):
         # Set initial button text based on current theme
         self.update_button_text()
         layout.addWidget(self.theme_toggle_btn)
+        
+        # Display info - show current scale (auto-calculated)
+        current_scale_factor = ScaleManager.get_scale_factor()
+        scale_info = BodyLabel(f"UI Scale: {int(current_scale_factor * 100)}% (Auto-fitted to display)", self)
+        scale_info.setStyleSheet("color: gray;")
+        scale_info.setAlignment(Qt.AlignCenter)
+        layout.addWidget(scale_info)
         
         # Add more settings options here in the future
         layout.addStretch()
