@@ -124,7 +124,8 @@ class ShopPricesTab(QWidget):
         items_grid.setSpacing(12)
 
         # Create items based on game version
-        self.create_version_items(items_grid)
+        dynamic_container = self.create_dynamic_content_container()
+        items_grid.addWidget(dynamic_container)
         
         # Store reference to the items grid for later updates
         self.items_grid = items_grid
