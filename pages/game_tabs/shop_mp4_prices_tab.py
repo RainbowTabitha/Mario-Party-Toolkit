@@ -55,11 +55,13 @@ class ShopPricesTab(QWidget):
         # Title
         title = SubtitleLabel("Item Shop Price Modifications")
         title.setAlignment(Qt.AlignCenter)
+        self.apply_label_theme(title, "")
         layout.addWidget(title)
 
         # Description
         desc = BodyLabel("Modify prices for items in the shop at different game stages:")
         desc.setAlignment(Qt.AlignCenter)
+        self.apply_label_theme(desc, "")
         layout.addWidget(desc)
 
         # Create scroll area for the shop interface
@@ -85,12 +87,14 @@ class ShopPricesTab(QWidget):
 
         # Add title to the card
         card_title = SubtitleLabel("Item Shop Prices")
-        card_title.setStyleSheet("font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        self.apply_label_theme(card_title, "font-size: 16px; font-weight: 600; margin-bottom: 8px;")
         shop_card_layout.addWidget(card_title)
 
         # Game version selection
         version_layout = QHBoxLayout()
-        version_layout.addWidget(BodyLabel("Game Version:"))
+        version_label = BodyLabel("Game Version:")
+        self.apply_label_theme(version_label, "")
+        version_layout.addWidget(version_label)
 
         # Create radio button group
         self.version_button_group = QButtonGroup()
@@ -121,6 +125,9 @@ class ShopPricesTab(QWidget):
 
         # Create items based on game version
         self.create_version_items(items_grid)
+        
+        # Store reference to the items grid for later updates
+        self.items_grid = items_grid
 
         shop_card_layout.addLayout(items_grid)
         container_layout.addWidget(shop_card)
@@ -146,6 +153,10 @@ class ShopPricesTab(QWidget):
 
         # Reapply theme styling to prevent palette glitches in dark mode
         self.update_radio_button_theme()
+        
+        # Update the items UI to reflect the new game version
+        if hasattr(self, 'items_grid'):
+            self.update_items_ui(self.items_grid)
 
     def clear_item_rows(self, scroll_layout):
         """Clear all items by replacing the dynamic content container"""
@@ -232,7 +243,7 @@ class ShopPricesTab(QWidget):
 
         # Item title
         title = BodyLabel(item_name)
-        title.setStyleSheet("font-size: 14px; font-weight: 600; margin-bottom: 4px;")
+        self.apply_label_theme(title, "font-size: 14px; font-weight: 600; margin-bottom: 4px;")
         item_card_layout.addWidget(title)
 
         # Parameters layout
@@ -259,7 +270,7 @@ class ShopPricesTab(QWidget):
             stage_layout.setSpacing(4)
 
             stage_label = BodyLabel(f"{stage}:")
-            stage_label.setStyleSheet("font-size: 12px; font-weight: 600;")
+            self.apply_label_theme(stage_label, "font-size: 12px; font-weight: 600;")
             stage_layout.addWidget(stage_label)
 
             # Create inputs for player counts (1, 2, 3-4 players)
@@ -503,6 +514,21 @@ class ShopPricesTab(QWidget):
                             prices[param_name] = entry.text()
 
         return prices
+
+    def apply_label_theme(self, label, base_style=""):
+        """Apply theme-aware styling to labels with explicit white text for dark mode"""
+        from qfluentwidgets import isDarkTheme
+        
+        if isDarkTheme():
+            # Dark theme - explicit white text
+            color_style = "color: #ffffff;"
+        else:
+            # Light theme - dark text
+            color_style = "color: #333333;"
+        
+        # Combine base style with color
+        full_style = f"{base_style} {color_style}".strip()
+        label.setStyleSheet(full_style)
 
     def calculate_minimum_coins(self):
         """Calculate minimum coins for MP4 based on lowest non-zero item price"""
