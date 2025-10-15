@@ -83,7 +83,7 @@ class ShopOddsTab(QWidget):
 
         # Add title to the card
         card_title = SubtitleLabel("Item Shop Odds")
-        self.apply_label_theme(card_title, "font-size: 16px; font-weight: 600; margin-bottom: 8px;")
+        self.apply_label_theme(card_title, "font-size: 16px; margin-bottom: 8px;")
         shop_card_layout.addWidget(card_title)
 
         # Game version selection
@@ -303,7 +303,7 @@ class ShopOddsTab(QWidget):
 
         # Item title
         title = BodyLabel(item_name)
-        self.apply_label_theme(title, "font-size: 14px; font-weight: 600; margin-bottom: 4px;")
+        self.apply_label_theme(title, "font-size: 14px; margin-bottom: 4px;")
         item_card_layout.addWidget(title)
 
         # Parameters layout
@@ -330,7 +330,7 @@ class ShopOddsTab(QWidget):
             stage_layout.setSpacing(4)
 
             stage_label = BodyLabel(f"{stage}:")
-            self.apply_label_theme(stage_label, "font-size: 12px; font-weight: 600;")
+            self.apply_label_theme(stage_label, "font-size: 12px;")
             stage_layout.addWidget(stage_label)
 
             # Create inputs for player counts (1, 2, 3-4 players)
@@ -550,7 +550,6 @@ class ShopOddsTab(QWidget):
                     background: transparent;
                     color: #ffffff;
                     font-size: 14px;
-                    font-weight: 500;
                     spacing: 8px;
                     padding: 4px;
                 }
@@ -580,7 +579,6 @@ class ShopOddsTab(QWidget):
                     background: transparent;
                     color: palette(text);
                     font-size: 14px;
-                    font-weight: 500;
                     spacing: 8px;
                     padding: 4px;
                 }
